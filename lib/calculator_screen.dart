@@ -1,7 +1,7 @@
 import 'package:day_night_themed_switch/day_night_themed_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:neumorphic_calculator/extension.dart';
 import 'button.dart';
 import 'enum.dart';
 import 'result_widget.dart';
@@ -15,50 +15,18 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class CalculatorScreenState extends State<CalculatorScreen> {
-  String input = '';
+  final TextEditingController controller = TextEditingController();
+  String get input => controller.text;
   String result = '';
   Parser p = Parser();
 
-  void calculate({bool skipErrorChecking = false}) {
-    String finalInput = input;
-    finalInput = finalInput.replaceAll('x', '*');
-    finalInput = finalInput.replaceAll('÷', '/');
-    // finalInput = finalInput.replaceAll('%', '/100');
-    bool hasDouble = finalInput.contains('.');
-    try {
-      Expression exp = p.parse(finalInput);
-      ContextModel ctxModel = ContextModel();
-      double eval = exp.evaluate(EvaluationType.REAL, ctxModel);
-      // if (eval % 1 == 0 && !hasDouble) {
-      //   result = eval.toInt().toString();
-      // } else {
-      //   result = eval.toString();
-      // }
-      result = eval.toString();
-    } catch (e) {
-      print(e.toString());
-      if (skipErrorChecking) {
-        result = '';
-      } else {
-        result = 'Format Error';
-      }
-    }
-  }
-
-  bool get canCalculate {
-    if (input.isEmpty) {
-      return false;
-    }
-    if (input.contains('x') || input.contains('÷')) {
-      return true;
-    }
-    if (input.contains('+') || input.contains('-')) {
-      return true;
-    }
-    return false;
-  }
-
   bool darkMode = false;
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +72,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(flex: 2, child: InputWidget(input)),
+                  Expanded(flex: 2, child: InputWidget(controller)),
                   Expanded(child: ResultWidget(result)),
                 ],
               ),
@@ -124,54 +92,70 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                     onPressed: () {
                       CalculatorButton button = CalculatorButton.values[index];
                       if (button.isNumber) {
-                        input += button.value;
-                        if (canCalculate) {
-                          calculate();
+                        if (controller.noSelection) {
+                          controller.text += button.value;
+                        } else {
+                          controller.addTextToOffset(button.value);
+                        }
+                        if (input.canCalculate) {
+                          result = input.calculate(parser: p);
                         }
                       } else {
                         switch (button) {
                           case CalculatorButton.negative:
                             break;
                           case CalculatorButton.clear:
-                            if (input.isNotEmpty) {
-                              input = input.substring(0, input.length - 1);
-                              if (canCalculate) {
-                                calculate(skipErrorChecking: true);
+                            if (input.isNotEmpty && controller.noSelection) {
+                              controller.eraseLastCharacter();
+                              if (input.canCalculate) {
+                                result = input.calculate(
+                                    parser: p, skipErrorChecking: true);
                               }
+                            } else {
+                              controller.removeTextAtOffset();
                             }
+
                             if (input.isEmpty && result.isNotEmpty) {
                               result = '';
                             }
                             break;
                           case CalculatorButton.allClear:
-                            input = '';
+                            // TODO: Add all clear animation to flush the screen
+                            controller.text = '';
                             result = '';
                             break;
                           case CalculatorButton.equal:
                             if (input.isNotEmpty) {
-                              calculate();
+                              result = input.calculate(parser: p);
                             }
                             break;
                           case CalculatorButton.decimal:
                             if (input.isEmpty) {
-                              input += '0.';
-                            } else if (input.contains('.')) {
+                              controller.text += '0.';
+                            } else if (controller.noSelection &&
+                                !input.endsWith('.')) {
+                              controller.text += '.';
+                            } else if (input.contains('.') &&
+                                controller.noSelection) {
                               return;
                             } else {
-                              input += button.value;
+                              controller.addTextToOffset('.');
                             }
                             break;
                           default:
-                            if (input.endsWith('+') ||
-                                input.endsWith('-') ||
-                                input.endsWith('x') ||
-                                input.endsWith('÷') ||
-                                input.isEmpty) {
+                            if ((input.endsWith('+') ||
+                                    input.endsWith('-') ||
+                                    input.endsWith('x') ||
+                                    input.endsWith('÷') ||
+                                    input.isEmpty) &&
+                                controller.noSelection) {
                               return;
                             }
 
-                            if (input.isNotEmpty) {
-                              input += button.value;
+                            if (input.isEmpty || controller.noSelection) {
+                              controller.text += button.value;
+                            } else {
+                              controller.addTextToOffset(button.value);
                             }
                         }
                       }
