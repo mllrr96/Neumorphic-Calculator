@@ -58,7 +58,7 @@ extension TextEditingContollerExtension on TextEditingController {
   bool get noSelection =>
       selection.base.offset == -1 || selection.base.offset == text.length;
 
-  void eraseLastCharacter() {
+  void removeLastCharacter() {
     try {
       if (text.isNotEmpty && noSelection) {
         text = text.substring(0, text.length - 1);
