@@ -1,15 +1,18 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:neumorphic_calculator/theme.dart';
 
 import 'calculator_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  runApp(const NeumorphicCalculator());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class NeumorphicCalculator extends StatelessWidget {
+  const NeumorphicCalculator({super.key});
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(

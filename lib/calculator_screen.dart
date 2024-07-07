@@ -175,6 +175,8 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                   } else {
                                     controller.addTextToOffset(button.value);
                                   }
+                                  // recalculate result if possible in case of operator change
+                                  result = input.calculate(parser: p);
                               }
                             }
                             setState(() {});
