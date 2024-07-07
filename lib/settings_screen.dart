@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:neumorphic_calculator/button.dart';
+import 'package:flutter/services.dart';
+import 'widgets/button.dart';
+import 'widgets/splash_effect.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -10,6 +12,9 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   double _buttonRadius = 25;
+  bool splash = false;
+  bool splashOnAc = true;
+  bool vibrateOnTap = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         body: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
           children: [
-            NeumorphicCustomButton(
+            NeumorphicButton(
               borderRadius: BorderRadius.circular(_buttonRadius),
               child: const ListTile(
                 title: Text('Theme'),
@@ -31,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             const SizedBox(height: 18.0),
-            NeumorphicCustomButton(
+            NeumorphicButton(
               borderRadius: BorderRadius.circular(_buttonRadius),
               child: ListTile(
                 title: const Text('Font'),
@@ -43,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             const SizedBox(height: 18.0),
-            NeumorphicCustomButton(
+            NeumorphicButton(
               borderRadius: BorderRadius.circular(_buttonRadius),
               height: kToolbarHeight,
               child: Padding(
@@ -68,6 +73,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onPressed: () {
                 // Navigator.pushNamed(context, '/theme');
               },
+            ),
+            const SizedBox(height: 18.0),
+            NeumorphicButton(
+              borderRadius: BorderRadius.circular(_buttonRadius),
+              child: SwitchListTile(
+                value: vibrateOnTap,
+                onChanged: (val) {
+                  if (val) {
+                    HapticFeedback.mediumImpact();
+                  }
+                  setState(() => vibrateOnTap = val);
+                },
+                title: const Text('Vibrate on Tap'),
+              ),
+              onPressed: () {
+                // Navigator.pushNamed(context, '/theme');
+              },
+            ),
+            const SizedBox(height: 18.0),
+            SplashEffect(
+              splash: splash,
+              splashColor: Colors.orange.withOpacity(0.5),
+              child: NeumorphicButton(
+                borderRadius: BorderRadius.circular(_buttonRadius),
+                onPressed: null,
+                onLongPress: () => setState(() => splash = !splash),
+                child: SwitchListTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(_buttonRadius)),
+                  value: splashOnAc,
+                  onChanged: (val) => setState(() => splashOnAc = val),
+                  title: const Text('Splash Effect on AC'),
+                  subtitle: const Text('Long tap here for demo'),
+                ),
+              ),
             ),
           ],
         ));

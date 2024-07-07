@@ -54,8 +54,9 @@ class _InputWidgetState extends State<InputWidget> {
         textInputAction: TextInputAction.none,
         textAlign: TextAlign.right,
         style:
-            TextStyle(fontSize: 150, color: Theme.of(context).iconTheme.color),
+            TextStyle(fontSize: 90, color: Theme.of(context).iconTheme.color),
         minFontSize: 12,
+        maxFontSize: 90,
         maxLines: 1,
         cursorColor: primaryColor,
         cursorWidth: 4,
