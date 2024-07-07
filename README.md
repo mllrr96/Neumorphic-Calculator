@@ -2,7 +2,7 @@
 
 An elegant and highly customizable calculator app with a beautiful neumorphic design, built using Flutter.
 
-![Calculator Screenshot](insert_screenshot_url_here)
+![Calculator Screenshot](https://cdn.dribbble.com/users/2986824/screenshots/14757121/media/7754c4eac87d79773937886400d0d95d.png)
 
 ## Features
 
@@ -17,7 +17,6 @@ An elegant and highly customizable calculator app with a beautiful neumorphic de
 
 ## Screenshots
 
-_Insert additional screenshots if needed._
 
 ## Getting Started
 
@@ -26,13 +25,13 @@ To get started with the Neumorphic Calculator app, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/neumorphic-calculator.git
+   git clone https://github.com/mllrr96/Neumorphic-Calculator.git
    ```
 
 2. Navigate into the project directory:
 
    ```bash
-   cd neumorphic-calculator
+   cd Neumorphic-Calculator
    ```
 
 3. Install dependencies:
