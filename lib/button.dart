@@ -7,11 +7,13 @@ class NeumorphicCustomButton extends StatefulWidget {
       this.width,
       this.height,
       this.duration,
-      required this.child});
+      required this.child,
+      this.borderRadius});
   final void Function()? onPressed;
   final double? width, height;
   final Duration? duration;
   final Widget child;
+  final BorderRadiusGeometry? borderRadius;
   @override
   State<NeumorphicCustomButton> createState() => NeumorphicCustomButtonState();
 }
@@ -40,7 +42,7 @@ class NeumorphicCustomButtonState extends State<NeumorphicCustomButton> {
         width: widget.width,
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(25),
           boxShadow: _isElevated
               ? [
                   BoxShadow(

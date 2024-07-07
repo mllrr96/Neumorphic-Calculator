@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:neumorphic_calculator/custom_ink_response.dart';
 import 'package:neumorphic_calculator/extension.dart';
+import 'package:neumorphic_calculator/settings_screen.dart';
 import 'button.dart';
 import 'enum.dart';
 import 'result_widget.dart';
@@ -67,9 +68,12 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                     IconButton(
                       padding: const EdgeInsets.all(16),
                       onPressed: () {
-                        // SystemNavigator.pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SettingsScreen()));
                       },
-                      icon: const Icon(Icons.more_vert),
+                      icon: const Icon(Icons.settings),
                     ),
                   ],
                 ),

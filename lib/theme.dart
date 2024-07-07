@@ -8,6 +8,7 @@ class Themes {
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
     useMaterial3: true,
     appBarTheme: AppBarTheme(
+      backgroundColor: Colors.grey[300],
       systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.grey[300],
@@ -23,6 +24,7 @@ class Themes {
     useMaterial3: true,
     scaffoldBackgroundColor: const Color(0xff2E3239),
     appBarTheme: AppBarTheme(
+      backgroundColor: const Color(0xff2E3239),
       systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: const Color(0xff2E3239),
