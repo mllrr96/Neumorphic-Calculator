@@ -1,8 +1,8 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'utils/theme.dart';
 import 'calculator_screen.dart';
+import 'utils/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,12 +15,11 @@ class NeumorphicCalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(
-      initTheme: Themes.pinkLight,
+      initTheme: Themes.blueLight,
       builder: (context, theme) {
         return MaterialApp(
-          title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
-          // themeMode: ThemeMode.dark,
+          title: 'Neumorphic Calculator',
           theme: theme,
           home: const CalculatorScreen(),
         );

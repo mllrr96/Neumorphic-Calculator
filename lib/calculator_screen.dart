@@ -3,6 +3,7 @@ import 'package:day_night_themed_switch/day_night_themed_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'utils/theme.dart';
 import 'widgets/input_widget.dart';
 import 'widgets/result_widget.dart';
 import 'widgets/splash_effect.dart';
@@ -10,7 +11,6 @@ import 'utils/extension.dart';
 import 'widgets/number_pad.dart';
 import 'settings_screen.dart';
 import 'utils/enum.dart';
-import 'utils/theme.dart';
 
 class CalculatorScreen extends StatefulWidget {
   const CalculatorScreen({super.key});
@@ -59,9 +59,8 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                             darkMode = val;
                             ThemeSwitcher.of(context).changeTheme(
                                 theme: darkMode
-                                    ? Themes.blueDark
-                                    : Themes.blueLight,
-                                isReversed: !darkMode);
+                                    ? Themes.blueLight
+                                    : Themes.blueDark);
                           },
                         ),
                       ),

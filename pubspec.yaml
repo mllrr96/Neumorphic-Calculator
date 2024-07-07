@@ -15,7 +15,6 @@ dependencies:
   day_night_themed_switch: ^1.0.0
   auto_size_text_field: ^2.2.3
   animated_theme_switcher: ^2.0.10
-  flutter_bloc: ^8.1.6
   equatable: ^2.0.5
 
 dev_dependencies:
