@@ -3,6 +3,7 @@ import 'package:day_night_themed_switch/day_night_themed_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:neumorphic_calculator/custom_ink_response.dart';
 import 'package:neumorphic_calculator/extension.dart';
 import 'button.dart';
 import 'enum.dart';
@@ -24,6 +25,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
   Parser p = Parser();
 
   bool darkMode = false;
+  bool splash = false;
 
   @override
   void dispose() {
@@ -78,18 +80,24 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
+                    child: SplashContainer(
+                      splash: splash,
+                      // containedInkWell: true,
+                      splashColor: Colors.orange.withOpacity(0.5),
                       child: SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(flex: 2, child: InputWidget(controller)),
-                        Expanded(child: ResultWidget(result)),
-                      ],
+                        width: double.infinity,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 2, child: InputWidget(controller)),
+                            Expanded(child: ResultWidget(result)),
+                          ],
+                        ),
+                      ),
                     ),
-                  )),
+                  ),
                   Flexible(
                     flex: 2,
                     child: GridView.builder(
@@ -115,9 +123,11 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               if (input.canCalculate) {
                                 result = input.calculate(parser: p);
                               }
+                              HapticFeedback.mediumImpact();
                             } else {
                               switch (button) {
                                 case CalculatorButton.negative:
+                                  HapticFeedback.mediumImpact();
                                   break;
                                 case CalculatorButton.clear:
                                   if (input.isNotEmpty &&
@@ -136,15 +146,21 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                   if (input.isEmpty && result.isNotEmpty) {
                                     result = '';
                                   }
+                                  HapticFeedback.mediumImpact();
                                   break;
                                 case CalculatorButton.allClear:
+                                  if (input.isNotEmpty && result.isNotEmpty) {
+                                    setState(() => splash = !splash);
+                                  }
                                   // TODO: Add all clear animation to flush the screen
                                   controller.text = '';
                                   result = '';
+                                  HapticFeedback.heavyImpact();
                                   break;
                                 case CalculatorButton.equal:
                                   if (input.isNotEmpty) {
                                     result = input.calculate(parser: p);
+                                    HapticFeedback.heavyImpact();
                                   }
                                   break;
                                 case CalculatorButton.decimal:
@@ -159,6 +175,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                   } else {
                                     controller.addTextToOffset('.');
                                   }
+                                  HapticFeedback.mediumImpact();
                                   break;
                                 default:
                                   if ((input.endsWith('+') ||
@@ -167,6 +184,9 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                           input.endsWith('÷') ||
                                           input.isEmpty) &&
                                       controller.noSelection) {
+                                    controller.removeLastCharacter();
+                                    controller.text += button.value;
+                                    HapticFeedback.mediumImpact();
                                     return;
                                   }
 
@@ -176,7 +196,10 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                     controller.addTextToOffset(button.value);
                                   }
                                   // recalculate result if possible in case of operator change
-                                  result = input.calculate(parser: p);
+                                  if (input.canCalculate) {
+                                    result = input.calculate(parser: p);
+                                  }
+                                  HapticFeedback.mediumImpact();
                               }
                             }
                             setState(() {});

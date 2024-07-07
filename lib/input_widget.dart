@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InputWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -50,7 +51,6 @@ class _InputWidgetState extends State<InputWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: AutoSizeTextField(
         controller: widget.controller,
-        // readOnly: true,
         textInputAction: TextInputAction.none,
         textAlign: TextAlign.right,
         style:
@@ -61,8 +61,10 @@ class _InputWidgetState extends State<InputWidget> {
         cursorWidth: 4,
         showCursor: true,
         readOnly: true,
-        // cursorHeight: 150,
-        // showCursor: showCursor,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          FilteringTextInputFormatter.allow(RegExp(r"[\-,\.,\+,\x,\÷,\%]")),
+        ],
         decoration: const InputDecoration(
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
