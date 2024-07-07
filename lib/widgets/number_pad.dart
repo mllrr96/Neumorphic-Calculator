@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/widgets/button.dart';
 
-import '../calculator_icons_icons.dart';
+import '../calculator_icons.dart';
 import '../utils/enum.dart';
 
 class NumberPad extends StatelessWidget {

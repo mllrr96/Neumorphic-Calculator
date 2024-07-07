@@ -58,7 +58,9 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                           onChanged: (val) {
                             darkMode = val;
                             ThemeSwitcher.of(context).changeTheme(
-                                theme: darkMode ? Themes.dark : Themes.light,
+                                theme: darkMode
+                                    ? Themes.blueDark
+                                    : Themes.blueLight,
                                 isReversed: !darkMode);
                           },
                         ),
@@ -84,9 +86,8 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                 children: [
                   Flexible(
                     child: SplashEffect(
+                      borderRadius: BorderRadius.circular(12.0),
                       splash: splash,
-                      // containedInkWell: true,
-                      splashColor: Colors.orange.withOpacity(0.5),
                       child: SizedBox(
                         width: double.infinity,
                         child: Column(

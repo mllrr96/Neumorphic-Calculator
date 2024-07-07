@@ -15,7 +15,7 @@ class NeumorphicCalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(
-      initTheme: Themes.light,
+      initTheme: Themes.pinkLight,
       builder: (context, theme) {
         return MaterialApp(
           title: 'Flutter Demo',

@@ -94,7 +94,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 18.0),
             SplashEffect(
               splash: splash,
-              splashColor: Colors.orange.withOpacity(0.5),
               child: NeumorphicButton(
                 borderRadius: BorderRadius.circular(_buttonRadius),
                 onPressed: null,
