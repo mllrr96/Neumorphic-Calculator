@@ -14,13 +14,16 @@ dependencies:
   google_fonts: ^6.2.1
   day_night_themed_switch: ^1.0.0
   auto_size_text_field: ^2.2.3
-  animated_theme_switcher: ^2.0.10
+  animated_theme_switcher:
+    git: https://github.com/mllrr96/animated_theme_switcher.git
   equatable: ^2.0.5
+  get_it: ^7.7.0
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
   uses-material-design: true

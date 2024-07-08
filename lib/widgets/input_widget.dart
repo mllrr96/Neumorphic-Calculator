@@ -12,41 +12,14 @@ class InputWidget extends StatefulWidget {
 }
 
 class _InputWidgetState extends State<InputWidget> {
-  // late Timer timer;
   bool showCursor = true;
-  // TextEditingController controller = TextEditingController();
 
   Timer get curserTimer => Timer.periodic(const Duration(milliseconds: 500),
       (_) => setState(() => showCursor = !showCursor));
 
   @override
-  void initState() {
-    // controller.text = widget.input;
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    // if (widget.input.isEmpty) {
-    //   return Container(
-    //       padding: const EdgeInsets.symmetric(horizontal: 18.0),
-    //       alignment: Alignment.centerRight,
-    //       child: Visibility(
-    //         visible: showCursor,
-    //         child: Container(
-    //           width: 4,
-    //           color: primaryColor,
-    //           margin: const EdgeInsets.symmetric(vertical: 25.0),
-    //         ),
-    //       ));
-    // }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: AutoSizeTextField(
@@ -76,17 +49,5 @@ class _InputWidgetState extends State<InputWidget> {
         ),
       ),
     );
-    // return Container(
-    //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-    //   alignment: Alignment.centerRight,
-    //   child: AutoSizeText(
-    //     widget.input.isEmpty ? '0' : widget.input,
-    //     minFontSize: 12,
-    //     // maxFontSize: 60,
-    //     style:
-    //         TextStyle(fontSize: 150, color: Theme.of(context).iconTheme.color),
-    //     maxLines: 1,
-    //   ),
-    // );
   }
 }

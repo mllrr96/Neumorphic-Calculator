@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Themes {
-  static ThemeData blueLight = ThemeData(
+class BlueTheme {
+  static ThemeData light = ThemeData(
     scaffoldBackgroundColor: Colors.grey[300],
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
     useMaterial3: true,
@@ -15,11 +15,10 @@ class Themes {
         systemNavigationBarColor: Colors.grey[300],
       ),
     ),
-    fontFamily: GoogleFonts.cairo().fontFamily,
     textTheme: GoogleFonts.cairoTextTheme(),
   );
 
-  static ThemeData blueDark = ThemeData(
+  static ThemeData dark = ThemeData(
     colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.blue, brightness: Brightness.dark),
     useMaterial3: true,
@@ -32,10 +31,12 @@ class Themes {
         systemNavigationBarColor: const Color(0xff2E3239),
       ),
     ),
-    fontFamily: GoogleFonts.cairo().fontFamily,
     textTheme: GoogleFonts.cairoTextTheme(),
   );
-  static ThemeData pinkLight = ThemeData(
+}
+
+class PinkTheme {
+  static ThemeData light = ThemeData(
     scaffoldBackgroundColor: Colors.grey[300],
     colorScheme: ColorScheme.fromSeed(
         seedColor: const Color(0xffc04e6e), primary: const Color(0xffc04e6e)),
@@ -48,11 +49,10 @@ class Themes {
         systemNavigationBarColor: Colors.grey[300],
       ),
     ),
-    fontFamily: GoogleFonts.cairo().fontFamily,
     textTheme: GoogleFonts.cairoTextTheme(),
   );
 
-  static ThemeData pinkDark = ThemeData(
+  static ThemeData dark = ThemeData(
     colorScheme: ColorScheme.fromSeed(
         seedColor: const Color(0xffc04e6e),
         primary: const Color(0xffc04e6e),
@@ -67,7 +67,83 @@ class Themes {
         systemNavigationBarColor: const Color(0xff2E3239),
       ),
     ),
-    fontFamily: GoogleFonts.cairo().fontFamily,
     textTheme: GoogleFonts.cairoTextTheme(),
   );
+}
+
+enum ThemeType {
+  blue,
+  pink;
+
+  (ThemeData, ThemeData) get themeData {
+    switch (this) {
+      case ThemeType.blue:
+        return (BlueTheme.light, BlueTheme.dark);
+      case ThemeType.pink:
+        return (PinkTheme.light, PinkTheme.dark);
+    }
+  }
+}
+
+enum Fonts {
+  cairo,
+  roboto,
+  lato,
+  montserrat,
+  notoSans,
+  openSans,
+  poppins,
+  raleway,
+  robotoMono,
+  ubuntu,
+  workSans;
+
+  ThemeData setToTheme(ThemeData theme) {
+    switch (this) {
+      case Fonts.cairo:
+        return theme.copyWith(
+          textTheme: GoogleFonts.cairoTextTheme(),
+        );
+      case Fonts.roboto:
+        return theme.copyWith(
+          textTheme: GoogleFonts.robotoTextTheme(),
+        );
+      case Fonts.lato:
+        return theme.copyWith(
+          textTheme: GoogleFonts.latoTextTheme(),
+        );
+      case Fonts.montserrat:
+        return theme.copyWith(
+          textTheme: GoogleFonts.montserratTextTheme(),
+        );
+      case Fonts.notoSans:
+        return theme.copyWith(
+          textTheme: GoogleFonts.notoSansTextTheme(),
+        );
+      case Fonts.openSans:
+        return theme.copyWith(
+          textTheme: GoogleFonts.openSansTextTheme(),
+        );
+      case Fonts.poppins:
+        return theme.copyWith(
+          textTheme: GoogleFonts.poppinsTextTheme(),
+        );
+      case Fonts.raleway:
+        return theme.copyWith(
+          textTheme: GoogleFonts.ralewayTextTheme(),
+        );
+      case Fonts.robotoMono:
+        return theme.copyWith(
+          textTheme: GoogleFonts.robotoMonoTextTheme(),
+        );
+      case Fonts.ubuntu:
+        return theme.copyWith(
+          textTheme: GoogleFonts.ubuntuTextTheme(),
+        );
+      case Fonts.workSans:
+        return theme.copyWith(
+          textTheme: GoogleFonts.workSansTextTheme(),
+        );
+    }
+  }
 }

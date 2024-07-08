@@ -107,3 +107,7 @@ extension TextEditingContollerExtension on TextEditingController {
     } catch (_) {}
   }
 }
+
+extension StringExtension on String {
+  String get capitilize => this[0].toUpperCase() + substring(1);
+}
