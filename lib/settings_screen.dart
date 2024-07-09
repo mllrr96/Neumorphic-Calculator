@@ -2,7 +2,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
-import 'package:neumorphic_calculator/utils/extension.dart';
+import 'package:neumorphic_calculator/utils/extensions/string_extension.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
 import 'utils/enum.dart';
 import 'widgets/neumorphic_button.dart';
@@ -21,17 +21,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late SettingsModel settings;
   @override
   void initState() {
-    settings = PreferencesService.instance.settingsModel;
+    settings = preferencesService.settingsModel;
 
     super.initState();
   }
+
+  PreferencesService get preferencesService => PreferencesService.instance;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return ThemeSwitchingArea(
       child: PopScope(
-        canPop: settings == PreferencesService.instance.settingsModel,
+        canPop: settings == preferencesService.settingsModel,
         onPopInvoked: (value) {
           if (value) return;
           // show dialog
@@ -51,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        settings = PreferencesService.instance.settingsModel;
+                        settings = preferencesService.settingsModel;
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -66,21 +68,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: const Text('Settings'),
               centerTitle: true,
             ),
-            floatingActionButton:
-                settings != PreferencesService.instance.settingsModel
-                    ? FloatingActionButton.extended(
-                        onPressed: () {
-                          final result = PreferencesService
-                                  .instance.settingsModel.buttonRadius !=
-                              settings.buttonRadius;
-                          PreferencesService.instance.updateSettings(settings);
+            floatingActionButton: settings != preferencesService.settingsModel
+                ? FloatingActionButton.extended(
+                    onPressed: () {
+                      final result = PreferencesService
+                              .instance.settingsModel.buttonRadius !=
+                          settings.buttonRadius;
+                      preferencesService.updateSettings(settings);
 
-                          Navigator.pop(context, result);
-                        },
-                        icon: const Icon(Icons.save),
-                        label: const Text('Save'),
-                      )
-                    : null,
+                      Navigator.pop(context, result);
+                    },
+                    icon: const Icon(Icons.save),
+                    label: const Text('Save'),
+                  )
+                : null,
             body: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
               children: [
@@ -102,10 +103,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         : Colors.pink)),
                           );
                         }).toList(),
-                        selected: {PreferencesService.instance.themeType},
+                        selected: {preferencesService.themeType},
                         onSelectionChanged: (value) {
-                          final font =
-                              PreferencesService.instance.settingsModel.font;
+                          final font = preferencesService.settingsModel.font;
                           ThemeData lightTheme = value.first.themeData.$1;
                           ThemeData darkTheme = value.first.themeData.$2;
                           if (font != Fonts.cabin) {
@@ -116,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             lightTheme: lightTheme,
                             darkTheme: darkTheme,
                           );
-                          PreferencesService.instance.saveTheme(value.first);
+                          preferencesService.saveTheme(value.first);
                         },
                       ),
                     );
@@ -139,10 +139,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           );
                         }).toList(),
-                        selected: {PreferencesService.instance.themeMode},
+                        selected: {preferencesService.themeMode},
                         onSelectionChanged: (value) {
-                          PreferencesService.instance
-                              .saveThemeMode(value.first);
+                          preferencesService.saveThemeMode(value.first);
                           final avoidAnimation =
                               value.first == ThemeMode.system &&
                                   MediaQuery.of(context).platformBrightness ==
@@ -178,10 +177,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               title: const Text('Select Font'),
                               children: Fonts.values.map((e) {
                                 final theme = isDark
-                                    ? e.setToTheme(
-                                        PreferencesService.instance.darkTheme)
+                                    ? e.setToTheme(preferencesService.darkTheme)
                                     : e.setToTheme(
-                                        PreferencesService.instance.lightTheme);
+                                        preferencesService.lightTheme);
                                 return Theme(
                                   data: theme,
                                   child: ListTile(
@@ -198,9 +196,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           darkTheme: e.setToTheme(
                                               PreferencesService
                                                   .instance.darkTheme));
-                                      PreferencesService.instance
-                                          .updateSettings(
-                                              settings.copyWith(font: e));
+                                      preferencesService.updateSettings(
+                                          settings.copyWith(font: e));
                                       Navigator.pop(context);
                                     },
                                     title: Text(e.name.capitilize),
@@ -259,7 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         settings = settings.copyWith(hapticEnabled: val);
                       });
                     },
-                    title: const Text('Vibrate on Tap'),
+                    title: const Text('Haptic feedback'),
                   ),
                   onPressed: () {
                     // Navigator.pushNamed(context, '/theme');

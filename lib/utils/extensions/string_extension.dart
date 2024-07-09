@@ -127,60 +127,6 @@ extension CalculatorExtension on String {
   }
 }
 
-extension TextEditingContollerExtension on TextEditingController {
-  bool get noSelection =>
-      selection.base.offset == -1 || selection.base.offset == text.length;
-
-  void removeLastCharacter() {
-    try {
-      if (text.isNotEmpty && noSelection) {
-        text = text.substring(0, text.length - 1);
-      }
-    } catch (_) {}
-  }
-
-  void addTextToOffset(String value) {
-    try {
-      final offset = selection.base.offset;
-      final firstPart = text.substring(0, offset);
-      final lastPart = text.substring(offset);
-      final oldOffset = offset;
-      // To avoid adding multiple operators in a row
-      if ((firstPart.endsWith('x') ||
-              firstPart.endsWith('÷') ||
-              firstPart.endsWith('+') ||
-              firstPart.endsWith('-') ||
-              firstPart.endsWith('%')) &&
-          !value.isNumber) {
-        text = firstPart.substring(0, offset - 1) + value + lastPart;
-        selection = TextSelection.collapsed(offset: oldOffset);
-      } else if ((lastPart.startsWith('x') ||
-              lastPart.startsWith('÷') ||
-              lastPart.startsWith('+') ||
-              lastPart.startsWith('-') ||
-              lastPart.startsWith('%')) &&
-          !value.isNumber) {
-        text = firstPart + value + lastPart.substring(1);
-        selection = TextSelection.collapsed(offset: oldOffset);
-      } else {
-        text = firstPart + value + lastPart;
-        selection = TextSelection.collapsed(offset: oldOffset + 1);
-      }
-    } catch (_) {}
-  }
-
-  void removeTextAtOffset() {
-    try {
-      final offset = selection.base.offset;
-      final firstPartWithoutLastCharacter = text.substring(0, offset - 1);
-      final lastPart = text.substring(offset);
-      final oldOffset = offset;
-      text = firstPartWithoutLastCharacter + lastPart;
-      selection = TextSelection.collapsed(offset: oldOffset - 1);
-    } catch (_) {}
-  }
-}
-
 extension StringExtension on String {
   String get capitilize => this[0].toUpperCase() + substring(1);
 }
