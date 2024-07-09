@@ -1,6 +1,7 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'utils/extensions/extensions.dart';
@@ -20,6 +21,7 @@ class CalculatorScreen extends StatefulWidget {
 
 class CalculatorScreenState extends State<CalculatorScreen> {
   final TextEditingController controller = TextEditingController();
+  final NumberFormat formatter = NumberFormat();
   String get input => controller.text;
   String result = '';
   Parser parser = Parser();
@@ -29,9 +31,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
   @override
   void initState() {
     super.initState();
-    // controller.addListener((){
-    //   // NumberFormat format = NumberFormat.decimalPattern();
-    // });
   }
 
   @override
@@ -94,10 +93,11 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                       color: Theme.of(context).scaffoldBackgroundColor,
                       child: NumberPad(
                         onNumberPressed: (number) {
-                          final result = controller.onNumberPressed(number,
+                          final val = controller.onNumberPressed(number,
                               parser: parser);
-                          if (result != null) {
-                            this.result = result;
+                          if (val != null) {
+                            result = val;
+                            result = result.formatThousands(formatter);
                             setState(() {});
                           }
                           mediumHaptic();
@@ -112,6 +112,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               final val = controller.onBackspacePressed(parser);
                               if (val != null) {
                                 result = val;
+                                result = result.formatThousands(formatter);
                               }
                               mediumHaptic();
                               break;
@@ -129,6 +130,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               final val = controller.onEqualPressed(parser);
                               if (val != null) {
                                 result = val;
+                                result = result.formatThousands(formatter);
                                 heavyHaptic();
                               }
                               break;
@@ -144,6 +146,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                   parser: parser);
                               if (val != null) {
                                 result = val;
+                                result = result.formatThousands(formatter);
                               }
                               mediumHaptic();
                           }

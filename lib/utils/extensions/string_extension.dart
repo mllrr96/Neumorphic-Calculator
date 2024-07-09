@@ -64,14 +64,14 @@ extension CalculatorExtension on String {
 
     // If the number is empty or only contains an operator, return the number
     if (parts.isEmpty) return number;
-    if (parts.length == 1) return _formatThousands(parts[0], formatter);
+    if (parts.length == 1) return parts[0].formatThousands(formatter);
 
     // Remove empty parts
     parts.removeWhere((part) => part.isEmpty);
 
     // Format each part with thousands separators
     List<String> formattedParts = parts
-        .map((part) => _formatThousands(part.replaceAll(' ', ''), formatter))
+        .map((part) => part.replaceAll(' ', '').formatThousands(formatter))
         .toList();
 
     // List operators
@@ -90,8 +90,8 @@ extension CalculatorExtension on String {
     return result;
   }
 
-  String _formatThousands(String value, NumberFormat formatter) {
-    String part = value.replaceAll(',', "");
+  String formatThousands(NumberFormat formatter) {
+    String part = replaceAll(',', "");
     final isInt = !part.contains('.');
     if (isInt) {
       formatter = NumberFormat("#,###");

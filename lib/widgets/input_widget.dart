@@ -1,7 +1,7 @@
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:neumorphic_calculator/utils/extensions/string_extension.dart';
+import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 
 class InputWidget extends StatefulWidget {
   final TextEditingController controller;
