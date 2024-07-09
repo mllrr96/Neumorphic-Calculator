@@ -11,7 +11,8 @@ class ResultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeType = PreferencesService.instance.themeType;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18.0),
       alignment: Alignment.centerRight,
@@ -21,9 +22,9 @@ class ResultWidget extends StatelessWidget {
             fontSize: 80,
             color: formatError
                 ? Colors.red
-                : themeType == ThemeType.pink
+                : isDark
                     ? Theme.of(context).iconTheme.color
-                    : Theme.of(context).colorScheme.primary),
+                    : primaryColor),
         minFontSize: 20,
         maxFontSize: 80,
         maxLines: 1,

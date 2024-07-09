@@ -2,11 +2,14 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/string_extension.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
+import 'package:simple_icons/simple_icons.dart';
 import 'utils/enum.dart';
 import 'widgets/neumorphic_button.dart';
 import 'widgets/splash_effect.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -31,42 +34,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final contentTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: isDark ? Colors.white : Colors.black,
+        );
     return ThemeSwitchingArea(
       child: PopScope(
         canPop: settings == preferencesService.settingsModel,
-        onPopInvoked: (value) {
-          if (value) return;
-          // show dialog
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Discard Changes?'),
-                  content:
-                      const Text('Are you sure you want to discard changes?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        settings = preferencesService.settingsModel;
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Discard'),
-                    ),
-                  ],
-                );
-              });
-        },
+        onPopInvoked: _onPopInvoked,
         child: Scaffold(
             appBar: AppBar(
               title: const Text('Settings'),
               centerTitle: true,
+            ),
+            bottomNavigationBar: BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '@2024 Neumorphic Calculator',
+                        style: contentTextStyle?.copyWith(color: Colors.grey),
+                      ),
+                      Text(
+                        'Made with ❤️ by Mohammed Ragheb',
+                        style: contentTextStyle,
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      try {
+                        await launchUrl(Uri.parse(AppConst.githubLink));
+                      } catch (_) {}
+                    },
+                    icon: Icon(
+                      SimpleIcons.github,
+                      color: isDark ? Colors.white : SimpleIconColors.github,
+                      size: 40,
+                    ),
+                  )
+                ],
+              ),
             ),
             floatingActionButton: settings != preferencesService.settingsModel
                 ? FloatingActionButton.extended(
@@ -285,6 +296,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             )),
       ),
+    );
+  }
+
+  void _onPopInvoked(bool value) {
+    if (value) return;
+    // show dialog
+    showDialog(
+        context: context,
+        builder: (context) {
+          return DiscardDialog(onDiscard: () {
+            settings = preferencesService.settingsModel;
+          });
+        });
+  }
+}
+
+class DiscardDialog extends StatelessWidget {
+  const DiscardDialog({super.key, required this.onDiscard});
+  final void Function() onDiscard;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // When showing dialog in dark mode the text remians black, this is a workaround
+    final titleTextStyle = Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: isDark ? Colors.white : Colors.black,
+        );
+    final contentTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: isDark ? Colors.white : Colors.black,
+        );
+    return AlertDialog(
+      title: const Text('Discard Changes?'),
+      titleTextStyle: titleTextStyle,
+      contentTextStyle: contentTextStyle,
+      content: const Text('Are you sure you want to discard changes?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            onDiscard();
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          child: const Text('Discard'),
+        ),
+      ],
     );
   }
 }

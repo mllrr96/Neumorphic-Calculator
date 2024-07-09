@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 
 class NeumorphicButton extends StatefulWidget {
-  const NeumorphicButton(
-      {super.key,
-      this.onPressed,
-      this.width,
-      this.height,
-      this.duration,
-      required this.child,
-      this.borderRadius,
-      this.onLongPress,
-      this.boxShadow});
+  const NeumorphicButton({
+    super.key,
+    this.onPressed,
+    this.width,
+    this.height,
+    this.duration,
+    required this.child,
+    this.borderRadius,
+    this.onLongPress,
+    this.boxShadow,
+  });
   final void Function()? onPressed;
   final void Function()? onLongPress;
   final double? width, height;
@@ -60,16 +61,20 @@ class NeumorphicButtonState extends State<NeumorphicButton> {
               ? widget.boxShadow ??
                   [
                     BoxShadow(
-                      color: isDark ? const Color(0xff23262A) : Colors.grey,
-                      offset: const Offset(4, 4),
-                      blurRadius: 15,
-                      spreadRadius: 1,
+                      color: isDark
+                          ? const Color(0xff313D4E)
+                          : const Color(0xffEBEFFF),
+                      offset: const Offset(5, 5),
+                      blurRadius: 10,
+                      spreadRadius: 0,
                     ),
                     BoxShadow(
-                      color: isDark ? const Color(0xff35393F) : Colors.white,
-                      offset: const Offset(-4, -4),
-                      blurRadius: 15,
-                      spreadRadius: 1,
+                      color: isDark
+                          ? const Color(0xff394656)
+                          : const Color(0xffFFFFFF),
+                      offset: const Offset(-5, -5),
+                      blurRadius: 10,
+                      spreadRadius: 0,
                     ),
                   ]
               : null,

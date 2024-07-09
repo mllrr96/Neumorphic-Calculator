@@ -42,7 +42,7 @@ class _InputWidgetState extends State<InputWidget> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final themeType = PreferencesService.instance.themeType;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: AutoSizeTextField(
@@ -50,9 +50,7 @@ class _InputWidgetState extends State<InputWidget> {
         textAlign: TextAlign.right,
         style: TextStyle(
             fontSize: 90,
-            color: themeType == ThemeType.pink
-                ? primaryColor
-                : Theme.of(context).iconTheme.color),
+            color: isDark ? primaryColor : Theme.of(context).iconTheme.color),
         minFontSize: 12,
         maxFontSize: 90,
         maxLines: 1,
