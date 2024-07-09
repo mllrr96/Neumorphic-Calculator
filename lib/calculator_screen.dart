@@ -96,8 +96,8 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                           final val = controller.onNumberPressed(number,
                               parser: parser);
                           if (val != null) {
-                            result = val;
-                            result = result.formatThousands(formatter);
+                            result = val.formatThousands(formatter);
+
                             setState(() {});
                           }
                           mediumHaptic();
@@ -111,8 +111,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                             case CalculatorButton.clear:
                               final val = controller.onBackspacePressed(parser);
                               if (val != null) {
-                                result = val;
-                                result = result.formatThousands(formatter);
+                                result = val.formatThousands(formatter);
                               }
                               mediumHaptic();
                               break;
@@ -129,8 +128,8 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                             case CalculatorButton.equal:
                               final val = controller.onEqualPressed(parser);
                               if (val != null) {
-                                result = val;
-                                result = result.formatThousands(formatter);
+                                result = val.formatThousands(formatter);
+
                                 heavyHaptic();
                               }
                               break;
@@ -145,8 +144,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                   button.value,
                                   parser: parser);
                               if (val != null) {
-                                result = val;
-                                result = result.formatThousands(formatter);
+                                result = val.formatThousands(formatter);
                               }
                               mediumHaptic();
                           }

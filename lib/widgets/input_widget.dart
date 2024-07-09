@@ -1,6 +1,8 @@
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 
 class InputWidget extends StatefulWidget {
@@ -40,13 +42,17 @@ class _InputWidgetState extends State<InputWidget> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final themeType = PreferencesService.instance.themeType;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: AutoSizeTextField(
         controller: controller,
         textAlign: TextAlign.right,
-        style:
-            TextStyle(fontSize: 90, color: Theme.of(context).iconTheme.color),
+        style: TextStyle(
+            fontSize: 90,
+            color: themeType == ThemeType.pink
+                ? primaryColor
+                : Theme.of(context).iconTheme.color),
         minFontSize: 12,
         maxFontSize: 90,
         maxLines: 1,

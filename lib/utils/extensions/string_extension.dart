@@ -60,19 +60,23 @@ extension CalculatorExtension on String {
     final number = replaceAll(',', '');
 
     // Split the number by operators (+, -, *, /, %)
-    List<String> parts = number.split(RegExp(r"[+\-/%x]"));
+    List<String> parts = number.split(RegExp(r"[+\-/%x÷]"));
 
     // If the number is empty or only contains an operator, return the number
     if (parts.isEmpty) return number;
-    if (parts.length == 1) return parts[0].formatThousands(formatter);
+    if (parts.length == 1) return parts.first.formatThousands(formatter);
 
     // Remove empty parts
     parts.removeWhere((part) => part.isEmpty);
 
     // Format each part with thousands separators
     List<String> formattedParts = parts
-        .map((part) => part.replaceAll(' ', '').formatThousands(formatter))
+        .map((part) =>
+            part.removeOperators.replaceAll(' ', '').formatThousands(formatter))
         .toList();
+    if (formattedParts.length > 400) {
+      return number;
+    }
 
     // List operators
     List<String> operators =
@@ -91,7 +95,8 @@ extension CalculatorExtension on String {
   }
 
   String formatThousands(NumberFormat formatter) {
-    String part = replaceAll(',', "");
+    // Remove all operators and spaces, had an issue where ÷ was casuing infinite loop
+    String part = replaceAll(',', "").replaceAll(' ', '').removeOperators;
     final isInt = !part.contains('.');
     if (isInt) {
       formatter = NumberFormat("#,###");
@@ -124,6 +129,17 @@ extension CalculatorExtension on String {
       return formatter.format(double.tryParse(part)) +
           (shouldAddDecimal ? '.' : '');
     }
+  }
+
+  String get removeOperators {
+    return input
+        .replaceAll('÷', '')
+        .replaceAll('x', '')
+        .replaceAll('*', '')
+        .replaceAll('+', '')
+        .replaceAll('-', '')
+        .replaceAll('/', '')
+        .replaceAll('÷', '');
   }
 }
 
