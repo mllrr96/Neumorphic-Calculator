@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/extension.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
-import 'package:neumorphic_calculator/utils/theme.dart';
-import 'widgets/button.dart';
+import 'utils/enum.dart';
+import 'widgets/neumorphic_button.dart';
 import 'widgets/splash_effect.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -108,7 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               PreferencesService.instance.settingsModel.font;
                           ThemeData lightTheme = value.first.themeData.$1;
                           ThemeData darkTheme = value.first.themeData.$2;
-                          if (font != Fonts.cairo) {
+                          if (font != Fonts.cabin) {
                             lightTheme = font.setToTheme(lightTheme);
                             darkTheme = font.setToTheme(darkTheme);
                           }
@@ -204,8 +204,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       Navigator.pop(context);
                                     },
                                     title: Text(e.name.capitilize),
-                                    subtitle:
-                                        Text('This is demo text 1234567890'),
+                                    subtitle: const Text(
+                                        'This is demo text 1234567890'),
                                   ),
                                 );
                               }).toList(),

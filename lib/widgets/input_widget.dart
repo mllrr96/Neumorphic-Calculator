@@ -1,7 +1,7 @@
-import 'dart:async';
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:neumorphic_calculator/utils/extension.dart';
 
 class InputWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -12,10 +12,30 @@ class InputWidget extends StatefulWidget {
 }
 
 class _InputWidgetState extends State<InputWidget> {
-  bool showCursor = true;
+  TextEditingController get controller => widget.controller;
+  final NumberFormat formatter = NumberFormat();
 
-  Timer get curserTimer => Timer.periodic(const Duration(milliseconds: 500),
-      (_) => setState(() => showCursor = !showCursor));
+  @override
+  void initState() {
+    controller.addListener(_listener);
+    super.initState();
+  }
+
+  int _length = 0;
+
+  void _listener() {
+    if (controller.text.isEmpty ||
+        controller.text.length < 3 ||
+        _length == controller.text.length) return;
+    _length = controller.text.length;
+    controller.text = controller.text.formatExpression(formatter);
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(_listener);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +43,7 @@ class _InputWidgetState extends State<InputWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: AutoSizeTextField(
-        controller: widget.controller,
-        textInputAction: TextInputAction.none,
+        controller: controller,
         textAlign: TextAlign.right,
         style:
             TextStyle(fontSize: 90, color: Theme.of(context).iconTheme.color),
@@ -35,10 +54,6 @@ class _InputWidgetState extends State<InputWidget> {
         cursorWidth: 4,
         showCursor: true,
         readOnly: true,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-          FilteringTextInputFormatter.allow(RegExp(r"[\-,\.,\+,\x,\÷,\%]")),
-        ],
         decoration: const InputDecoration(
           border: InputBorder.none,
           focusedBorder: InputBorder.none,

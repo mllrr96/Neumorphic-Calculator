@@ -31,12 +31,27 @@ class CalculatorScreenState extends State<CalculatorScreen> {
   @override
   void initState() {
     super.initState();
+    // controller.addListener((){
+    //   // NumberFormat format = NumberFormat.decimalPattern();
+    // });
   }
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  void mediumHaptic() {
+    if (PreferencesService.instance.settingsModel.hapticEnabled) {
+      HapticFeedback.mediumImpact();
+    }
+  }
+
+  void heavyHaptic() {
+    if (PreferencesService.instance.settingsModel.hapticEnabled) {
+      HapticFeedback.heavyImpact();
+    }
   }
 
   @override
@@ -84,13 +99,16 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                       padding: const EdgeInsets.all(16),
                       onPressed: () async {
                         await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const SettingsScreen())).then((result) {
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SettingsScreen()))
+                            .then((result) async {
                           // When result is true that means button radius has been changed
                           // so we need to rebuild the widget
                           if (result == true) {
+                            await Future.delayed(
+                                const Duration(milliseconds: 300));
                             setState(() {});
                           }
                         });
@@ -137,13 +155,13 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                           if (input.canCalculate) {
                             result = input.calculate(parser: parser);
                           }
-                          HapticFeedback.mediumImpact();
+                          mediumHaptic();
                           setState(() {});
                         },
                         onOperationPressed: (button) {
                           switch (button) {
                             case CalculatorButton.negative:
-                              HapticFeedback.mediumImpact();
+                              mediumHaptic();
                               break;
                             case CalculatorButton.clear:
                               if (input.isNotEmpty && controller.noSelection) {
@@ -161,7 +179,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               if (input.isEmpty && result.isNotEmpty) {
                                 result = '';
                               }
-                              HapticFeedback.mediumImpact();
+                              mediumHaptic();
                               break;
                             case CalculatorButton.allClear:
                               if (input.isNotEmpty &&
@@ -172,7 +190,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               }
                               controller.text = '';
                               result = '';
-                              HapticFeedback.heavyImpact();
+                              heavyHaptic();
                               break;
                             case CalculatorButton.equal:
                               if (input.endsWith('x') ||
@@ -183,7 +201,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               }
                               if (input.isNotEmpty) {
                                 result = input.calculate(parser: parser);
-                                HapticFeedback.heavyImpact();
+                                heavyHaptic();
                               }
                               break;
                             case CalculatorButton.decimal:
@@ -198,7 +216,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               } else {
                                 controller.addTextToOffset('.');
                               }
-                              HapticFeedback.mediumImpact();
+                              mediumHaptic();
                               break;
                             default:
                               if ((input.endsWith('+') ||
@@ -209,7 +227,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                   controller.noSelection) {
                                 controller.removeLastCharacter();
                                 controller.text += button.value;
-                                HapticFeedback.mediumImpact();
+                                mediumHaptic();
                                 return;
                               }
 
@@ -222,7 +240,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               if (input.canCalculate) {
                                 result = input.calculate(parser: parser);
                               }
-                              HapticFeedback.mediumImpact();
+                              mediumHaptic();
                           }
                           setState(() {});
                         },

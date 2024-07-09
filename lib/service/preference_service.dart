@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:neumorphic_calculator/utils/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../main.dart';
+import '../utils/enum.dart';
 import '../utils/settings_model.dart';
 
 class PreferencesService {

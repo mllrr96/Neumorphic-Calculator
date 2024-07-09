@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import 'theme.dart';
+import 'enum.dart';
 
 class SettingsModel extends Equatable {
   final bool hapticEnabled;
@@ -18,7 +17,7 @@ class SettingsModel extends Equatable {
         hapticEnabled: true,
         splashEnabled: true,
         buttonRadius: 12.0,
-        font: Fonts.cairo);
+        font: Fonts.cabin);
   }
 
   SettingsModel copyWith(

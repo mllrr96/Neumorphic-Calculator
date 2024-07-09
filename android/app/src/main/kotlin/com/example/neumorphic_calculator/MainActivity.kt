@@ -1,4 +1,4 @@
-package com.example.neumorphic_calculator
+package com.ragheb.neumorphic_calculator
 
 import io.flutter.embedding.android.FlutterActivity
 
