@@ -11,6 +11,15 @@ An elegant and highly customizable calculator app with a beautiful neumorphic de
 - **Customizable Buttons:** Customize individual calculator buttons to your liking.
 - **Font Customization:** Don't like the default font? Change it easily in the settings.
 
+## Get the App!
+
+**Download:**
+
+Head to [Releases](https://github.com/mllrr96/Neumorphic-Calculator/releases) page and download the app
+
+**iOS:** Due to App Store restrictions, sideloading is required, checkout [Sideloadly](https://sideloadly.io/) or [AltStore](https://altstore.io/) for more info about sideloading.
+
+
 ## To-Do
 
 - **History of Calculations:** Implement a feature to display a history of previous calculations.

@@ -37,6 +37,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final contentTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: isDark ? Colors.white : Colors.black,
         );
+    final titleTextStyle = Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: isDark ? Colors.white : Colors.black,
+        );
     return ThemeSwitchingArea(
       child: PopScope(
         canPop: settings == preferencesService.settingsModel,
@@ -82,9 +85,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             floatingActionButton: settings != preferencesService.settingsModel
                 ? FloatingActionButton.extended(
                     onPressed: () {
-                      final result = PreferencesService
-                              .instance.settingsModel.buttonRadius !=
-                          settings.buttonRadius;
+                      final result =
+                          preferencesService.settingsModel.buttonRadius !=
+                              settings.buttonRadius;
                       preferencesService.updateSettings(settings);
 
                       Navigator.pop(context, result);
@@ -186,32 +189,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           return ThemeSwitcher(builder: (context) {
                             return SimpleDialog(
                               title: const Text('Select Font'),
-                              children: Fonts.values.map((e) {
+                              titleTextStyle: titleTextStyle,
+                              children: Fonts.values.map((font) {
                                 final theme = isDark
-                                    ? e.setToTheme(preferencesService.darkTheme)
-                                    : e.setToTheme(
+                                    ? font.setToTheme(
+                                        preferencesService.darkTheme)
+                                    : font.setToTheme(
                                         preferencesService.lightTheme);
                                 return Theme(
                                   data: theme,
                                   child: ListTile(
                                     onTap: () {
-                                      final settings = PreferencesService
-                                          .instance.settingsModel;
-                                      if (e == settings.font) {
+                                      final settings =
+                                          preferencesService.settingsModel;
+                                      if (font == settings.font) {
                                         return Navigator.pop(context);
                                       }
                                       context.updateTheme(
-                                          lightTheme: e.setToTheme(
-                                              PreferencesService
-                                                  .instance.lightTheme),
-                                          darkTheme: e.setToTheme(
-                                              PreferencesService
-                                                  .instance.darkTheme));
+                                          lightTheme: font.setToTheme(
+                                              preferencesService.lightTheme),
+                                          darkTheme: font.setToTheme(
+                                              preferencesService.darkTheme));
                                       preferencesService.updateSettings(
-                                          settings.copyWith(font: e));
+                                          settings.copyWith(font: font));
                                       Navigator.pop(context);
                                     },
-                                    title: Text(e.name.capitilize),
+                                    title: Text(font.name.capitilize),
                                     subtitle: const Text(
                                         'This is demo text 1234567890'),
                                   ),

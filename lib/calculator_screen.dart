@@ -71,7 +71,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                 children: [
                   Flexible(
                     child: SplashEffect(
-                      borderRadius: BorderRadius.circular(12.0),
                       splash: splash,
                       child: SizedBox(
                         width: double.infinity,
@@ -129,7 +128,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               final val = controller.onEqualPressed(parser);
                               if (val != null) {
                                 result = val.formatThousands(formatter);
-
                                 heavyHaptic();
                               }
                               break;

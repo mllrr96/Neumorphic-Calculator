@@ -7,7 +7,7 @@ class BlueTheme {
     scaffoldBackgroundColor: const Color(0xffFAFBFF),
     colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff006FF1)),
     useMaterial3: true,
-    splashColor: Colors.blue[100],
+    splashColor: const Color.fromARGB(255, 207, 88, 41),
     appBarTheme: AppBarTheme(
       backgroundColor: const Color(0xffFAFBFF),
       systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
@@ -23,7 +23,7 @@ class BlueTheme {
         seedColor: const Color(0xff006FF1), brightness: Brightness.dark),
     useMaterial3: true,
     scaffoldBackgroundColor: const Color(0xff374353),
-    splashColor: Colors.blue[100],
+    splashColor: const Color.fromARGB(255, 207, 88, 41),
     appBarTheme: AppBarTheme(
       backgroundColor: const Color(0xff374353),
       systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
@@ -40,7 +40,7 @@ class PinkTheme {
     scaffoldBackgroundColor: const Color(0xffFFF6F9),
     colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffC34568)),
     useMaterial3: true,
-    splashColor: Colors.pink[100],
+    splashColor: const Color.fromARGB(255, 207, 88, 41),
     appBarTheme: AppBarTheme(
       backgroundColor: const Color(0xffFFF6F9),
       systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
@@ -56,7 +56,7 @@ class PinkTheme {
         seedColor: const Color(0xffC34568), brightness: Brightness.dark),
     useMaterial3: true,
     scaffoldBackgroundColor: const Color(0xff374353),
-    splashColor: Colors.pink[100],
+    splashColor: const Color.fromARGB(255, 207, 88, 41),
     appBarTheme: AppBarTheme(
       backgroundColor: const Color(0xff374353),
       systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(

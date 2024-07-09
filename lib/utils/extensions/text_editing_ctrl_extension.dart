@@ -85,6 +85,9 @@ extension TextEditingContollerExtension on TextEditingController {
   }
 
   String? onEqualPressed(Parser parser) {
+    if (text.isEmpty) {
+      return null;
+    }
     if (text.endsWith('x') ||
         text.endsWith('÷') ||
         text.endsWith('+') ||
