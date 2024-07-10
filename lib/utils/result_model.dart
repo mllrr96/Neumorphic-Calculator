@@ -32,6 +32,21 @@ class ResultModel extends Equatable {
       dateTime: DateTime.now(),
     );
   }
+  factory ResultModel.fromMap(Map<String, dynamic> json) {
+    return ResultModel(
+      output: json['output'],
+      expression: json['expression'],
+      dateTime: DateTime.parse(json['dateTime']),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'output': output,
+      'expression': expression,
+      'dateTime': dateTime.toIso8601String(),
+    };
+  }
 
   @override
   List<Object?> get props => [output, expression, dateTime];

@@ -138,8 +138,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                   result = '';
                                 }
 
-                                // TODO: Save result to history
-
+                                preferencesService.saveResult(resultModel);
                                 heavyHaptic();
                               }
                               break;

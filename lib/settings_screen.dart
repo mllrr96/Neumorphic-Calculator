@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
-import 'package:neumorphic_calculator/utils/extensions/string_extension.dart';
+import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
 import 'package:simple_icons/simple_icons.dart';
 import 'utils/enum.dart';
@@ -305,19 +305,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _onPopInvoked(bool value) {
     if (value) return;
     // show dialog
-    showDialog(
-        context: context,
-        builder: (context) {
-          return DiscardDialog(onDiscard: () {
-            settings = preferencesService.settingsModel;
-          });
-        });
+    ConfirmDialog(
+        title: 'Discard Changes',
+        content: 'Are you sure you want to discard changes?',
+        confirmText: 'Discard',
+        onConfirm: () {
+          settings = preferencesService.settingsModel;
+        }).show(context);
   }
 }
 
-class DiscardDialog extends StatelessWidget {
-  const DiscardDialog({super.key, required this.onDiscard});
-  final void Function() onDiscard;
+class ConfirmDialog extends StatelessWidget {
+  const ConfirmDialog(
+      {super.key,
+      required this.onConfirm,
+      required this.title,
+      required this.content,
+      required this.confirmText});
+  final String title, content, confirmText;
+
+  final void Function() onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -331,10 +338,10 @@ class DiscardDialog extends StatelessWidget {
           color: isDark ? Colors.white : Colors.black,
         );
     return AlertDialog(
-      title: const Text('Discard Changes?'),
+      title: Text(title),
       titleTextStyle: titleTextStyle,
       contentTextStyle: contentTextStyle,
-      content: const Text('Are you sure you want to discard changes?'),
+      content: Text(content),
       actions: [
         TextButton(
           onPressed: () {
@@ -344,11 +351,10 @@ class DiscardDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            onDiscard();
-            Navigator.pop(context);
+            onConfirm();
             Navigator.pop(context);
           },
-          child: const Text('Discard'),
+          child: Text(confirmText),
         ),
       ],
     );

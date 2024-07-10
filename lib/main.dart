@@ -1,7 +1,9 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:neumorphic_calculator/history_screen.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'calculator_screen.dart';
@@ -19,8 +21,17 @@ Future<void> main() async {
   runApp(const NeumorphicCalculatorApp());
 }
 
-class NeumorphicCalculatorApp extends StatelessWidget {
+class NeumorphicCalculatorApp extends StatefulWidget {
   const NeumorphicCalculatorApp({super.key});
+
+  @override
+  State<NeumorphicCalculatorApp> createState() =>
+      _NeumorphicCalculatorAppState();
+}
+
+class _NeumorphicCalculatorAppState extends State<NeumorphicCalculatorApp> {
+  final PageController _pageController = PageController();
+  int _index = 0;
   @override
   Widget build(BuildContext context) {
     final themeMode = PreferencesService.instance.themeMode;
@@ -39,9 +50,46 @@ class NeumorphicCalculatorApp extends StatelessWidget {
           themeMode: theme.themeMode,
           theme: theme.lightTheme,
           darkTheme: theme.darkTheme,
-          home: const CalculatorScreen(),
+          home: PopScope(
+            canPop: _index == 0,
+            onPopInvoked: (val) {
+              if (val) return;
+              _pageController.animateToPage(0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeIn);
+            },
+            child: PageView(
+              onPageChanged: (index) => setState(() => _index = index),
+              controller: _pageController,
+              dragStartBehavior: DragStartBehavior.down,
+              children: const [
+                KeepAliveWidget(child: CalculatorScreen()),
+                HistoryScreen()
+              ],
+            ),
+          ),
         );
       },
     );
   }
+}
+
+class KeepAliveWidget extends StatefulWidget {
+  const KeepAliveWidget({super.key, required this.child});
+  final Widget child;
+
+  @override
+  State<KeepAliveWidget> createState() => _KeepAliveWidgetState();
+}
+
+class _KeepAliveWidgetState extends State<KeepAliveWidget>
+    with AutomaticKeepAliveClientMixin<KeepAliveWidget> {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
