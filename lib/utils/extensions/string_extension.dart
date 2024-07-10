@@ -10,11 +10,7 @@ extension CalculatorExtension on String {
     String finalInput = input;
     finalInput = finalInput.replaceAll('x', '*');
     finalInput = finalInput.replaceAll('÷', '/');
-    if (finalInput.endsWith('%')) {
-      finalInput = finalInput.replaceAll('%', '/100');
-    } else {
-      finalInput = finalInput.replaceAll('%', '/100*');
-    }
+    finalInput = finalInput.replaceAll('%', '/100');
     finalInput = finalInput.replaceAll(',', '');
     bool hasDouble = finalInput.contains('.');
     try {
@@ -26,7 +22,6 @@ extension CalculatorExtension on String {
       } else {
         return eval.toString();
       }
-      // result = eval.toString();
     } catch (e) {
       if (skipErrorChecking) {
         return '';
@@ -36,7 +31,8 @@ extension CalculatorExtension on String {
     }
   }
 
-  bool get isNumber => double.tryParse(input) != null;
+  bool get isNumber =>
+      double.tryParse(input) != null || int.tryParse(input) != null;
 
   bool get canCalculate {
     if (input.isEmpty ||
@@ -56,90 +52,79 @@ extension CalculatorExtension on String {
   }
 
   String formatExpression(NumberFormat formatter) {
-    // Remove all commas
-    final number = replaceAll(',', '');
-
-    // Split the number by operators (+, -, *, /, %)
-    List<String> parts = number.split(RegExp(r"[+\-/%x÷]"));
-
-    // If the number is empty or only contains an operator, return the number
-    if (parts.isEmpty) return number;
-    if (parts.length == 1) return parts.first.formatThousands(formatter);
-
-    // Remove empty parts
-    parts.removeWhere((part) => part.isEmpty);
-
-    // Format each part with thousands separators
-    List<String> formattedParts = parts
-        .map((part) =>
-            part.removeOperators.replaceAll(' ', '').formatThousands(formatter))
-        .toList();
-    if (formattedParts.length > 400) {
-      return number;
-    }
-
-    // List operators
-    List<String> operators =
-        number.replaceAll('.', '').replaceAll(RegExp(r"[0-9]+"), "").split('');
-
-    // Rebuild the number with operators
-    String result = '';
-    for (int i = 0; i < formattedParts.length; i++) {
-      result += formattedParts[i];
-      if (i < operators.length) {
-        result += operators[i];
-      }
-    }
-
-    return result;
+    String expression = replaceAll(',', '');
+    String parts = expression.splitMapJoin(
+      RegExp(r"[+\-x÷%]"),
+      onMatch: (m) => m.group(0)!,
+      onNonMatch: (n) {
+        return n.replaceAll(' ', '').formatThousands(formatter);
+      },
+    );
+    return parts;
   }
 
   String formatThousands(NumberFormat formatter) {
-    // Remove all operators and spaces, had an issue where ÷ was casuing infinite loop
-    String part = replaceAll(',', "").replaceAll(' ', '').removeOperators;
-    final isInt = !part.contains('.');
+    String number = this;
+    if (number.replaceAll(' ', '').isEmpty) return number;
+
+    if (!number.isNumber) {
+      return number;
+    }
+
+    final isInt = !number.contains('.');
     if (isInt) {
       formatter = NumberFormat("#,###");
-      final partAsInt = int.tryParse(part);
+      final partAsInt = int.tryParse(number);
       if (partAsInt == null) {
-        return part;
+        return number;
       }
-      return formatter.format(int.tryParse(part));
+      String formattedString = formatter.format(int.tryParse(number));
+
+      return formattedString;
     } else {
       bool shouldAddDecimal;
-      if (part.characters.last == '.') {
+      if (number.characters.last == '.') {
         shouldAddDecimal = true;
       } else {
         shouldAddDecimal = false;
       }
       // Remove trailing decimal point if there is more than one decimal point
-      if (part.endsWith('.') &&
-          part.substring(0, part.length - 1).contains('.')) {
+      if (number.endsWith('.') &&
+          number.substring(0, number.length - 1).contains('.')) {
         shouldAddDecimal = false;
-        part = part.substring(0, part.length - 1);
+        number = number.substring(0, number.length - 1);
       }
       final numOfDecimalPlaces =
-          part.split('.').last == '0' ? 1 : part.split('.').last.length;
+          number.split('.').last == '0' ? 1 : number.split('.').last.length;
       formatter =
           NumberFormat.decimalPatternDigits(decimalDigits: numOfDecimalPlaces);
-      final partAsDouble = double.tryParse(part);
+      final partAsDouble = double.tryParse(number);
       if (partAsDouble == null) {
-        return part;
+        return number;
       }
-      return formatter.format(double.tryParse(part)) +
+      String formattedString = formatter.format(double.tryParse(number)) +
           (shouldAddDecimal ? '.' : '');
+
+      return formattedString;
     }
   }
 
-  String get removeOperators {
-    return input
-        .replaceAll('÷', '')
-        .replaceAll('x', '')
-        .replaceAll('*', '')
-        .replaceAll('+', '')
-        .replaceAll('-', '')
-        .replaceAll('/', '')
-        .replaceAll('÷', '');
+  bool endsWithAny(List<String> suffixes) {
+    for (final suffix in suffixes) {
+      if (input.endsWith(suffix)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool startsWithAny(List<String> prefixes) {
+    for (final prefix in prefixes) {
+      if (input.startsWith(prefix)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 

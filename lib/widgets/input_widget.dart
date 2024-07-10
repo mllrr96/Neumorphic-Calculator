@@ -1,8 +1,6 @@
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
-import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 
 class InputWidget extends StatefulWidget {
@@ -30,6 +28,7 @@ class _InputWidgetState extends State<InputWidget> {
         controller.text.length < 3 ||
         _length == controller.text.length) return;
     _length = controller.text.length;
+    if (controller.text.endsWithAny(['x', '÷', '+', '-', '%', '.'])) return;
     controller.text = controller.text.formatExpression(formatter);
   }
 

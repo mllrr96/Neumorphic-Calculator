@@ -96,7 +96,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               parser: parser);
                           if (val != null) {
                             result = val.formatThousands(formatter);
-
                             setState(() {});
                           }
                           mediumHaptic();
@@ -128,6 +127,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               final val = controller.onEqualPressed(parser);
                               if (val != null) {
                                 result = val.formatThousands(formatter);
+
                                 heavyHaptic();
                               }
                               break;

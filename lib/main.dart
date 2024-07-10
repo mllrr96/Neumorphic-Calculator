@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/utils/const.dart';
 import 'calculator_screen.dart';
 
 final getIt = GetIt.instance;
@@ -34,7 +35,7 @@ class NeumorphicCalculatorApp extends StatelessWidget {
       builder: (context, theme) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Neumorphic Calculator',
+          title: AppConst.appName,
           themeMode: theme.themeMode,
           theme: theme.lightTheme,
           darkTheme: theme.darkTheme,

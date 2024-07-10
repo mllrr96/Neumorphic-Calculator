@@ -21,19 +21,10 @@ extension TextEditingContollerExtension on TextEditingController {
       final lastPart = text.substring(offset);
       final oldOffset = offset;
       // To avoid adding multiple operators in a row
-      if ((firstPart.endsWith('x') ||
-              firstPart.endsWith('÷') ||
-              firstPart.endsWith('+') ||
-              firstPart.endsWith('-') ||
-              firstPart.endsWith('%')) &&
-          !value.isNumber) {
+      if (firstPart.endsWithAny(['x', '÷', '+', '-', '%']) && !value.isNumber) {
         text = firstPart.substring(0, offset - 1) + value + lastPart;
         selection = TextSelection.collapsed(offset: oldOffset);
-      } else if ((lastPart.startsWith('x') ||
-              lastPart.startsWith('÷') ||
-              lastPart.startsWith('+') ||
-              lastPart.startsWith('-') ||
-              lastPart.startsWith('%')) &&
+      } else if (lastPart.startsWithAny(['x', '÷', '+', '-', '%']) &&
           !value.isNumber) {
         text = firstPart + value + lastPart.substring(1);
         selection = TextSelection.collapsed(offset: oldOffset);
@@ -88,10 +79,7 @@ extension TextEditingContollerExtension on TextEditingController {
     if (text.isEmpty) {
       return null;
     }
-    if (text.endsWith('x') ||
-        text.endsWith('÷') ||
-        text.endsWith('+') ||
-        text.endsWith('-')) {
+    if (text.endsWithAny(['x', '÷', '+', '-'])) {
       return null;
     }
     return text.calculate(parser: parser);
@@ -111,22 +99,42 @@ extension TextEditingContollerExtension on TextEditingController {
   }
 
   String? onOperationPressed(String operator, {Parser? parser}) {
-    if ((text.endsWith('+') ||
-            text.endsWith('-') ||
-            text.endsWith('x') ||
-            text.endsWith('÷') ||
-            text.isEmpty) &&
-        noSelection) {
-      removeLastCharacter();
-      text += operator;
-    } else if (text.isEmpty || noSelection) {
-      text += operator;
-    } else {
-      addTextToOffset(operator);
+    try {
+      // If no selection the user is typing a new expression
+      if (noSelection) {
+        // Do not allow adding oeprators in the beginning unless it's (-)
+        if (text.isEmpty) {
+          if (operator == '-') {
+            text += operator;
+          }
+          return null;
+        }
+
+        // allow adding negative numbers after operation symbols
+        if (operator == '-' && text.endsWithAny(['x', '÷', '+'])) {
+          text += operator;
+        } else
+        // If the user tries to add an operator after another operator, replace the last operator with the new one
+        if (text.endsWithAny(['x', '÷', '+', '-'])) {
+          if (text.length != 1 && text != '-') {
+            removeLastCharacter();
+            text += operator;
+          }
+        }
+        // If the user tries to add an operator after a number, add the operator
+        else {
+          text += operator;
+        }
+      } else {
+        // Need to handle updating negative numbers
+        addTextToOffset(operator);
+      }
+      if (text.canCalculate) {
+        return text.calculate(parser: parser);
+      }
+      return null;
+    } catch (_) {
+      return "Error";
     }
-    if (text.canCalculate) {
-      return text.calculate(parser: parser);
-    }
-    return null;
   }
 }
