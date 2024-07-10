@@ -1,117 +1,134 @@
 import 'package:flutter/material.dart';
+import 'package:fraction/fraction.dart';
 import 'package:intl/intl.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:neumorphic_calculator/utils/result_model.dart';
 
 extension CalculatorExtension on String {
   String get input => this;
 
-  String calculate({bool skipErrorChecking = false, Parser? parser}) {
+  ResultModel calculate({bool skipErrorChecking = false, Parser? parser}) {
     Parser p = parser ?? Parser();
-    String finalInput = input;
-    finalInput = finalInput.replaceAll('x', '*');
-    finalInput = finalInput.replaceAll('÷', '/');
-    finalInput = finalInput.replaceAll('%', '/100');
-    finalInput = finalInput.replaceAll(',', '');
+    String finalInput = _replaceOperationSymbols.removeCommas;
     bool hasDouble = finalInput.contains('.');
     try {
       Expression exp = p.parse(finalInput);
       ContextModel ctxModel = ContextModel();
       double eval = exp.evaluate(EvaluationType.REAL, ctxModel);
       if (eval % 1 == 0 && !hasDouble) {
-        return eval.toInt().toString();
+        return ResultModel(
+            output: eval.toInt().toString(),
+            expression: this,
+            dateTime: DateTime.now());
       } else {
-        return eval.toString();
+        return ResultModel(
+            output: eval.toString(),
+            expression: this,
+            dateTime: DateTime.now());
       }
     } catch (e) {
       if (skipErrorChecking) {
-        return '';
+        return ResultModel.empty();
       } else {
-        return 'Format Error';
+        return ResultModel.formatError();
       }
     }
   }
 
   bool get isNumber =>
       double.tryParse(input) != null || int.tryParse(input) != null;
+  bool get isDouble => double.tryParse(input) != null;
+  bool get isInt => int.tryParse(input) != null;
+
+  String get toFraction {
+    if (!isDouble) return input;
+    double number = double.tryParse(input.removeCommas)!;
+    MixedFraction fraction = MixedFraction.fromDouble(number);
+    return fraction.toString();
+  }
 
   bool get canCalculate {
-    if (input.isEmpty ||
-        (!input.contains('x') &&
-            !input.contains('÷') &&
-            !input.contains('+') &&
-            !input.contains('-'))) {
+    if (input.isEmpty || !input.containsAny(['x', '÷', '+', '-'])) {
       return false;
     }
-    if (input.endsWith('x') ||
-        input.endsWith('÷') ||
-        input.endsWith('+') ||
-        input.endsWith('-')) {
+    if (input.endsWithAny(['x', '÷', '+', '-'])) {
       return false;
     }
     return true;
   }
 
-  String formatExpression(NumberFormat formatter) {
-    String expression = replaceAll(',', '');
+  String formatExpression() {
+    String expression = removeSpaces;
     String parts = expression.splitMapJoin(
       RegExp(r"[+\-x÷%]"),
-      onMatch: (m) => m.group(0)!,
+      onMatch: (m) => '${m.group(0)}',
       onNonMatch: (n) {
-        return n.replaceAll(' ', '').formatThousands(formatter);
+        if (n.isEmpty) return '';
+        return n.formatThousands();
       },
     );
     return parts;
   }
 
-  String formatThousands(NumberFormat formatter) {
-    String number = this;
-    if (number.replaceAll(' ', '').isEmpty) return number;
+  String formatThousands() {
+    try {
+      String number = input.removeCommas;
+      if (number.removeSpaces.isEmpty) return number;
 
-    if (!number.isNumber) {
-      return number;
-    }
-
-    final isInt = !number.contains('.');
-    if (isInt) {
-      formatter = NumberFormat("#,###");
-      final partAsInt = int.tryParse(number);
-      if (partAsInt == null) {
-        return number;
+      if (!number.isNumber) {
+        throw Exception('Not a number to format $number');
       }
-      String formattedString = formatter.format(int.tryParse(number));
 
-      return formattedString;
-    } else {
-      bool shouldAddDecimal;
-      if (number.characters.last == '.') {
-        shouldAddDecimal = true;
+      final isInt = !number.contains('.');
+      String formattedString;
+      if (isInt) {
+        NumberFormat formatter = NumberFormat("#,###");
+        formattedString = formatter.format(int.tryParse(number));
       } else {
-        shouldAddDecimal = false;
+        formattedString = number._formatDouble;
       }
-      // Remove trailing decimal point if there is more than one decimal point
-      if (number.endsWith('.') &&
-          number.substring(0, number.length - 1).contains('.')) {
-        shouldAddDecimal = false;
-        number = number.substring(0, number.length - 1);
-      }
-      final numOfDecimalPlaces =
-          number.split('.').last == '0' ? 1 : number.split('.').last.length;
-      formatter =
-          NumberFormat.decimalPatternDigits(decimalDigits: numOfDecimalPlaces);
-      final partAsDouble = double.tryParse(number);
-      if (partAsDouble == null) {
-        return number;
-      }
-      String formattedString = formatter.format(double.tryParse(number)) +
-          (shouldAddDecimal ? '.' : '');
-
       return formattedString;
+    } catch (_) {
+      return this;
     }
   }
 
+  String get _replaceOperationSymbols {
+    String finalInput = input;
+    finalInput = finalInput.replaceAll('x', '*');
+    finalInput = finalInput.replaceAll('÷', '÷');
+    finalInput = finalInput.replaceAll('%', '%');
+    finalInput = finalInput.replaceAll('%', '/100');
+    return finalInput;
+  }
+
+  String get _formatDouble {
+    String number = this;
+    bool shouldAddDecimal = number.characters.last == '.';
+
+    // Remove trailing decimal point if there is more than one decimal point
+    if (number.endsWith('.') &&
+        number.substring(0, number.length - 1).contains('.')) {
+      shouldAddDecimal = false;
+      number = number.substring(0, number.length - 1);
+    }
+    final numOfDecimalPlaces =
+        number.split('.').last == '0' ? 1 : number.split('.').last.length;
+    NumberFormat formatter =
+        NumberFormat.decimalPatternDigits(decimalDigits: numOfDecimalPlaces);
+    return formatter.format(double.tryParse(number)) +
+        (shouldAddDecimal ? '.' : '');
+  }
+}
+
+extension StringExtension on String {
+  String get capitilize => this[0].toUpperCase() + substring(1);
+
+  String get removeSpaces => replaceAll(' ', '');
+
   bool endsWithAny(List<String> suffixes) {
     for (final suffix in suffixes) {
-      if (input.endsWith(suffix)) {
+      if (endsWith(suffix)) {
         return true;
       }
     }
@@ -120,14 +137,21 @@ extension CalculatorExtension on String {
 
   bool startsWithAny(List<String> prefixes) {
     for (final prefix in prefixes) {
-      if (input.startsWith(prefix)) {
+      if (startsWith(prefix)) {
         return true;
       }
     }
     return false;
   }
-}
 
-extension StringExtension on String {
-  String get capitilize => this[0].toUpperCase() + substring(1);
+  bool containsAny(List<String> substrings) {
+    for (final substring in substrings) {
+      if (contains(substring)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  String get removeCommas => input.replaceAll(',', '');
 }

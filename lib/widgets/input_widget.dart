@@ -1,6 +1,5 @@
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 
 class InputWidget extends StatefulWidget {
@@ -13,7 +12,6 @@ class InputWidget extends StatefulWidget {
 
 class _InputWidgetState extends State<InputWidget> {
   TextEditingController get controller => widget.controller;
-  final NumberFormat formatter = NumberFormat();
 
   @override
   void initState() {
@@ -29,7 +27,7 @@ class _InputWidgetState extends State<InputWidget> {
         _length == controller.text.length) return;
     _length = controller.text.length;
     if (controller.text.endsWithAny(['x', '÷', '+', '-', '%', '.'])) return;
-    controller.text = controller.text.formatExpression(formatter);
+    controller.text = controller.text.formatExpression();
   }
 
   @override

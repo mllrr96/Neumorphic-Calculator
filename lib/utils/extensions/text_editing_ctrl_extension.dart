@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:neumorphic_calculator/utils/result_model.dart';
 import 'string_extension.dart';
 
 extension TextEditingContollerExtension on TextEditingController {
@@ -46,7 +47,7 @@ extension TextEditingContollerExtension on TextEditingController {
     } catch (_) {}
   }
 
-  String? onNumberPressed(String number, {Parser? parser}) {
+  ResultModel? onNumberPressed(String number, {Parser? parser}) {
     if (noSelection) {
       text += number;
     } else {
@@ -58,16 +59,16 @@ extension TextEditingContollerExtension on TextEditingController {
     return null;
   }
 
-  String? onBackspacePressed(Parser parser) {
+  ResultModel? onBackspacePressed(Parser parser) {
     if (text.isNotEmpty && noSelection) {
       removeLastCharacter();
       if (text.isEmpty) {
-        return '';
+        return ResultModel.empty();
       }
       if (text.canCalculate) {
         return text.calculate(parser: parser, skipErrorChecking: true);
       } else {
-        return '';
+        return ResultModel.empty();
       }
     } else {
       removeTextAtOffset();
@@ -75,7 +76,7 @@ extension TextEditingContollerExtension on TextEditingController {
     return null;
   }
 
-  String? onEqualPressed(Parser parser) {
+  ResultModel? onEqualPressed(Parser parser) {
     if (text.isEmpty) {
       return null;
     }
@@ -98,7 +99,7 @@ extension TextEditingContollerExtension on TextEditingController {
     return true;
   }
 
-  String? onOperationPressed(String operator, {Parser? parser}) {
+  ResultModel? onOperationPressed(String operator, {Parser? parser}) {
     try {
       // If no selection the user is typing a new expression
       if (noSelection) {
@@ -134,7 +135,7 @@ extension TextEditingContollerExtension on TextEditingController {
       }
       return null;
     } catch (_) {
-      return "Error";
+      return ResultModel.error('Internal Error');
     }
   }
 }
