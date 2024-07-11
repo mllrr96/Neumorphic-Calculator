@@ -137,8 +137,10 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                 } else {
                                   result = '';
                                 }
-
-                                preferencesService.saveResult(resultModel);
+                                if (resultModel.output != 'Format Error' ||
+                                    resultModel.output != 'Error') {
+                                  preferencesService.saveResult(resultModel);
+                                }
                                 heavyHaptic();
                               }
                               break;

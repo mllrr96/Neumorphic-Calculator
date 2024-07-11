@@ -4,6 +4,29 @@ An elegant and highly customizable calculator app with a beautiful neumorphic de
 
 ![Calculator Screenshot](https://cdn.dribbble.com/users/2986824/screenshots/14757121/media/7754c4eac87d79773937886400d0d95d.png)
 
+## Screenshots
+<div style="text-align: center">
+    <table>
+        <tr>
+            <td style="text-align: center">
+                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/1.png" width="220"/>
+            </td>            
+            <td style="text-align: center">
+                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/2.png" width="220"/>
+            </td>      
+        </tr>
+        <tr>
+            <td style="text-align: center">
+                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/3.png" width="220"/>
+            </td>               
+            <td style="text-align: center">
+                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/4.png" width="220"/>
+            </td>      
+        </tr>
+    </table>
+</div>
+
+
 ## Features
 
 - **Supports Dark Mode:** Seamlessly switch between light and dark themes.
@@ -20,11 +43,7 @@ Head to [Releases](https://github.com/mllrr96/Neumorphic-Calculator/releases) pa
 **iOS:** Due to App Store restrictions, sideloading is required, checkout [Sideloadly](https://sideloadly.io/) or [AltStore](https://altstore.io/) for more info about sideloading.
 
 
-## To-Do
 
-- **History of Calculations:** Implement a feature to display a history of previous calculations.
-
-## Screenshots
 
 
 ## Getting Started

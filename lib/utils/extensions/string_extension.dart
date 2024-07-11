@@ -95,10 +95,10 @@ extension CalculatorExtension on String {
 
   String get _replaceOperationSymbols {
     String finalInput = input;
-    finalInput = finalInput.replaceAll('x', '*');
-    finalInput = finalInput.replaceAll('÷', '÷');
-    finalInput = finalInput.replaceAll('%', '%');
-    finalInput = finalInput.replaceAll('%', '/100');
+    finalInput = finalInput
+        .replaceAll('x', '*')
+        .replaceAll('÷', '/')
+        .replaceAll('%', '/100');
     return finalInput;
   }
 

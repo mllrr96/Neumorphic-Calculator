@@ -37,13 +37,17 @@ class _HistoryScreenState extends State<HistoryScreen>
     final results = PreferencesService.instance.results;
     final prefs = PreferencesService.instance;
     final showTip = prefs.settingsModel.showHistoryTip;
+    final textStyle = Theme.of(context)
+        .textTheme
+        .bodyLarge
+        ?.copyWith(color: Theme.of(context).colorScheme.onSurface);
     return AnimatedBuilder(
         animation: _controller,
         builder: (context, _) {
           return Scaffold(
             appBar: AppBar(
               title: const Text('History'),
-              bottom: showTip
+              bottom: showTip && results.isNotEmpty
                   ? PreferredSize(
                       preferredSize: Size.fromHeight(_animation.value),
                       child: SizedBox(
@@ -87,29 +91,35 @@ class _HistoryScreenState extends State<HistoryScreen>
                             confirmText: 'Clear',
                             onConfirm: () {
                               PreferencesService.instance.clearResults();
+                              setState(() {});
                             }).show(context);
                       }),
               ],
             ),
-            body: ListView.builder(
-              itemCount: results.length,
-              itemBuilder: (context, index) {
-                final result = results[index];
-                return ListTile(
-                  title: Text(result.expression),
-                  subtitle: Text(result.output),
-                  trailing: Text(result.dateTime.timeAgo),
-                  onTap: () {
-                    // TODO: Copy the expression and result to the main screen
-                  },
-                  onLongPress: () async {
-                    // copy the result to the clipboard
-                    await Clipboard.setData(ClipboardData(text: result.output));
-                    HapticFeedback.heavyImpact();
-                  },
-                );
-              },
-            ),
+            body: results.isEmpty
+                ? Center(
+                    child: Text('Expression history = 0', style: textStyle),
+                  )
+                : ListView.builder(
+                    itemCount: results.length,
+                    itemBuilder: (context, index) {
+                      final result = results[index];
+                      return ListTile(
+                        title: Text(result.expression),
+                        subtitle: Text(result.output),
+                        trailing: Text(result.dateTime.timeAgo),
+                        onTap: () {
+                          // TODO: Copy the expression and result to the main screen
+                        },
+                        onLongPress: () async {
+                          // copy the result to the clipboard
+                          await Clipboard.setData(
+                              ClipboardData(text: result.output));
+                          HapticFeedback.heavyImpact();
+                        },
+                      );
+                    },
+                  ),
           );
         });
   }
