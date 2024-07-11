@@ -13,14 +13,20 @@ An elegant and highly customizable calculator app with a beautiful neumorphic de
             </td>            
             <td style="text-align: center">
                 <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/2.png" width="220"/>
+            </td>   
+            <td style="text-align: center">
+                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/3.png" width="220"/>
             </td>      
         </tr>
         <tr>
             <td style="text-align: center">
-                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/3.png" width="220"/>
+                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/4.png" width="220"/>
             </td>               
             <td style="text-align: center">
-                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/4.png" width="220"/>
+                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/5.png" width="220"/>
+            </td>  
+            <td style="text-align: center">
+                <img src="https://github.com/mllrr96/Neumorphic-Calculator/blob/main/screenshots/6.png" width="220"/>
             </td>      
         </tr>
     </table>
@@ -29,10 +35,11 @@ An elegant and highly customizable calculator app with a beautiful neumorphic de
 
 ## Features
 
-- **Supports Dark Mode:** Seamlessly switch between light and dark themes.
-- **Multiple Themes:** Choose from a variety of themes to personalize your calculator.
-- **Customizable Buttons:** Customize individual calculator buttons to your liking.
-- **Font Customization:** Don't like the default font? Change it easily in the settings.
+* **Supports Dark Mode:** Seamlessly switch between light and dark themes for optimal viewing comfort.
+* **Multiple Themes:** Choose from a variety of themes to personalize your calculator and match your style.
+* **Customizable Buttons:** Tailor individual calculator buttons to your preference for a truly unique experience.
+* **Font Customization:** Don't like the default font? Change it easily in the settings to match your taste.
+* **Enhanced Calculation History:**  **Recall your Calculations with Ease:** Keep track of your calculations with a comprehensive and easily accessible history.
 
 ## Get the App!
 
