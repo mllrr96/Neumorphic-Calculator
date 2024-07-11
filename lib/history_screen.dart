@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
+import 'package:neumorphic_calculator/widgets/confirm_dialog.dart';
+
 import 'service/preference_service.dart';
-import 'settings_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
