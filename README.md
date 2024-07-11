@@ -53,9 +53,7 @@ Head to [Releases](https://github.com/mllrr96/Neumorphic-Calculator/releases) pa
 
 
 
-## Getting Started
-
-To get started with the Neumorphic Calculator app, follow these steps:
+## Build it yourself
 
 1. Clone the repository:
 
