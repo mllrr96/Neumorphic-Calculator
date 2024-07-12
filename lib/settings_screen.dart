@@ -1,15 +1,19 @@
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:simple_icons/simple_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
-import 'package:simple_icons/simple_icons.dart';
+import 'package:neumorphic_calculator/widgets/confirm_dialog.dart';
+
 import 'utils/enum.dart';
 import 'widgets/neumorphic_button.dart';
 import 'widgets/splash_effect.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -311,52 +315,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         confirmText: 'Discard',
         onConfirm: () {
           settings = preferencesService.settingsModel;
+          Navigator.pop(context);
         }).show(context);
-  }
-}
-
-class ConfirmDialog extends StatelessWidget {
-  const ConfirmDialog(
-      {super.key,
-      required this.onConfirm,
-      required this.title,
-      required this.content,
-      required this.confirmText});
-  final String title, content, confirmText;
-
-  final void Function() onConfirm;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // When showing dialog in dark mode the text remians black, this is a workaround
-    final titleTextStyle = Theme.of(context).textTheme.headlineSmall?.copyWith(
-          color: isDark ? Colors.white : Colors.black,
-        );
-    final contentTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: isDark ? Colors.white : Colors.black,
-        );
-    return AlertDialog(
-      title: Text(title),
-      titleTextStyle: titleTextStyle,
-      contentTextStyle: contentTextStyle,
-      content: Text(content),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            onConfirm();
-            Navigator.pop(context);
-          },
-          child: Text(confirmText),
-        ),
-      ],
-    );
   }
 }
