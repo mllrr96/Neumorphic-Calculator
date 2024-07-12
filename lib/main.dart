@@ -1,9 +1,10 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:neumorphic_calculator/bloc/calculator_bloc.dart';
 import 'package:neumorphic_calculator/history_screen.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
@@ -19,7 +20,10 @@ Future<void> main() async {
   );
   await getIt.allReady(timeout: const Duration(seconds: 10));
 
-  runApp(const NeumorphicCalculatorApp());
+  runApp(BlocProvider(
+    create: (context) => CalculatorBloc(),
+    child: const NeumorphicCalculatorApp(),
+  ));
 }
 
 class NeumorphicCalculatorApp extends StatefulWidget {

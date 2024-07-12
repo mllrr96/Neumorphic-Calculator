@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:neumorphic_calculator/bloc/calculator_bloc.dart';
 
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/widgets/confirm_dialog.dart';
@@ -111,7 +113,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                         subtitle: Text(result.output),
                         trailing: Text(result.dateTime.timeAgo),
                         onTap: () {
-                          // TODO: Copy the expression and result to the main screen
+                          context
+                              .read<CalculatorBloc>()
+                              .add(LoadHistory(result));
+                          // TODO: Navigate back to calculator screen using page controller
                         },
                         onLongPress: () async {
                           // copy the result to the clipboard

@@ -102,6 +102,43 @@ extension CalculatorExtension on String {
     return finalInput;
   }
 
+  (String, int) insertText(String value, int offset) {
+    try {
+      final firstPart = input.substring(0, offset);
+      final lastPart = input.substring(offset);
+      final oldOffset = offset;
+      // To avoid adding multiple operators in a row
+      if (firstPart.endsWithAny(['x', '÷', '+', '-', '%']) && !value.isNumber) {
+        return (
+          firstPart.substring(0, offset - 1) + value + lastPart,
+          oldOffset
+        );
+      } else if (lastPart.startsWithAny(['x', '÷', '+', '-', '%']) &&
+          !value.isNumber) {
+        return (firstPart + value + lastPart.substring(1), oldOffset);
+      } else {
+        return (firstPart + value + lastPart, oldOffset + 1);
+      }
+    } catch (_) {
+      return (input, offset);
+    }
+  }
+
+  String get removeLastChar => input.substring(0, input.length - 1);
+
+  (String, int) removeCharAt(int offset) {
+    try {
+      final firstPartWithoutLastCharacter = input.substring(0, offset - 1);
+      final lastPart = input.substring(offset);
+      final oldOffset = offset;
+      final updatedText = firstPartWithoutLastCharacter + lastPart;
+      final updatedOffset = oldOffset - 1;
+      return (updatedText, updatedOffset);
+    } catch (_) {
+      return (input, offset);
+    }
+  }
+
   String get _formatDouble {
     String number = this;
     bool shouldAddDecimal = number.characters.last == '.';

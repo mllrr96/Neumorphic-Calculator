@@ -1,8 +1,11 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/utils/result_model.dart';
+import 'bloc/calculator_bloc.dart';
 import 'utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/widgets/calculator_app_bar.dart';
 import 'widgets/input_widget.dart';
@@ -21,7 +24,7 @@ class CalculatorScreen extends StatefulWidget {
 class CalculatorScreenState extends State<CalculatorScreen> {
   final TextEditingController controller = TextEditingController();
   String get input => controller.text;
-  String result = '';
+  // String result = '';
   Parser parser = Parser();
 
   bool splash = false;
@@ -54,122 +57,135 @@ class CalculatorScreenState extends State<CalculatorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ThemeSwitchingArea(
-      child: Builder(builder: (context) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: Theme.of(context).appBarTheme.systemOverlayStyle ??
-              SystemUiOverlayStyle.light,
-          child: Scaffold(
-            appBar: CalculatorAppBar(
-              onButtonSizeChanged: () => setState(() {}),
-            ),
-            body: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: SplashEffect(
-                      splash: splash,
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 2, child: InputWidget(controller)),
-                            Expanded(child: ResultWidget(result)),
-                          ],
+    return BlocListener<CalculatorBloc, CalculatorState>(
+      listener: (context, state) {
+        if (state.splash) {
+          setState(() => splash = !splash);
+        }
+        controller.value = TextEditingValue(
+          text: state.expression.formatExpression(),
+          selection: TextSelection.collapsed(
+              offset: state.offset ?? state.expression.length),
+        );
+        if (state.expression.canCalculate) {
+          context.read<CalculatorBloc>().add(const Calculate());
+        }
+      },
+      child: ThemeSwitchingArea(
+        child: Builder(builder: (context) {
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: Theme.of(context).appBarTheme.systemOverlayStyle ??
+                SystemUiOverlayStyle.light,
+            child: Scaffold(
+              appBar: CalculatorAppBar(
+                onButtonSizeChanged: () => setState(() {}),
+              ),
+              body: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: SplashEffect(
+                        splash: splash,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: BlocBuilder<CalculatorBloc, CalculatorState>(
+                            builder: (context, state) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                      flex: 2, child: InputWidget(controller)),
+                                  Expanded(
+                                      child: ResultWidget(
+                                          state.output.formatThousands())),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: Material(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: NumberPad(
-                        onNumberPressed: (number) {
-                          final val = controller.onNumberPressed(number,
-                              parser: parser);
-                          if (val != null) {
-                            result = val.output.formatThousands();
-                            setState(() {});
-                          }
-                          mediumHaptic();
-                        },
-                        onOperationPressed: (button) {
-                          switch (button) {
-                            case CalculatorButton.negative:
-                              // TODO: Handle this case.
-                              mediumHaptic();
-                              break;
-                            case CalculatorButton.clear:
-                              final val = controller.onBackspacePressed(parser);
-                              if (val != null) {
-                                result = val.output.formatThousands();
-                              }
-                              mediumHaptic();
-                              break;
-                            case CalculatorButton.allClear:
-                              if (input.isNotEmpty &&
-                                  result.isNotEmpty &&
-                                  splashEnabled) {
-                                setState(() => splash = !splash);
-                              }
-                              controller.text = '';
-                              result = '';
-                              heavyHaptic();
-                              break;
-                            case CalculatorButton.equal:
-                              if (result.isEmpty || result.contains('/')) {
-                                heavyHaptic();
-                                return;
-                              }
-
-                              final resultModel =
-                                  controller.onEqualPressed(parser);
-                              if (resultModel != null) {
-                                controller.text = result.formatThousands();
-                                if (!resultModel.output.isInt &&
-                                    resultModel.output.isDouble) {
-                                  result = resultModel.output.toFraction;
-                                } else {
-                                  result = '';
-                                }
-                                if (resultModel.output != 'Format Error' ||
-                                    resultModel.output != 'Error') {
-                                  preferencesService.saveResult(resultModel);
-                                }
-                                heavyHaptic();
-                              }
-                              break;
-                            case CalculatorButton.decimal:
-                              final haptic = controller.onDecimalPressed();
-                              if (haptic) {
+                    Flexible(
+                      flex: 2,
+                      child: Material(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        child: NumberPad(
+                          onNumberPressed: (number) {
+                            context.read<CalculatorBloc>().add(AddNumber(
+                                number, controller.selection.baseOffset));
+                            // final val = controller.onNumberPressed(number,
+                            //     parser: parser);
+                            // if (val != null) {
+                            //   result = val.output.formatThousands();
+                            //   setState(() {});
+                            // }
+                            mediumHaptic();
+                          },
+                          onOperationPressed: (button) {
+                            switch (button) {
+                              case CalculatorButton.negative:
+                                // TODO: Handle this case.
                                 mediumHaptic();
-                              }
-                              break;
-                            default:
-                              final val = controller.onOperationPressed(
-                                  button.value,
-                                  parser: parser);
-                              if (val != null) {
-                                result = val.output.formatThousands();
-                              }
-                              mediumHaptic();
-                          }
-                          setState(() {});
-                        },
+                                break;
+                              case CalculatorButton.clear:
+                                context.read<CalculatorBloc>().add(DeleteEntry(
+                                    controller.selection.baseOffset));
+                                mediumHaptic();
+                                break;
+                              case CalculatorButton.allClear:
+                                context
+                                    .read<CalculatorBloc>()
+                                    .add(const ClearCalculator());
+                                heavyHaptic();
+                                break;
+                              case CalculatorButton.equal:
+                                context
+                                    .read<CalculatorBloc>()
+                                    .add(const Equals());
+
+                                //TODO: add result to history using history bloc
+
+                                // preferencesService.saveResult(ResultModel(
+                                //     output: '12',
+                                //     expression: '2x6',
+                                //     dateTime: DateTime.now()));
+                                heavyHaptic();
+                                break;
+                              case CalculatorButton.decimal:
+                                context.read<CalculatorBloc>().add(AddDecimal(
+                                    controller.selection.baseOffset));
+                                // final haptic = controller.onDecimalPressed();
+                                // if (haptic) {
+                                mediumHaptic();
+                                // }
+                                break;
+                              default:
+                                context.read<CalculatorBloc>().add(AddOperator(
+                                    button.value,
+                                    controller.selection.baseOffset));
+                                // final val = controller.onOperationPressed(
+                                //     button.value,
+                                //     parser: parser);
+                                // if (val != null) {
+                                //   result = val.output.formatThousands();
+                                // }
+                                mediumHaptic();
+                            }
+                            setState(() {});
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }

@@ -1,41 +1,9 @@
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 
-class InputWidget extends StatefulWidget {
+class InputWidget extends StatelessWidget {
   final TextEditingController controller;
   const InputWidget(this.controller, {super.key});
-
-  @override
-  State<InputWidget> createState() => _InputWidgetState();
-}
-
-class _InputWidgetState extends State<InputWidget> {
-  TextEditingController get controller => widget.controller;
-
-  @override
-  void initState() {
-    controller.addListener(_listener);
-    super.initState();
-  }
-
-  int _length = 0;
-
-  void _listener() {
-    if (controller.text.isEmpty ||
-        controller.text.length < 3 ||
-        _length == controller.text.length) return;
-    _length = controller.text.length;
-    if (controller.text.endsWithAny(['x', '÷', '+', '-', '%', '.'])) return;
-    controller.text = controller.text.formatExpression();
-  }
-
-  @override
-  void dispose() {
-    controller.removeListener(_listener);
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
