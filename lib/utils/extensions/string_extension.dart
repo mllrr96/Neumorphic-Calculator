@@ -62,9 +62,14 @@ extension CalculatorExtension on String {
     String expression = removeSpaces.removeCommas;
     String parts = expression.splitMapJoin(
       RegExp(r"[+\-x÷%]"),
-      onMatch: (m) => '${m.group(0)}',
+      onMatch: (m) => m.group(0) ?? '',
       onNonMatch: (n) {
         if (n.isEmpty) return '';
+        // Prevent formatting number above 20 length
+        // otherwise NumberFormat will throw an error
+        if (n.length > 19) {
+          return n.substring(0, 19).formatThousands();
+        }
         return n.formatThousands();
       },
     );

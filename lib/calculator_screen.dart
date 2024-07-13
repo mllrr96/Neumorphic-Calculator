@@ -74,7 +74,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
       },
       child: ThemeSwitchingArea(
         child: Builder(builder: (context) {
-          print(controller.selection.baseOffset);
           return AnnotatedRegion<SystemUiOverlayStyle>(
             value: Theme.of(context).appBarTheme.systemOverlayStyle ??
                 SystemUiOverlayStyle.light,
