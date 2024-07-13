@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:fraction/fraction.dart';
 import 'package:intl/intl.dart';
@@ -58,7 +59,7 @@ extension CalculatorExtension on String {
   }
 
   String formatExpression() {
-    String expression = removeSpaces;
+    String expression = removeSpaces.removeCommas;
     String parts = expression.splitMapJoin(
       RegExp(r"[+\-x÷%]"),
       onMatch: (m) => '${m.group(0)}',
@@ -88,7 +89,8 @@ extension CalculatorExtension on String {
         formattedString = number._formatDouble;
       }
       return formattedString;
-    } catch (_) {
+    } catch (e) {
+      dev.log(e.toString());
       return this;
     }
   }
@@ -106,20 +108,23 @@ extension CalculatorExtension on String {
     try {
       final firstPart = input.substring(0, offset);
       final lastPart = input.substring(offset);
-      final oldOffset = offset;
       // To avoid adding multiple operators in a row
       if (firstPart.endsWithAny(['x', '÷', '+', '-', '%']) && !value.isNumber) {
-        return (
-          firstPart.substring(0, offset - 1) + value + lastPart,
-          oldOffset
-        );
+        return (firstPart.substring(0, offset - 1) + value + lastPart, offset);
       } else if (lastPart.startsWithAny(['x', '÷', '+', '-', '%']) &&
           !value.isNumber) {
-        return (firstPart + value + lastPart.substring(1), oldOffset);
+        return (firstPart + value + lastPart.substring(1), offset);
       } else {
-        return (firstPart + value + lastPart, oldOffset + 1);
+        // insering a number
+        final result = (firstPart + value + lastPart).formatExpression();
+
+        // Calculate the difference because formatExpression can add ','
+        // which will mess up the original offset
+        final difference = (result.length - input.length).abs();
+        return (result, offset + difference);
       }
-    } catch (_) {
+    } catch (e) {
+      dev.log(e.toString());
       return (input, offset);
     }
   }
@@ -132,9 +137,11 @@ extension CalculatorExtension on String {
       final lastPart = input.substring(offset);
       final oldOffset = offset;
       final updatedText = firstPartWithoutLastCharacter + lastPart;
-      final updatedOffset = oldOffset - 1;
-      return (updatedText, updatedOffset);
-    } catch (_) {
+      final formattedText = updatedText.formatExpression();
+      final difference = (formattedText.length - input.length).abs();
+      return (updatedText, oldOffset - difference);
+    } catch (e) {
+      dev.log(e.toString());
       return (input, offset);
     }
   }
@@ -191,4 +198,5 @@ extension StringExtension on String {
   }
 
   String get removeCommas => input.replaceAll(',', '');
+  int get commaCount => input.characters.where((val) => val == ',').length;
 }

@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
+import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../main.dart';
 import '../utils/enum.dart';
 import '../utils/settings_model.dart';
 
+@singleton
 class PreferencesService {
+  PreferencesService();
   static PreferencesService get instance => getIt<PreferencesService>();
   static late SharedPreferences _sharedPreferences;
   static const String _themeModeKey = 'theme_mode';
@@ -32,8 +35,8 @@ class PreferencesService {
   static late List<ResultModel> _results;
   List<ResultModel> get results => _results;
 
-  static Future<PreferencesService> init() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
+  @factoryMethod
+  factory PreferencesService.init() {
     _settingsModel = _loadSettingsModel();
     _themeMode = _loadThemeMode();
     _themeType = _loadTheme();
@@ -92,7 +95,7 @@ class PreferencesService {
       final results = _sharedPreferences.getStringList('results');
       if (results != null) {
         return results
-            .map((result) => ResultModel.fromMap(jsonDecode(result)))
+            .map((result) => ResultModel.fromJson(jsonDecode(result)))
             .toList();
       } else {
         return [];
@@ -108,7 +111,7 @@ class PreferencesService {
       if (_results.length >= 40) _results.removeLast();
       _results.insert(0, result);
       _sharedPreferences.setStringList(_resultsKey,
-          _results.map((result) => jsonEncode(result.toMap())).toList());
+          _results.map((result) => jsonEncode(result.toJson())).toList());
     } catch (_) {}
   }
 

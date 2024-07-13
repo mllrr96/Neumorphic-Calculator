@@ -52,9 +52,9 @@ final class Equals extends CalculatorEvent {
   List<Object> get props => [];
 }
 
-final class LoadHistory extends CalculatorEvent {
+final class LoadCalculation extends CalculatorEvent {
   final ResultModel result;
-  const LoadHistory(this.result);
+  const LoadCalculation(this.result);
   @override
   List<Object> get props => [result];
 }

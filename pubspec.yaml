@@ -25,12 +25,14 @@ dependencies:
   fraction: ^5.0.2
   timeago: ^3.7.0
   flutter_bloc: ^8.1.6
+  injectable: ^2.4.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-
+  build_runner: 
+  injectable_generator:  
 flutter:
   uses-material-design: true
 

@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
-import 'bloc/calculator_bloc.dart';
+import 'bloc/calculator_bloc/calculator_bloc.dart';
+import 'bloc/history_bloc/history_bloc.dart';
 import 'utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/widgets/calculator_app_bar.dart';
 import 'widgets/input_widget.dart';
@@ -24,7 +25,6 @@ class CalculatorScreen extends StatefulWidget {
 class CalculatorScreenState extends State<CalculatorScreen> {
   final TextEditingController controller = TextEditingController();
   String get input => controller.text;
-  // String result = '';
   Parser parser = Parser();
 
   bool splash = false;
@@ -62,10 +62,11 @@ class CalculatorScreenState extends State<CalculatorScreen> {
         if (state.splash) {
           setState(() => splash = !splash);
         }
+
         controller.value = TextEditingValue(
-          text: state.expression.formatExpression(),
-          selection: TextSelection.collapsed(
-              offset: state.offset ?? state.expression.length),
+          text: state.expression,
+          selection: TextSelection.collapsed(offset: state.offset ?? -1),
+          // composing: TextRange
         );
         if (state.expression.canCalculate) {
           context.read<CalculatorBloc>().add(const Calculate());
@@ -73,6 +74,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
       },
       child: ThemeSwitchingArea(
         child: Builder(builder: (context) {
+          print(controller.selection.baseOffset);
           return AnnotatedRegion<SystemUiOverlayStyle>(
             value: Theme.of(context).appBarTheme.systemOverlayStyle ??
                 SystemUiOverlayStyle.light,
@@ -116,12 +118,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                           onNumberPressed: (number) {
                             context.read<CalculatorBloc>().add(AddNumber(
                                 number, controller.selection.baseOffset));
-                            // final val = controller.onNumberPressed(number,
-                            //     parser: parser);
-                            // if (val != null) {
-                            //   result = val.output.formatThousands();
-                            //   setState(() {});
-                            // }
                             mediumHaptic();
                           },
                           onOperationPressed: (button) {
@@ -147,11 +143,12 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                     .add(const Equals());
 
                                 //TODO: add result to history using history bloc
-
-                                // preferencesService.saveResult(ResultModel(
-                                //     output: '12',
-                                //     expression: '2x6',
-                                //     dateTime: DateTime.now()));
+                                // context.watch<HistoryBloc>().state.;
+                                context.read<HistoryBloc>().add(AddHistory(
+                                    ResultModel(
+                                        output: '12',
+                                        expression: '11+1',
+                                        dateTime: DateTime.now())));
                                 heavyHaptic();
                                 break;
                               case CalculatorButton.decimal:

@@ -1,10 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
+import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
 part 'calculator_event.dart';
 part 'calculator_state.dart';
 
+@injectable
 class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   CalculatorBloc() : super(const CalculatorState.initial()) {
     on<AddNumber>(_addNumber);
@@ -14,10 +17,10 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     on<Calculate>(_calculate);
     on<AddDecimal>(_addDecimal);
     on<Equals>(_equals);
-    on<LoadHistory>(_loadHistory);
+    on<LoadCalculation>(_loadCalculation);
   }
 
-  _loadHistory(LoadHistory event, Emitter<CalculatorState> emit) {
+  _loadCalculation(LoadCalculation event, Emitter<CalculatorState> emit) {
     emit(state.copyWith(
         expression: event.result.expression, output: event.result.output));
   }
@@ -39,9 +42,17 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   }
 
   _addNumber(AddNumber event, Emitter<CalculatorState> emit) {
-    emit(state.copyWith(
-      expression: state.expression + event.number,
-    ));
+    bool noSelection =
+        event.offset == -1 || event.offset == state.expression.length;
+    if (noSelection) {
+      emit(state.copyWith(
+        expression: (state.expression + event.number).formatExpression(),
+      ));
+    } else {
+      final result = state.expression.insertText(event.number, event.offset);
+      emit(state.copyWith(
+          expression: result.$1.formatExpression(), offset: result.$2));
+    }
   }
 
   _addDecimal(AddDecimal event, Emitter<CalculatorState> emit) {
@@ -55,9 +66,9 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     } else if (expression.contains('.') && noSelection) {
       return;
     } else {
+      final result = expression.insertText('.', event.offset);
       emit(state.copyWith(
-          expression: expression.insertText('.', event.offset).$1,
-          offset: expression.insertText('.', event.offset).$2));
+          expression: result.$1.formatExpression(), offset: result.$2));
     }
   }
 
@@ -79,14 +90,16 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
 
         // allow adding negative numbers after operation symbols
         if (operator == '-' && expression.endsWithAny(['x', '÷', '+'])) {
-          return emit(state.copyWith(expression: expression + operator));
+          return emit(state.copyWith(
+              expression: (expression + operator).formatExpression()));
         } else
         // If the user tries to add an operator after another operator, replace the last operator with the new one
         if (expression.endsWithAny(['x', '÷', '+', '-'])) {
           if (expression.length != 1 && expression != '-') {
             return emit(state.copyWith(
                 expression:
-                    expression.substring(0, event.offset - 1) + operator));
+                    (expression.substring(0, event.offset - 1) + operator)
+                        .formatExpression()));
           }
         }
         // If the user tries to add an operator after a number, add the operator
@@ -96,7 +109,8 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
       } else {
         // Need to handle updating negative numbers
         final result = expression.insertText(operator, event.offset);
-        emit(state.copyWith(expression: result.$1, offset: result.$2));
+        emit(state.copyWith(
+            expression: result.$1.formatExpression(), offset: result.$2));
       }
     } catch (_) {
       emit(state.copyWith(output: 'Internal Error'));
@@ -114,16 +128,18 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     final expression = state.expression;
 
     if (expression.isEmpty) {
-      emit(state.copyWith(expression: expression.removeLastChar));
+      emit(state.copyWith(
+          expression: expression.removeLastChar.formatExpression()));
     }
     if (noOffset) {
       if (expression.isNotEmpty) {
         final result = expression.removeLastChar;
-        emit(state.copyWith(expression: result));
+        emit(state.copyWith(expression: result.formatExpression()));
       }
     } else {
       final result = expression.removeCharAt(event.offset);
-      emit(state.copyWith(expression: result.$1, offset: result.$2));
+      emit(state.copyWith(
+          expression: result.$1.formatExpression(), offset: result.$2));
     }
   }
 
@@ -142,4 +158,6 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
       emit(state.copyWith(output: 'Internal Error'));
     }
   }
+
+  static CalculatorBloc get instance => getIt<CalculatorBloc>();
 }

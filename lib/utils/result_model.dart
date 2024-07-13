@@ -32,7 +32,7 @@ class ResultModel extends Equatable {
       dateTime: DateTime.now(),
     );
   }
-  factory ResultModel.fromMap(Map<String, dynamic> json) {
+  factory ResultModel.fromJson(Map<String, dynamic> json) {
     return ResultModel(
       output: json['output'],
       expression: json['expression'],
@@ -40,7 +40,7 @@ class ResultModel extends Equatable {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'output': output,
       'expression': expression,
