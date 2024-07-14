@@ -5,7 +5,8 @@ import 'theme.dart';
 
 enum CalculatorButton {
   allClear('AC'),
-  negative('+/-'),
+  openParenthesis('('),
+  closeParenthesis(')'),
   percent('%'),
   divide('÷'),
   //

@@ -36,7 +36,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   void _addHistory(AddHistory event, Emitter<HistoryState> emit) {
     List<String> result = _database.getStringList(_historyKey) ?? [];
 
-    result.add(jsonEncode(event.result.toJson()));
+    result.insert(0, jsonEncode(event.result.toJson()));
     _database.setStringList(_historyKey, result);
     emit(HistoryLoaded(result
         .map((String e) => ResultModel.fromJson(jsonDecode(e)))

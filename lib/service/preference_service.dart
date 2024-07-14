@@ -9,7 +9,9 @@ import '../utils/settings_model.dart';
 
 @singleton
 class PreferencesService {
-  PreferencesService();
+  PreferencesService(SharedPreferences sharedPreferences) {
+    _sharedPreferences = sharedPreferences;
+  }
   static PreferencesService get instance => getIt<PreferencesService>();
   static late SharedPreferences _sharedPreferences;
   static const String _themeModeKey = 'theme_mode';
@@ -35,15 +37,14 @@ class PreferencesService {
   static late List<ResultModel> _results;
   List<ResultModel> get results => _results;
 
-  @factoryMethod
-  factory PreferencesService.init() {
+  @PostConstruct()
+  void init() {
     _settingsModel = _loadSettingsModel();
     _themeMode = _loadThemeMode();
     _themeType = _loadTheme();
     _lightTheme = _settingsModel.font.setToTheme(_themeType.themeData.$1);
     _darkTheme = _settingsModel.font.setToTheme(_themeType.themeData.$2);
     _results = _loadResults();
-    return PreferencesService();
   }
 
   static SettingsModel _loadSettingsModel() {

@@ -32,6 +32,14 @@ final class AddDecimal extends CalculatorEvent {
   List<Object> get props => [offset];
 }
 
+final class AddParentheses extends CalculatorEvent {
+  final int offset;
+  final String parentheses;
+  const AddParentheses(this.parentheses, this.offset);
+  @override
+  List<Object> get props => [parentheses, offset];
+}
+
 final class AddOperator extends CalculatorEvent {
   final String operator;
   final int offset;

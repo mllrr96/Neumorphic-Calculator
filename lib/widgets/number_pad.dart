@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/widgets/neumorphic_button.dart';
-
+import 'package:neumorphic_calculator/widgets/parenthesis_button.dart';
 import '../calculator_icons.dart';
 import '../utils/enum.dart';
 
@@ -55,12 +55,19 @@ class NumberPad extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            NeumorphicButton(
-              child:
-                  Text(CalculatorButton.negative.value, style: operationStyle),
-              onPressed: () =>
-                  onOperationPressed?.call(CalculatorButton.negative),
-            ),
+            SizedBox(
+                width: 75,
+                child: ParenthesisButton(
+                  onPressed: (val) {
+                    if (val == '(') {
+                      onOperationPressed
+                          ?.call(CalculatorButton.openParenthesis);
+                    } else {
+                      onOperationPressed
+                          ?.call(CalculatorButton.closeParenthesis);
+                    }
+                  },
+                )),
             NeumorphicButton(
               child: Text(CalculatorButton.eight.value, style: numberStyle),
               onPressed: () =>

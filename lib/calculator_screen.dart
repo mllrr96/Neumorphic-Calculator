@@ -2,9 +2,9 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'bloc/calculator_bloc/calculator_bloc.dart';
 import 'bloc/history_bloc/history_bloc.dart';
 import 'utils/extensions/extensions.dart';
@@ -25,14 +25,7 @@ class CalculatorScreen extends StatefulWidget {
 class CalculatorScreenState extends State<CalculatorScreen> {
   final TextEditingController controller = TextEditingController();
   String get input => controller.text;
-  Parser parser = Parser();
-
   bool splash = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -52,6 +45,30 @@ class CalculatorScreenState extends State<CalculatorScreen> {
     }
   }
 
+  void _addToResult() {
+    final calculatorState = context.read<CalculatorBloc>().state;
+    final historyState = context.read<HistoryBloc>().state;
+    final result = ResultModel(
+        output: calculatorState.output,
+        expression: calculatorState.expression,
+        dateTime: DateTime.now());
+    if (calculatorState.output.toLowerCase().contains('error') ||
+        calculatorState.output.isEmpty) {
+      return;
+    }
+    if (historyState is HistoryLoaded) {
+      if (historyState.results.isNotEmpty) {
+        if (historyState.results.first != result) {
+          context.read<HistoryBloc>().add(AddHistory(result));
+        }
+      } else {
+        context.read<HistoryBloc>().add(AddHistory(result));
+      }
+    } else if (historyState is HistoryEmpty) {
+      context.read<HistoryBloc>().add(AddHistory(result));
+    }
+  }
+
   PreferencesService get preferencesService => PreferencesService.instance;
   bool get splashEnabled => preferencesService.settingsModel.splashEnabled;
 
@@ -66,7 +83,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
         controller.value = TextEditingValue(
           text: state.expression,
           selection: TextSelection.collapsed(offset: state.offset ?? -1),
-          // composing: TextRange
         );
         if (state.expression.canCalculate) {
           context.read<CalculatorBloc>().add(const Calculate());
@@ -121,8 +137,11 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                           },
                           onOperationPressed: (button) {
                             switch (button) {
-                              case CalculatorButton.negative:
-                                // TODO: Handle this case.
+                              case CalculatorButton.openParenthesis ||
+                                    CalculatorButton.closeParenthesis:
+                                context.read<CalculatorBloc>().add(
+                                    AddParentheses(button.value,
+                                        controller.selection.baseOffset));
                                 mediumHaptic();
                                 break;
                               case CalculatorButton.clear:
@@ -141,14 +160,9 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                     .read<CalculatorBloc>()
                                     .add(const Equals());
 
-                                //TODO: add result to history using history bloc
-                                // context.watch<HistoryBloc>().state.;
-                                context.read<HistoryBloc>().add(AddHistory(
-                                    ResultModel(
-                                        output: '12',
-                                        expression: '11+1',
-                                        dateTime: DateTime.now())));
+                                _addToResult();
                                 heavyHaptic();
+
                                 break;
                               case CalculatorButton.decimal:
                                 context.read<CalculatorBloc>().add(AddDecimal(

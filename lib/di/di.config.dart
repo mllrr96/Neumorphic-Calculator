@@ -38,7 +38,8 @@ extension GetItInjectableX on _i1.GetIt {
     );
     gh.factory<_i4.CalculatorBloc>(() => _i4.CalculatorBloc());
     gh.factory<_i5.PageCubit>(() => _i5.PageCubit());
-    gh.singleton<_i6.PreferencesService>(() => _i6.PreferencesService.init());
+    gh.singleton<_i6.PreferencesService>(
+        () => _i6.PreferencesService(gh<_i3.SharedPreferences>())..init());
     gh.singleton<_i7.Database>(() => _i7.Database(gh<_i3.SharedPreferences>()));
     gh.factory<_i8.HistoryBloc>(() => _i8.HistoryBloc(gh<_i7.Database>()));
     return this;

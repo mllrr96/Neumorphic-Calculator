@@ -18,6 +18,30 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     on<AddDecimal>(_addDecimal);
     on<Equals>(_equals);
     on<LoadCalculation>(_loadCalculation);
+    on<AddParentheses>(_addParentheses);
+  }
+
+  _addParentheses(AddParentheses event, Emitter<CalculatorState> emit) {
+    bool noSelection =
+        event.offset == -1 || event.offset == state.expression.length;
+    final expression = state.expression;
+    final parentheses = event.parentheses;
+    final isCloseParentheses = parentheses == ')';
+
+    switch (noSelection) {
+      case true:
+        // Prevent adding ')' at the beginning of the expression
+        if (expression.isEmpty && isCloseParentheses) {
+          return;
+        }
+        return emit(
+            state.copyWith(expression: expression + parentheses, offset: -1));
+
+      case false:
+        final result = expression.insertText(parentheses, event.offset);
+        emit(state.copyWith(
+            expression: result.$1.formatExpression(), offset: result.$2));
+    }
   }
 
   _loadCalculation(LoadCalculation event, Emitter<CalculatorState> emit) {
@@ -46,8 +70,8 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
         event.offset == -1 || event.offset == state.expression.length;
     if (noSelection) {
       emit(state.copyWith(
-        expression: (state.expression + event.number).formatExpression(),
-      ));
+          expression: (state.expression + event.number).formatExpression(),
+          offset: -1));
     } else {
       final result = state.expression.insertText(event.number, event.offset);
       emit(state.copyWith(
@@ -60,15 +84,38 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
         event.offset == -1 || event.offset == state.expression.length;
     final expression = state.expression;
     if (expression.isEmpty) {
-      emit(state.copyWith(expression: '0.'));
-    } else if (noSelection && !expression.endsWith('.')) {
-      emit(state.copyWith(expression: '$expression.'));
-    } else if (expression.contains('.') && noSelection) {
-      return;
-    } else {
-      final result = expression.insertText('.', event.offset);
-      emit(state.copyWith(
-          expression: result.$1.formatExpression(), offset: result.$2));
+      return emit(state.copyWith(expression: '0.'));
+    }
+    switch (noSelection) {
+      case true:
+        final splittedExpression = expression.split(
+          RegExp(r"[+\-x÷%]"),
+        );
+
+        if (splittedExpression.last.contains('.')) {
+          return;
+        }
+
+        if (!splittedExpression.last.endsWith('.')) {
+          return emit(state.copyWith(expression: '$expression.'));
+        }
+      case false:
+        final result =
+            expression.insertText('|', event.offset, skipFormatting: true);
+        final index = result.$1
+            .split(RegExp(r"[+\-x÷%]"))
+            .indexWhere((e) => e.contains('|'));
+        if (index == -1) {
+          return;
+        }
+        final selectedText = result.$1.split(RegExp(r"[+\-x÷%]"))[index];
+        if (selectedText.contains('.')) {
+          return;
+        } else {
+          return emit(state.copyWith(
+              expression: result.$1.replaceAll('|', '.').formatExpression(),
+              offset: result.$2));
+        }
     }
   }
 
@@ -104,7 +151,8 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
         }
         // If the user tries to add an operator after a number, add the operator
         else {
-          return emit(state.copyWith(expression: expression + operator));
+          return emit(
+              state.copyWith(expression: expression + operator, offset: -1));
         }
       } else {
         // Need to handle updating negative numbers

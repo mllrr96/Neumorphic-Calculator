@@ -49,5 +49,5 @@ class ResultModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [output, expression, dateTime];
+  List<Object?> get props => [output, expression];
 }

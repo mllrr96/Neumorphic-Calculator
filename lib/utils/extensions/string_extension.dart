@@ -58,10 +58,14 @@ extension CalculatorExtension on String {
     return true;
   }
 
+  int count(String countValue) {
+    return input.characters.where((val) => val == countValue).length;
+  }
+
   String formatExpression() {
     String expression = removeSpaces.removeCommas;
     String parts = expression.splitMapJoin(
-      RegExp(r"[+\-x÷%]"),
+      RegExp(r"[+\-x÷%()]"),
       onMatch: (m) => m.group(0) ?? '',
       onNonMatch: (n) {
         if (n.isEmpty) return '';
@@ -109,7 +113,8 @@ extension CalculatorExtension on String {
     return finalInput;
   }
 
-  (String, int) insertText(String value, int offset) {
+  (String, int) insertText(String value, int offset,
+      {bool skipFormatting = false}) {
     try {
       final firstPart = input.substring(0, offset);
       final lastPart = input.substring(offset);
@@ -121,11 +126,18 @@ extension CalculatorExtension on String {
         return (firstPart + value + lastPart.substring(1), offset);
       } else {
         // insering a number
-        final result = (firstPart + value + lastPart).formatExpression();
+        String result;
+        int difference;
+        if (skipFormatting) {
+          result = (firstPart + value + lastPart);
+          difference = 0;
+        } else {
+          result = (firstPart + value + lastPart).formatExpression();
+          // Calculate the difference because formatExpression can add ','
+          // which will mess up the original offset
+          difference = (result.length - input.length).abs();
+        }
 
-        // Calculate the difference because formatExpression can add ','
-        // which will mess up the original offset
-        final difference = (result.length - input.length).abs();
         return (result, offset + difference);
       }
     } catch (e) {
