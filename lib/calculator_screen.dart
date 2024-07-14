@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'bloc/calculator_bloc/calculator_bloc.dart';
 import 'bloc/history_bloc/history_bloc.dart';
 import 'utils/extensions/extensions.dart';
