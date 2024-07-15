@@ -49,7 +49,8 @@ extension CalculatorExtension on String {
   }
 
   bool get canCalculate {
-    if (input.isEmpty || !input.containsAny(['x', '÷', '+', '-'])) {
+    if (input.isEmpty ||
+        !input.containsAny(['x', '÷', '+', '-', 'log', 'sin', 'cos', 'tan'])) {
       return false;
     }
     if (input.endsWithAny(['x', '÷', '+', '-'])) {
@@ -82,8 +83,21 @@ extension CalculatorExtension on String {
 
   String formatThousands() {
     try {
+      // To avoid formatting the number if it contains an error
+      if (input.toLowerCase().contains('error')) {
+        return input;
+      }
+      //
+
       String number = input.removeCommas;
       if (number.removeSpaces.isEmpty) return number;
+      String? trigonometry;
+      // Remove sin, cos, tan, log and add them later
+      if (number.containsAny(['sin', 'cos', 'tan', 'log'])) {
+        // Remove all numbers and () from the string
+        trigonometry = number.replaceAll(RegExp(r'[0-9()]'), '');
+        number = number.replaceAll(RegExp(r'[a-zA-Z]'), '');
+      }
 
       if (!number.isNumber) {
         throw Exception('Not a number to format $number');
@@ -97,7 +111,9 @@ extension CalculatorExtension on String {
       } else {
         formattedString = number._formatDouble;
       }
-      return formattedString;
+
+      if (trigonometry == null) return formattedString;
+      return '$trigonometry($formattedString)';
     } catch (e) {
       dev.log(e.toString());
       return this;
@@ -111,6 +127,17 @@ extension CalculatorExtension on String {
         .replaceAll('÷', '/')
         .replaceAll('%', '/100');
     return finalInput;
+  }
+
+  (String, int) insertScienticButton(String value, int offset) {
+    try {
+      final firstPart = input.substring(0, offset);
+      final lastPart = input.substring(offset);
+      return (firstPart + value + lastPart, offset + value.length);
+    } catch (e) {
+      dev.log(e.toString());
+      return (input, offset);
+    }
   }
 
   (String, int) insertText(String value, int offset,

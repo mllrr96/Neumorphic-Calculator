@@ -53,8 +53,10 @@ class NeumorphicButtonState extends State<NeumorphicButton> {
         width: widget.width,
         constraints: widget.constraints ??
             const BoxConstraints(
-              minHeight: 75,
-              minWidth: 75,
+              minHeight: 55,
+              maxHeight: 75,
+              minWidth: 55,
+              maxWidth: 75,
             ),
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,

@@ -49,9 +49,10 @@ final class AddOperator extends CalculatorEvent {
 }
 
 final class Calculate extends CalculatorEvent {
-  const Calculate();
+  final bool skipError;
+  const Calculate({this.skipError = false});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [skipError];
 }
 
 final class Equals extends CalculatorEvent {
@@ -65,4 +66,12 @@ final class LoadCalculation extends CalculatorEvent {
   const LoadCalculation(this.result);
   @override
   List<Object> get props => [result];
+}
+
+final class AddScientificButton extends CalculatorEvent {
+  final String value;
+  final int offset;
+  const AddScientificButton(this.value, this.offset);
+  @override
+  List<Object> get props => [value];
 }

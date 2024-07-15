@@ -19,6 +19,26 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     on<Equals>(_equals);
     on<LoadCalculation>(_loadCalculation);
     on<AddParentheses>(_addParentheses);
+    on<AddScientificButton>(_addScientificButton);
+  }
+
+  _addScientificButton(
+      AddScientificButton event, Emitter<CalculatorState> emit) {
+    final expression = state.expression;
+    final offset = event.offset;
+    final value = event.value;
+    final noSelection = offset == -1 || offset == expression.length;
+    switch (noSelection) {
+      case true:
+        emit(state.copyWith(
+            expression: (value + expression).formatExpression(), offset: -1));
+        break;
+      case false:
+        final result = expression.insertScienticButton(value, offset);
+        emit(state.copyWith(
+            expression: result.$1.formatExpression(), offset: result.$2));
+        break;
+    }
   }
 
   _addParentheses(AddParentheses event, Emitter<CalculatorState> emit) {
@@ -176,8 +196,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     final expression = state.expression;
 
     if (expression.isEmpty) {
-      emit(state.copyWith(
-          expression: expression.removeLastChar.formatExpression()));
+      emit(state.copyWith(expression: expression.formatExpression()));
     }
     if (noOffset) {
       if (expression.isNotEmpty) {
@@ -200,7 +219,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
       return emit(state.copyWith(output: ''));
     }
     try {
-      final result = expression.calculate();
+      final result = expression.calculate(skipErrorChecking: event.skipError);
       emit(state.copyWith(output: result.output));
     } catch (_) {
       emit(state.copyWith(output: 'Internal Error'));

@@ -36,6 +36,27 @@ enum CalculatorButton {
   bool get isNumber => int.tryParse(value) != null;
 }
 
+enum ScientificButton {
+  sin('sin('),
+  asin('asin('),
+  cos('cos('),
+  acos('acos('),
+  tan('tan('),
+  atan('atan('),
+  log('log('),
+  ln('ln('),
+  sqrt('√'),
+  pow('^'),
+  fact('!'),
+  pi('π'),
+  e('e'),
+  rad('rad'),
+  deg('deg');
+
+  final String value;
+  const ScientificButton(this.value);
+}
+
 enum ThemeType {
   blue,
   pink;

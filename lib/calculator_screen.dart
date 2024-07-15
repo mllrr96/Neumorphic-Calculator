@@ -84,7 +84,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
           selection: TextSelection.collapsed(offset: state.offset ?? -1),
         );
         if (state.expression.canCalculate) {
-          context.read<CalculatorBloc>().add(const Calculate());
+          context.read<CalculatorBloc>().add(const Calculate(skipError: true));
         }
       },
       child: ThemeSwitchingArea(
@@ -125,7 +125,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                       ),
                     ),
                     Flexible(
-                      flex: 2,
+                      flex: 4,
                       child: Material(
                         color: Theme.of(context).scaffoldBackgroundColor,
                         child: NumberPad(
@@ -133,6 +133,11 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                             context.read<CalculatorBloc>().add(AddNumber(
                                 number, controller.selection.baseOffset));
                             mediumHaptic();
+                          },
+                          onAdditionalButtonsPressed: (val) {
+                            context.read<CalculatorBloc>().add(
+                                AddScientificButton(val.value,
+                                    controller.selection.baseOffset));
                           },
                           onOperationPressed: (button) {
                             switch (button) {
