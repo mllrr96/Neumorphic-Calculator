@@ -26,6 +26,7 @@ dependencies:
   timeago: ^3.7.0
   flutter_bloc: ^8.1.6
   injectable: ^2.4.2
+  logger: ^2.4.0
 
 dev_dependencies:
   flutter_test:

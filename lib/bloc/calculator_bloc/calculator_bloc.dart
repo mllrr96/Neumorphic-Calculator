@@ -31,7 +31,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     switch (noSelection) {
       case true:
         emit(state.copyWith(
-            expression: (value + expression).formatExpression(), offset: -1));
+            expression: (expression + value).formatExpression(), offset: -1));
         break;
       case false:
         final result = expression.insertScienticButton(value, offset);

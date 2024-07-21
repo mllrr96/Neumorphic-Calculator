@@ -162,7 +162,10 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               case CalculatorButton.equal:
                                 context
                                     .read<CalculatorBloc>()
-                                    .add(const Equals());
+                                    .add(const Calculate());
+                                // context
+                                //     .read<CalculatorBloc>()
+                                //     .add(const Equals());
 
                                 _addToResult();
                                 heavyHaptic();

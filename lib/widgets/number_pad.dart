@@ -55,9 +55,9 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
           firstChild: Text(ScientificButton.pow.value),
           secondChild: Text(ScientificButton.fact.value),
           onFirstChildPressed: () =>
-              widget.onOperationPressed?.call(CalculatorButton.openParenthesis),
-          onSecondChildPressed: () => widget.onOperationPressed
-              ?.call(CalculatorButton.closeParenthesis),
+              widget.onAdditionalButtonsPressed?.call(ScientificButton.pow),
+          onSecondChildPressed: () =>
+              widget.onAdditionalButtonsPressed?.call(ScientificButton.fact),
         ),
         StackedButton.vertical(
           firstChild: Text(ScientificButton.sin.value.replaceAll('(', '')),
@@ -76,8 +76,8 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
               widget.onAdditionalButtonsPressed?.call(ScientificButton.log),
         ),
         StackedButton(
-          firstChild: const Text('√'),
-          secondChild: const Text('π'),
+          firstChild: Text(ScientificButton.sqrt.value),
+          secondChild: Text(ScientificButton.pi.value),
           onFirstChildPressed: () =>
               widget.onAdditionalButtonsPressed?.call(ScientificButton.sqrt),
           onSecondChildPressed: () =>

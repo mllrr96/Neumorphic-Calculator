@@ -12,6 +12,11 @@ import 'package:neumorphic_calculator/utils/const.dart';
 import 'bloc/page_cubit/page_cubit.dart';
 import 'calculator_screen.dart';
 import 'widgets/keep_alive_wrapper.dart';
+import 'package:logger/logger.dart';
+
+var logger = Logger(
+  printer: PrettyPrinter(),
+);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

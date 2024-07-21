@@ -1,9 +1,11 @@
-import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:fraction/fraction.dart';
 import 'package:intl/intl.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:neumorphic_calculator/main.dart';
+import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
+import 'dart:math' as math;
 
 extension CalculatorExtension on String {
   String get input => this;
@@ -15,6 +17,9 @@ extension CalculatorExtension on String {
     try {
       Expression exp = p.parse(finalInput);
       ContextModel ctxModel = ContextModel();
+      ctxModel.bindVariableName('π', Number(math.pi));
+      ctxModel.bindVariableName('e', Number(math.e));
+      ctxModel.bindVariableName('√', Number(math.sqrt2));
       double eval = exp.evaluate(EvaluationType.REAL, ctxModel);
       if (eval % 1 == 0 && !hasDouble) {
         return ResultModel(
@@ -27,7 +32,8 @@ extension CalculatorExtension on String {
             expression: this,
             dateTime: DateTime.now());
       }
-    } catch (e) {
+    } catch (e, stack) {
+      logger.f(e.toString(), stackTrace: stack, error: e);
       if (skipErrorChecking) {
         return ResultModel.empty();
       } else {
@@ -50,7 +56,14 @@ extension CalculatorExtension on String {
 
   bool get canCalculate {
     if (input.isEmpty ||
-        !input.containsAny(['x', '÷', '+', '-', 'log', 'sin', 'cos', 'tan'])) {
+        !input.containsAny([
+          'x',
+          '÷',
+          '+',
+          '-',
+          ...ScientificButton.values
+              .map((e) => e.value.replaceAll('(', '').replaceAll(')', ''))
+        ])) {
       return false;
     }
     if (input.endsWithAny(['x', '÷', '+', '-'])) {
@@ -93,10 +106,14 @@ extension CalculatorExtension on String {
       if (number.removeSpaces.isEmpty) return number;
       String? trigonometry;
       // Remove sin, cos, tan, log and add them later
-      if (number.containsAny(['sin', 'cos', 'tan', 'log'])) {
+      if (number.containsAny(['sin', 'cos', 'tan', 'log', 'e', 'π'])) {
         // Remove all numbers and () from the string
         trigonometry = number.replaceAll(RegExp(r'[0-9()]'), '');
-        number = number.replaceAll(RegExp(r'[a-zA-Z]'), '');
+        number = number.replaceAll(RegExp(r'[a-zA-Zπ]'), '');
+      }
+
+      if (number.isEmpty) {
+        return trigonometry ?? number;
       }
 
       if (!number.isNumber) {
@@ -113,9 +130,13 @@ extension CalculatorExtension on String {
       }
 
       if (trigonometry == null) return formattedString;
-      return '$trigonometry($formattedString)';
-    } catch (e) {
-      dev.log(e.toString());
+      if (trigonometry.length > 1) {
+        return '$trigonometry($formattedString)';
+      } else {
+        return '$trigonometry$formattedString';
+      }
+    } catch (e, stack) {
+      logger.f(e.toString(), stackTrace: stack, error: e);
       return this;
     }
   }
@@ -134,8 +155,8 @@ extension CalculatorExtension on String {
       final firstPart = input.substring(0, offset);
       final lastPart = input.substring(offset);
       return (firstPart + value + lastPart, offset + value.length);
-    } catch (e) {
-      dev.log(e.toString());
+    } catch (e, stack) {
+      logger.f(e.toString(), stackTrace: stack, error: e);
       return (input, offset);
     }
   }
@@ -167,8 +188,8 @@ extension CalculatorExtension on String {
 
         return (result, offset + difference);
       }
-    } catch (e) {
-      dev.log(e.toString());
+    } catch (e, stack) {
+      logger.f(e.toString(), stackTrace: stack, error: e);
       return (input, offset);
     }
   }
@@ -184,8 +205,8 @@ extension CalculatorExtension on String {
       final formattedText = updatedText.formatExpression();
       final difference = (formattedText.length - input.length).abs();
       return (updatedText, oldOffset - difference);
-    } catch (e) {
-      dev.log(e.toString());
+    } catch (e, stack) {
+      logger.f(e.toString(), stackTrace: stack);
       return (input, offset);
     }
   }
