@@ -136,8 +136,9 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                           },
                           onAdditionalButtonsPressed: (val) {
                             context.read<CalculatorBloc>().add(
-                                AddScientificButton(val.value,
-                                    controller.selection.baseOffset));
+                                AddScientificButton(
+                                    val, controller.selection.baseOffset));
+                            mediumHaptic();
                           },
                           onOperationPressed: (button) {
                             switch (button) {
@@ -163,9 +164,9 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                 context
                                     .read<CalculatorBloc>()
                                     .add(const Calculate());
-                                // context
-                                //     .read<CalculatorBloc>()
-                                //     .add(const Equals());
+                                context
+                                    .read<CalculatorBloc>()
+                                    .add(const Equals());
 
                                 _addToResult();
                                 heavyHaptic();
@@ -174,21 +175,12 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                               case CalculatorButton.decimal:
                                 context.read<CalculatorBloc>().add(AddDecimal(
                                     controller.selection.baseOffset));
-                                // final haptic = controller.onDecimalPressed();
-                                // if (haptic) {
                                 mediumHaptic();
-                                // }
                                 break;
                               default:
                                 context.read<CalculatorBloc>().add(AddOperator(
                                     button.value,
                                     controller.selection.baseOffset));
-                                // final val = controller.onOperationPressed(
-                                //     button.value,
-                                //     parser: parser);
-                                // if (val != null) {
-                                //   result = val.output.formatThousands();
-                                // }
                                 mediumHaptic();
                             }
                             setState(() {});

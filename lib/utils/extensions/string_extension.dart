@@ -12,14 +12,13 @@ extension CalculatorExtension on String {
 
   ResultModel calculate({bool skipErrorChecking = false, Parser? parser}) {
     Parser p = parser ?? Parser();
-    String finalInput = _replaceOperationSymbols.removeCommas;
+    String finalInput =
+        _replaceOperationSymbols.removeCommas.replaceAll('√', 'sqrt');
     bool hasDouble = finalInput.contains('.');
     try {
       Expression exp = p.parse(finalInput);
       ContextModel ctxModel = ContextModel();
       ctxModel.bindVariableName('π', Number(math.pi));
-      ctxModel.bindVariableName('e', Number(math.e));
-      ctxModel.bindVariableName('√', Number(math.sqrt2));
       double eval = exp.evaluate(EvaluationType.REAL, ctxModel);
       if (eval % 1 == 0 && !hasDouble) {
         return ResultModel(
@@ -150,11 +149,12 @@ extension CalculatorExtension on String {
     return finalInput;
   }
 
-  (String, int) insertScienticButton(String value, int offset) {
+  (String, int) insertScienticButton(ScientificButton value, int offset) {
     try {
       final firstPart = input.substring(0, offset);
       final lastPart = input.substring(offset);
-      return (firstPart + value + lastPart, offset + value.length);
+
+      return (firstPart + value.value + lastPart, offset + value.value.length);
     } catch (e, stack) {
       logger.f(e.toString(), stackTrace: stack, error: e);
       return (input, offset);

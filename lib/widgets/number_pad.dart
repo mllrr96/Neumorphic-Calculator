@@ -4,7 +4,7 @@ import 'package:neumorphic_calculator/widgets/stacked_button.dart';
 import '../calculator_icons.dart';
 import '../utils/enum.dart';
 
-class NumberPad extends StatefulWidget {
+class NumberPad extends StatelessWidget {
   const NumberPad(
       {super.key,
       this.onNumberPressed,
@@ -13,31 +13,6 @@ class NumberPad extends StatefulWidget {
   final void Function(String number)? onNumberPressed;
   final void Function(CalculatorButton button)? onOperationPressed;
   final void Function(ScientificButton value)? onAdditionalButtonsPressed;
-
-  @override
-  State<NumberPad> createState() => _NumberPadState();
-}
-
-class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  bool showAdditionalButtons = false;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _animation = Tween<double>(begin: 0, end: 100).animate(_controller);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,33 +30,33 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
           firstChild: Text(ScientificButton.pow.value),
           secondChild: Text(ScientificButton.fact.value),
           onFirstChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.pow),
+              onAdditionalButtonsPressed?.call(ScientificButton.pow),
           onSecondChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.fact),
+              onAdditionalButtonsPressed?.call(ScientificButton.fact),
         ),
         StackedButton.vertical(
-          firstChild: Text(ScientificButton.sin.value.replaceAll('(', '')),
-          secondChild: Text(ScientificButton.cos.value.replaceAll('(', '')),
+          firstChild: Text(ScientificButton.sin.name),
+          secondChild: Text(ScientificButton.cos.name),
           onFirstChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.sin),
+              onAdditionalButtonsPressed?.call(ScientificButton.sin),
           onSecondChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.cos),
+              onAdditionalButtonsPressed?.call(ScientificButton.cos),
         ),
         StackedButton.vertical(
-          firstChild: Text(ScientificButton.tan.value.replaceAll('(', '')),
-          secondChild: Text(ScientificButton.log.value.replaceAll('(', '')),
+          firstChild: Text(ScientificButton.tan.name),
+          secondChild: Text(ScientificButton.log.name),
           onFirstChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.tan),
+              onAdditionalButtonsPressed?.call(ScientificButton.tan),
           onSecondChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.log),
+              onAdditionalButtonsPressed?.call(ScientificButton.log),
         ),
         StackedButton(
-          firstChild: Text(ScientificButton.sqrt.value),
+          firstChild: Text(ScientificButton.sqrt.value.replaceAll('(', '')),
           secondChild: Text(ScientificButton.pi.value),
           onFirstChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.sqrt),
+              onAdditionalButtonsPressed?.call(ScientificButton.sqrt),
           onSecondChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.pi),
+              onAdditionalButtonsPressed?.call(ScientificButton.pi),
         ),
       ],
     );
@@ -95,12 +70,12 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
           onSecondChildPressed: () {},
         ),
         StackedButton.vertical(
-          firstChild: Text(ScientificButton.asin.value.replaceAll('(', '')),
-          secondChild: Text(ScientificButton.acos.value.replaceAll('(', '')),
+          firstChild: Text(ScientificButton.asin.name),
+          secondChild: Text(ScientificButton.acos.name),
           onFirstChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.asin),
+              onAdditionalButtonsPressed?.call(ScientificButton.asin),
           onSecondChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.acos),
+              onAdditionalButtonsPressed?.call(ScientificButton.acos),
         ),
         StackedButton.vertical(
           firstChild: const Text('10\u02e3'),
@@ -109,12 +84,12 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
           onSecondChildPressed: () {},
         ),
         StackedButton(
-          firstChild: Text(ScientificButton.e.value.replaceAll('(', '')),
-          secondChild: Text(ScientificButton.ln.value.replaceAll('(', '')),
+          firstChild: Text(ScientificButton.e.value),
+          secondChild: Text(ScientificButton.ln.name),
           onFirstChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.e),
+              onAdditionalButtonsPressed?.call(ScientificButton.e),
           onSecondChildPressed: () =>
-              widget.onAdditionalButtonsPressed?.call(ScientificButton.ln),
+              onAdditionalButtonsPressed?.call(ScientificButton.ln),
         ),
       ],
     );
@@ -122,24 +97,8 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // AnimatedSwitcher(
-        //     duration: const Duration(milliseconds: 200),
-        //     child: showAdditionalButtons
-        //         ? additionalButtons
-        //         : const SizedBox.shrink(),
-        //     transitionBuilder: (child, animation) {
-        //       return SizeTransition(sizeFactor: animation, child: child);
-        //     }),
-        // AnimatedSwitcher(
-        //     duration: const Duration(milliseconds: 200),
-        //     child: showAdditionalButtons
-        //         ? additionalButtons
-        //         : const SizedBox.shrink(),
-        //     transitionBuilder: (child, animation) {
-        //       return SizeTransition(sizeFactor: animation, child: child);
-        //     }),
-        additionalButtons2,
         additionalButtons,
+        additionalButtons2,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -147,15 +106,7 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
               child:
                   Text(CalculatorButton.allClear.value, style: operationStyle),
               onPressed: () {
-                if (_controller.isCompleted) {
-                  _controller.reverse();
-                } else {
-                  _controller.forward();
-                }
-                setState(() {
-                  showAdditionalButtons = !showAdditionalButtons;
-                });
-                widget.onOperationPressed?.call(CalculatorButton.allClear);
+                onOperationPressed?.call(CalculatorButton.allClear);
               },
             ),
             SizedBox(
@@ -163,22 +114,22 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
                 child: StackedButton(
                   firstChild: const Text('('),
                   secondChild: const Text(')'),
-                  onFirstChildPressed: () => widget.onOperationPressed
+                  onFirstChildPressed: () => onOperationPressed
                       ?.call(CalculatorButton.openParenthesis),
-                  onSecondChildPressed: () => widget.onOperationPressed
+                  onSecondChildPressed: () => onOperationPressed
                       ?.call(CalculatorButton.closeParenthesis),
                 )),
             NeumorphicButton(
               child: Icon(CalculatorIcons.percentage,
                   color: primaryColor, size: 24),
               onPressed: () =>
-                  widget.onOperationPressed?.call(CalculatorButton.percent),
+                  onOperationPressed?.call(CalculatorButton.percent),
             ),
             NeumorphicButton(
               child:
                   Icon(CalculatorIcons.divide, color: primaryColor, size: 24),
               onPressed: () =>
-                  widget.onOperationPressed?.call(CalculatorButton.divide),
+                  onOperationPressed?.call(CalculatorButton.divide),
             ),
           ],
         ),
@@ -188,23 +139,23 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
             NeumorphicButton(
               child: Text(CalculatorButton.seven.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.seven.value),
+                  onNumberPressed?.call(CalculatorButton.seven.value),
             ),
             NeumorphicButton(
               child: Text(CalculatorButton.eight.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.eight.value),
+                  onNumberPressed?.call(CalculatorButton.eight.value),
             ),
             NeumorphicButton(
               child: Text(CalculatorButton.nine.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.nine.value),
+                  onNumberPressed?.call(CalculatorButton.nine.value),
             ),
             NeumorphicButton(
               child:
                   Icon(CalculatorIcons.cancel, color: primaryColor, size: 24),
               onPressed: () =>
-                  widget.onOperationPressed?.call(CalculatorButton.multiply),
+                  onOperationPressed?.call(CalculatorButton.multiply),
             ),
           ],
         ),
@@ -214,22 +165,22 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
             NeumorphicButton(
               child: Text(CalculatorButton.four.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.four.value),
+                  onNumberPressed?.call(CalculatorButton.four.value),
             ),
             NeumorphicButton(
               child: Text(CalculatorButton.five.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.five.value),
+                  onNumberPressed?.call(CalculatorButton.five.value),
             ),
             NeumorphicButton(
               child: Text(CalculatorButton.six.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.six.value),
+                  onNumberPressed?.call(CalculatorButton.six.value),
             ),
             NeumorphicButton(
               child: Icon(CalculatorIcons.minus, color: primaryColor, size: 24),
               onPressed: () =>
-                  widget.onOperationPressed?.call(CalculatorButton.subtract),
+                  onOperationPressed?.call(CalculatorButton.subtract),
             ),
           ],
         ),
@@ -239,22 +190,21 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
             NeumorphicButton(
               child: Text(CalculatorButton.one.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.one.value),
+                  onNumberPressed?.call(CalculatorButton.one.value),
             ),
             NeumorphicButton(
               child: Text(CalculatorButton.two.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.two.value),
+                  onNumberPressed?.call(CalculatorButton.two.value),
             ),
             NeumorphicButton(
               child: Text(CalculatorButton.three.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.three.value),
+                  onNumberPressed?.call(CalculatorButton.three.value),
             ),
             NeumorphicButton(
               child: Icon(CalculatorIcons.plus, color: primaryColor, size: 24),
-              onPressed: () =>
-                  widget.onOperationPressed?.call(CalculatorButton.add),
+              onPressed: () => onOperationPressed?.call(CalculatorButton.add),
             ),
           ],
         ),
@@ -264,23 +214,21 @@ class _NumberPadState extends State<NumberPad> with TickerProviderStateMixin {
             NeumorphicButton(
               child: Text(CalculatorButton.zero.value, style: numberStyle),
               onPressed: () =>
-                  widget.onNumberPressed?.call(CalculatorButton.zero.value),
+                  onNumberPressed?.call(CalculatorButton.zero.value),
             ),
             NeumorphicButton(
               child:
                   Text(CalculatorButton.decimal.value, style: operationStyle),
               onPressed: () =>
-                  widget.onOperationPressed?.call(CalculatorButton.decimal),
+                  onOperationPressed?.call(CalculatorButton.decimal),
             ),
             NeumorphicButton(
               child: Icon(Icons.backspace, size: 24, color: primaryColor),
-              onPressed: () =>
-                  widget.onOperationPressed?.call(CalculatorButton.clear),
+              onPressed: () => onOperationPressed?.call(CalculatorButton.clear),
             ),
             NeumorphicButton(
               child: Icon(CalculatorIcons.calc, color: primaryColor, size: 24),
-              onPressed: () =>
-                  widget.onOperationPressed?.call(CalculatorButton.equal),
+              onPressed: () => onOperationPressed?.call(CalculatorButton.equal),
             ),
           ],
         ),

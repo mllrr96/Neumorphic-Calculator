@@ -69,7 +69,7 @@ final class LoadCalculation extends CalculatorEvent {
 }
 
 final class AddScientificButton extends CalculatorEvent {
-  final String value;
+  final ScientificButton value;
   final int offset;
   const AddScientificButton(this.value, this.offset);
   @override

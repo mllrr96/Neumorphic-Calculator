@@ -123,7 +123,7 @@ class StackedButtonState extends State<StackedButton> {
                 height: widget.height,
                 width: widget.width,
                 margin: margin1,
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: Clip.none,
                 // constraints: widget.constraints ??
                 //     const BoxConstraints(
                 //       minHeight: 55,
@@ -174,7 +174,7 @@ class StackedButtonState extends State<StackedButton> {
                 widget.onSecondChildPressed?.call();
               },
               child: AnimatedContainer(
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: Clip.none,
                 alignment: Alignment.center,
                 duration: widget.duration ?? const Duration(milliseconds: 200),
                 height: widget.height,

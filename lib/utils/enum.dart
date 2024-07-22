@@ -45,7 +45,7 @@ enum ScientificButton {
   atan('atan('),
   log('log('),
   ln('ln('),
-  sqrt('√'),
+  sqrt('√('),
   pow('^'),
   fact('!'),
   pi('π'),

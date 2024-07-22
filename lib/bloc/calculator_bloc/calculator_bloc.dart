@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:neumorphic_calculator/di/di.dart';
+import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
 part 'calculator_event.dart';
@@ -26,15 +27,16 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
       AddScientificButton event, Emitter<CalculatorState> emit) {
     final expression = state.expression;
     final offset = event.offset;
-    final value = event.value;
+    final button = event.value;
     final noSelection = offset == -1 || offset == expression.length;
     switch (noSelection) {
       case true:
         emit(state.copyWith(
-            expression: (expression + value).formatExpression(), offset: -1));
+            expression: (expression + button.value).formatExpression(),
+            offset: -1));
         break;
       case false:
-        final result = expression.insertScienticButton(value, offset);
+        final result = expression.insertScienticButton(button, offset);
         emit(state.copyWith(
             expression: result.$1.formatExpression(), offset: result.$2));
         break;
