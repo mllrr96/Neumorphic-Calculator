@@ -71,9 +71,14 @@ Head to [Releases](https://github.com/mllrr96/Neumorphic-Calculator/releases) pa
 
    ```bash
    flutter pub get
+  
+4. Generate necessary files:
+
+   ```bash
+   dart run build_runner build
    ```
 
-4. Run the app:
+5. Run the app:
 
    ```bash
    flutter run
