@@ -45,3 +45,6 @@ app.*.map.json
 # Project-specific files
 /pubspec.lock
 /devtools_options.yaml
+
+# Generated files
+*.config.dart
