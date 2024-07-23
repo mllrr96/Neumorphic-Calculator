@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/widgets/neumorphic_button.dart';
 import 'package:neumorphic_calculator/widgets/stacked_button.dart';
 import '../calculator_icons.dart';
@@ -13,7 +14,7 @@ class NumberPad extends StatelessWidget {
   final void Function(String number)? onNumberPressed;
   final void Function(CalculatorButton button)? onOperationPressed;
   final void Function(ScientificButton value)? onAdditionalButtonsPressed;
-
+  PreferencesService get preferencesService => PreferencesService.instance;
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
@@ -97,8 +98,8 @@ class NumberPad extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        additionalButtons,
-        additionalButtons2,
+        if (preferencesService.settingsModel.scientific) additionalButtons,
+        if (preferencesService.settingsModel.scientific) additionalButtons2,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

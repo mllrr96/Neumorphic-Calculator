@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:simple_icons/simple_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
 import 'package:neumorphic_calculator/widgets/confirm_dialog.dart';
-
 import 'utils/enum.dart';
 import 'widgets/neumorphic_button.dart';
 import 'widgets/splash_effect.dart';
@@ -227,19 +223,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             );
                           });
                         });
-                    // Navigator.pushNamed(context, '/theme');
                   },
                 ),
                 const SizedBox(height: 18.0),
                 NeumorphicButton(
                   borderRadius: BorderRadius.circular(settings.buttonRadius),
-                  child: ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    height: 56.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Button Radius'),
-                        const Spacer(),
+                        Text('Button Radius', style: contentTextStyle),
                         Slider(
                             divisions: 20,
                             label: settings.buttonRadius.toString(),
@@ -250,35 +245,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                             },
                             max: 25,
-                            min: 5)
+                            min: 5),
                       ],
                     ),
                   ),
-                  onPressed: () {
-                    // Navigator.pushNamed(context, '/theme');
-                  },
-                ),
-                const SizedBox(height: 18.0),
-                NeumorphicButton(
-                  borderRadius: BorderRadius.circular(settings.buttonRadius),
-                  child: SwitchListTile(
-                    value: settings.hapticEnabled,
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(settings.buttonRadius)),
-                    onChanged: (val) {
-                      if (val) {
-                        HapticFeedback.mediumImpact();
-                      }
-                      setState(() {
-                        settings = settings.copyWith(hapticEnabled: val);
-                      });
-                    },
-                    title: const Text('Haptic feedback'),
-                  ),
-                  onPressed: () {
-                    // Navigator.pushNamed(context, '/theme');
-                  },
+                  onPressed: () {},
                 ),
                 const SizedBox(height: 18.0),
                 SplashEffect(
