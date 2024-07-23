@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fraction/fraction.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:math_expressions/math_expressions.dart';
-import 'package:neumorphic_calculator/main.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
 import 'dart:math' as math;
+
+var logger = Logger(
+  printer: PrettyPrinter(),
+);
 
 extension CalculatorExtension on String {
   String get input => this;

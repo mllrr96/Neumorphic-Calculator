@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/settings_screen.dart';
 
+final settingsIconKey = GlobalKey();
+
 class CalculatorAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CalculatorAppBar({super.key, this.onButtonSizeChanged});
   final void Function()? onButtonSizeChanged;
@@ -49,6 +51,7 @@ class _CalculatorAppBarState extends State<CalculatorAppBar> {
             ),
           ),
           IconButton(
+            key: settingsIconKey,
             padding: const EdgeInsets.all(16),
             onPressed: () async {
               await Navigator.push(

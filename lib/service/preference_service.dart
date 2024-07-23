@@ -18,6 +18,8 @@ class PreferencesService {
   static const String _themeKey = 'theme';
   static const String _settingsKey = 'settings';
   static const String _resultsKey = 'results';
+  static const String _firstRunKey = 'firstRun';
+  static const String _firstCallKey = 'firstKey';
 
   static late ThemeMode _themeMode;
   ThemeMode get themeMode => _themeMode;
@@ -36,6 +38,41 @@ class PreferencesService {
 
   static late List<ResultModel> _results;
   List<ResultModel> get results => _results;
+
+  static bool get isFirstRun {
+    if (_firstRun == null) {
+      try {
+        final bool firstRun = _sharedPreferences.getBool(_firstRunKey) ?? true;
+        _sharedPreferences.setBool(_firstRunKey, false);
+        _firstRun = firstRun;
+        return firstRun;
+      } catch (_) {
+        _sharedPreferences.setBool(_firstRunKey, false);
+        _firstRun = true;
+        return true;
+      }
+    } else {
+      return _firstRun!;
+    }
+  }
+
+  static bool? _firstRun;
+
+  static bool get isFirstCall {
+    try {
+      final bool firstCall = _sharedPreferences.getBool(_firstCallKey) ?? true;
+      _sharedPreferences.setBool(_firstCallKey, false);
+      return firstCall;
+    } catch (_) {
+      _sharedPreferences.setBool(_firstCallKey, false);
+      return true;
+    }
+  }
+
+  static void reset() {
+    _sharedPreferences.setBool(_firstRunKey, true);
+    _sharedPreferences.setBool(_firstCallKey, true);
+  }
 
   @PostConstruct()
   void init() {

@@ -8,15 +8,11 @@ import 'package:neumorphic_calculator/bloc/history_bloc/history_bloc.dart';
 import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/history_screen.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/tutorial_screen.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'bloc/page_cubit/page_cubit.dart';
 import 'calculator_screen.dart';
 import 'widgets/keep_alive_wrapper.dart';
-import 'package:logger/logger.dart';
-
-var logger = Logger(
-  printer: PrettyPrinter(),
-);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -92,17 +88,19 @@ class _NeumorphicCalculatorAppState extends State<NeumorphicCalculatorApp> {
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.easeIn);
               },
-              child: PageView(
-                onPageChanged: (index) {
-                  setState(() => _index = index);
-                  context.read<PageCubit>().updateIndex(-1);
-                },
-                controller: _pageController,
-                dragStartBehavior: DragStartBehavior.down,
-                children: const [
-                  KeepAliveWrapper(child: CalculatorScreen()),
-                  HistoryScreen()
-                ],
+              child: TutorialScreen(
+                child: PageView(
+                  onPageChanged: (index) {
+                    setState(() => _index = index);
+                    context.read<PageCubit>().updateIndex(-1);
+                  },
+                  controller: _pageController,
+                  dragStartBehavior: DragStartBehavior.down,
+                  children: const [
+                    KeepAliveWrapper(child: CalculatorScreen()),
+                    HistoryScreen()
+                  ],
+                ),
               ),
             ),
           );
