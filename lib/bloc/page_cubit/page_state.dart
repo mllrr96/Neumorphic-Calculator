@@ -17,3 +17,7 @@ final class NavigateToMain extends PageState {
 final class NavigateToHistory extends PageState {
   const NavigateToHistory();
 }
+
+final class NavigateToSettings extends PageState {
+  const NavigateToSettings();
+}

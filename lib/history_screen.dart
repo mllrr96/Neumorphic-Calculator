@@ -128,7 +128,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                             context
                                 .read<CalculatorBloc>()
                                 .add(LoadCalculation(result));
-                            context.read<PageCubit>().updateIndex(0);
+                            context.read<PageCubit>().updateIndex(1);
                           },
                           onLongPress: () async {
                             // copy the result to the clipboard

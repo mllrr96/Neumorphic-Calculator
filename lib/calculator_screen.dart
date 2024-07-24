@@ -158,9 +158,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
               value: Theme.of(context).appBarTheme.systemOverlayStyle ??
                   SystemUiOverlayStyle.light,
               child: Scaffold(
-                appBar: CalculatorAppBar(
-                  onButtonSizeChanged: () => setState(() {}),
-                ),
+                appBar: const CalculatorAppBar(),
                 body: SafeArea(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

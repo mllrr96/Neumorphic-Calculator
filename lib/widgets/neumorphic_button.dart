@@ -13,6 +13,7 @@ class NeumorphicButton extends StatefulWidget {
     this.onLongPress,
     this.boxShadow,
     this.constraints,
+    this.border,
   });
   final void Function()? onPressed;
   final void Function()? onLongPress;
@@ -22,6 +23,7 @@ class NeumorphicButton extends StatefulWidget {
   final BorderRadiusGeometry? borderRadius;
   final List<BoxShadow>? boxShadow;
   final BoxConstraints? constraints;
+  final BoxBorder? border;
   @override
   State<NeumorphicButton> createState() => NeumorphicButtonState();
 }
@@ -59,6 +61,7 @@ class NeumorphicButtonState extends State<NeumorphicButton> {
               maxWidth: 75,
             ),
         decoration: BoxDecoration(
+          border: widget.border,
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius:
               widget.borderRadius ?? BorderRadius.circular(borderRadius),

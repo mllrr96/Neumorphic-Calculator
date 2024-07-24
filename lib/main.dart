@@ -1,5 +1,4 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +7,7 @@ import 'package:neumorphic_calculator/bloc/history_bloc/history_bloc.dart';
 import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/history_screen.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/settings_screen.dart';
 import 'package:neumorphic_calculator/tutorial_screen.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'bloc/page_cubit/page_cubit.dart';
@@ -44,7 +44,7 @@ class NeumorphicCalculatorApp extends StatefulWidget {
 }
 
 class _NeumorphicCalculatorAppState extends State<NeumorphicCalculatorApp> {
-  final PageController _pageController = PageController();
+  final PageController _pageController = PageController(initialPage: 1);
   int _index = 0;
   @override
   Widget build(BuildContext context) {
@@ -57,12 +57,16 @@ class _NeumorphicCalculatorAppState extends State<NeumorphicCalculatorApp> {
         switch (state) {
           case Initial():
             return;
-          case NavigateToMain():
+          case NavigateToSettings():
             _pageController.animateToPage(0,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeIn);
-          case NavigateToHistory():
+          case NavigateToMain():
             _pageController.animateToPage(1,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeIn);
+          case NavigateToHistory():
+            _pageController.animateToPage(2,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeIn);
         }
@@ -81,10 +85,10 @@ class _NeumorphicCalculatorAppState extends State<NeumorphicCalculatorApp> {
             theme: theme.lightTheme,
             darkTheme: theme.darkTheme,
             home: PopScope(
-              canPop: _index == 0,
+              canPop: _index == 1,
               onPopInvoked: (val) {
                 if (val) return;
-                _pageController.animateToPage(0,
+                _pageController.animateToPage(1,
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.easeIn);
               },
@@ -95,8 +99,8 @@ class _NeumorphicCalculatorAppState extends State<NeumorphicCalculatorApp> {
                     context.read<PageCubit>().updateIndex(-1);
                   },
                   controller: _pageController,
-                  dragStartBehavior: DragStartBehavior.down,
                   children: const [
+                    SettingsScreen(),
                     KeepAliveWrapper(child: CalculatorScreen()),
                     HistoryScreen()
                   ],

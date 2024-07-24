@@ -15,9 +15,12 @@ class PageCubit extends Cubit<PageState> {
         emit(const Initial());
         break;
       case 0:
-        emit(const NavigateToMain());
+        emit(const NavigateToSettings());
         break;
       case 1:
+        emit(const NavigateToMain());
+        break;
+      case 2:
         emit(const NavigateToHistory());
         break;
     }
