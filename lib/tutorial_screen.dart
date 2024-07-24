@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
-import 'package:neumorphic_calculator/widgets/calculator_app_bar.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class TutorialScreen extends StatefulWidget {
@@ -15,6 +14,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
   late TutorialCoachMark tutorialCoachMark;
   final historyKey = GlobalKey();
   final swipeUpKey = GlobalKey();
+  final settingsKey = GlobalKey();
+  bool showSettings = false;
   bool showHistory = false;
   bool showSwipeUp = false;
   bool ignorePointer = false;
@@ -26,6 +27,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
       initTutorial();
       Future.delayed(const Duration(seconds: 2), () {
         tutorialCoachMark.show(context: context);
+        setState(() {
+          showSettings = true;
+        });
       });
     }
     super.initState();
@@ -34,6 +38,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
   void handleClick(TargetFocus target) {
     if (target.identify == 'settings') {
       setState(() {
+        showSettings = false;
         showHistory = true;
       });
     }
@@ -57,6 +62,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
         setState(() {
           showHistory = false;
           showSwipeUp = false;
+          showHistory = false;
+          ignorePointer = false;
         });
         return true;
       },
@@ -69,7 +76,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
       targets: [
         TargetFocus(
           identify: 'settings',
-          keyTarget: settingsIconKey,
+          keyTarget: settingsKey,
           alignSkip: Alignment.bottomRight,
           enableOverlayTab: true,
           contents: [
@@ -80,7 +87,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'App Settings',
+                      'Swipe right to view settings',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -88,7 +95,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       ),
                     ),
                     Text(
-                      'Change theme, button style and more',
+                      'and change theme, button style and more',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ],
@@ -171,6 +178,28 @@ class _TutorialScreenState extends State<TutorialScreen> {
     return Stack(
       children: [
         IgnorePointer(ignoring: ignorePointer, child: widget.child),
+        IgnorePointer(
+          ignoring: true,
+          child: AnimatedOpacity(
+              opacity: showSettings ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Material(
+                    key: settingsKey,
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(50),
+                    child: IconButton(
+                      padding: const EdgeInsets.all(16),
+                      onPressed: () {},
+                      icon: const Icon(Icons.arrow_forward),
+                    ),
+                  ),
+                ),
+              )),
+        ),
         IgnorePointer(
           ignoring: true,
           child: AnimatedOpacity(

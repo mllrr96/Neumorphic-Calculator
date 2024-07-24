@@ -3,8 +3,6 @@ import 'package:day_night_themed_switch/day_night_themed_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 
-final settingsIconKey = GlobalKey();
-
 class CalculatorAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CalculatorAppBar({super.key});
 
