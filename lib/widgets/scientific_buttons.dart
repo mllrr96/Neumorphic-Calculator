@@ -8,7 +8,6 @@ class ScientificButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -47,6 +46,7 @@ class ScientificButtons extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 10.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

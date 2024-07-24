@@ -17,12 +17,14 @@ class _TutorialScreenState extends State<TutorialScreen> {
   final swipeUpKey = GlobalKey();
   bool showHistory = false;
   bool showSwipeUp = false;
+  bool ignorePointer = false;
 
   @override
   void initState() {
     if (PreferencesService.isFirstRun) {
+      ignorePointer = true;
       initTutorial();
-      Future.delayed(const Duration(milliseconds: 300), () {
+      Future.delayed(const Duration(seconds: 2), () {
         tutorialCoachMark.show(context: context);
       });
     }
@@ -57,6 +59,11 @@ class _TutorialScreenState extends State<TutorialScreen> {
           showSwipeUp = false;
         });
         return true;
+      },
+      onFinish: () {
+        setState(() {
+          ignorePointer = false;
+        });
       },
       paddingFocus: 0.0,
       targets: [
@@ -163,7 +170,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
 
     return Stack(
       children: [
-        widget.child,
+        IgnorePointer(ignoring: ignorePointer, child: widget.child),
         IgnorePointer(
           ignoring: true,
           child: AnimatedOpacity(
