@@ -201,7 +201,7 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                                   number, controller.selection.baseOffset));
                               mediumHaptic();
                             },
-                            onAdditionalButtonsPressed: (val) {
+                            onScientificButtonsPressed: (val) {
                               context.read<CalculatorBloc>().add(
                                   AddScientificButton(
                                       val, controller.selection.baseOffset));

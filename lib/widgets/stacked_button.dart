@@ -54,10 +54,12 @@ class StackedButtonState extends State<StackedButton> {
   Widget _orientation({required List<Widget> children}) {
     if (widget._isVertical) {
       return Column(
+        mainAxisSize: MainAxisSize.min,
         children: children,
       );
     } else {
       return Row(
+        mainAxisSize: MainAxisSize.min,
         children: children,
       );
     }
@@ -99,8 +101,8 @@ class StackedButtonState extends State<StackedButton> {
       constraints: widget.constraints ??
           const BoxConstraints(
             minHeight: 55,
-            maxHeight: 75,
             minWidth: 55,
+            maxHeight: 75,
             maxWidth: 75,
           ),
       child: _orientation(
@@ -123,14 +125,6 @@ class StackedButtonState extends State<StackedButton> {
                 height: widget.height,
                 width: widget.width,
                 margin: margin1,
-                clipBehavior: Clip.none,
-                // constraints: widget.constraints ??
-                //     const BoxConstraints(
-                //       minHeight: 55,
-                //       maxHeight: 75,
-                //       minWidth: 55,
-                //       maxWidth: 75,
-                //     ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: borderRadius1,
@@ -174,19 +168,11 @@ class StackedButtonState extends State<StackedButton> {
                 widget.onSecondChildPressed?.call();
               },
               child: AnimatedContainer(
-                clipBehavior: Clip.none,
                 alignment: Alignment.center,
                 duration: widget.duration ?? const Duration(milliseconds: 200),
                 height: widget.height,
                 width: widget.width,
                 margin: margin2,
-                // constraints: widget.constraints ??
-                //     const BoxConstraints(
-                //       minHeight: 55,
-                //       maxHeight: 75,
-                //       minWidth: 55,
-                //       maxWidth: 75,
-                //     ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: borderRadius2,

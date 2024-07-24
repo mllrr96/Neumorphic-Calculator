@@ -152,26 +152,15 @@ class _TutorialScreenState extends State<TutorialScreen> {
         ),
       ], // List<TargetFocus>
       colorShadow: Colors.blue, // DEFAULT Colors.black
-      // onClickTargetWithTapPosition: (target, tapDetails) {
-      //   tutorialCoachMark.next();
-      // },
-      // onClickTarget: (target) {
-      //   tutorialCoachMark.next();
-      // },
-      // onSkip: () {
-      //   return true;
-      // }
     );
-
-    // tutorial.skip();
-    // tutorial.finish();
-    // tutorial.next(); // call next target programmatically
-    // tutorial.previous(); // call previous target programmatically
-    // tutorial.goTo(3); // call target programmatically by index
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!PreferencesService.isFirstRun) {
+      return widget.child;
+    }
+
     return Stack(
       children: [
         widget.child,

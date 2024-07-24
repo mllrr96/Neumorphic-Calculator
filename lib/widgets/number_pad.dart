@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/widgets/neumorphic_button.dart';
+import 'package:neumorphic_calculator/widgets/scientific_buttons.dart';
 import 'package:neumorphic_calculator/widgets/stacked_button.dart';
 import '../calculator_icons.dart';
 import '../utils/enum.dart';
@@ -10,10 +11,10 @@ class NumberPad extends StatelessWidget {
       {super.key,
       this.onNumberPressed,
       this.onOperationPressed,
-      this.onAdditionalButtonsPressed});
+      this.onScientificButtonsPressed});
   final void Function(String number)? onNumberPressed;
   final void Function(CalculatorButton button)? onOperationPressed;
-  final void Function(ScientificButton value)? onAdditionalButtonsPressed;
+  final void Function(ScientificButton value)? onScientificButtonsPressed;
   PreferencesService get preferencesService => PreferencesService.instance;
   @override
   Widget build(BuildContext context) {
@@ -24,82 +25,13 @@ class NumberPad extends StatelessWidget {
         fontWeight: FontWeight.bold);
     TextStyle operationStyle = TextStyle(
         color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900);
-    final additionalButtons = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        StackedButton(
-          firstChild: Text(ScientificButton.pow.value),
-          secondChild: Text(ScientificButton.fact.value),
-          onFirstChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.pow),
-          onSecondChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.fact),
-        ),
-        StackedButton.vertical(
-          firstChild: Text(ScientificButton.sin.name),
-          secondChild: Text(ScientificButton.cos.name),
-          onFirstChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.sin),
-          onSecondChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.cos),
-        ),
-        StackedButton.vertical(
-          firstChild: Text(ScientificButton.tan.name),
-          secondChild: Text(ScientificButton.log.name),
-          onFirstChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.tan),
-          onSecondChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.log),
-        ),
-        StackedButton(
-          firstChild: Text(ScientificButton.sqrt.value.replaceAll('(', '')),
-          secondChild: Text(ScientificButton.pi.value),
-          onFirstChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.sqrt),
-          onSecondChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.pi),
-        ),
-      ],
-    );
-    final additionalButtons2 = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        StackedButton.vertical(
-          firstChild: const Text(''),
-          secondChild: const Text('INV'),
-          onFirstChildPressed: () {},
-          onSecondChildPressed: () {},
-        ),
-        StackedButton.vertical(
-          firstChild: Text(ScientificButton.asin.name),
-          secondChild: Text(ScientificButton.acos.name),
-          onFirstChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.asin),
-          onSecondChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.acos),
-        ),
-        StackedButton.vertical(
-          firstChild: const Text('10\u02e3'),
-          secondChild: const Text('e\u02e3'),
-          onFirstChildPressed: () {},
-          onSecondChildPressed: () {},
-        ),
-        StackedButton(
-          firstChild: Text(ScientificButton.e.value),
-          secondChild: Text(ScientificButton.ln.name),
-          onFirstChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.e),
-          onSecondChildPressed: () =>
-              onAdditionalButtonsPressed?.call(ScientificButton.ln),
-        ),
-      ],
-    );
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        if (preferencesService.settingsModel.scientific) additionalButtons,
-        if (preferencesService.settingsModel.scientific) additionalButtons2,
+        if (preferencesService.settingsModel.scientific)
+          ScientificButtons(
+              onScientificButtonsPressed: onScientificButtonsPressed),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
