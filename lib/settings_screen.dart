@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:simple_icons/simple_icons.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
-import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
 import 'utils/enum.dart';
+import 'widgets/made_by.dart';
 import 'widgets/neumorphic_button.dart';
 import 'widgets/splash_effect.dart';
 
@@ -53,39 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return ThemeSwitchingArea(
       child: Scaffold(
           appBar: AppBar(title: const Text('Settings')),
-          bottomNavigationBar: BottomAppBar(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '@2024 Neumorphic Calculator',
-                      style: contentTextStyle?.copyWith(color: Colors.grey),
-                    ),
-                    Text(
-                      'Made with ❤️ by Mohammed Ragheb',
-                      style: contentTextStyle,
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () async {
-                    try {
-                      await launchUrl(Uri.parse(AppConst.githubLink));
-                    } catch (_) {}
-                  },
-                  icon: Icon(
-                    SimpleIcons.github,
-                    color: isDark ? Colors.white : SimpleIconColors.github,
-                    size: 40,
-                  ),
-                )
-              ],
-            ),
-          ),
+          bottomNavigationBar: const BottomAppBar(child: MadeBy()),
           body: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
             children: [

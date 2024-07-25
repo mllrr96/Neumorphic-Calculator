@@ -16,6 +16,7 @@ extension CalculatorExtension on String {
 
   ResultModel calculate({bool skipErrorChecking = false, Parser? parser}) {
     Parser p = parser ?? Parser();
+    // TODO: check for mismatch parenthesis and fix it, use mapslitjoin to check every open parenthesis
     String finalInput =
         _replaceOperationSymbols.removeCommas.replaceAll('√', 'sqrt');
     bool hasDouble = finalInput.contains('.');
