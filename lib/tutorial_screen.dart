@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class TutorialScreen extends StatefulWidget {
@@ -10,7 +12,8 @@ class TutorialScreen extends StatefulWidget {
   State<TutorialScreen> createState() => _TutorialScreenState();
 }
 
-class _TutorialScreenState extends State<TutorialScreen> {
+class _TutorialScreenState extends State<TutorialScreen>
+    with TickerProviderStateMixin {
   late TutorialCoachMark tutorialCoachMark;
   final historyKey = GlobalKey();
   final swipeUpKey = GlobalKey();
@@ -20,16 +23,31 @@ class _TutorialScreenState extends State<TutorialScreen> {
   bool showSwipeUp = false;
   bool ignorePointer = false;
 
+  late AnimationController _swipeRightController;
+  late AnimationController _swipeLeftController;
+  late AnimationController _swipeUpController;
+
+  void _initAnimations() {
+    _swipeRightController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _swipeLeftController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _swipeUpController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+  }
+
   @override
   void initState() {
     if (PreferencesService.isFirstRun) {
       ignorePointer = true;
       initTutorial();
+      _initAnimations();
       Future.delayed(const Duration(seconds: 2), () {
         tutorialCoachMark.show(context: context);
         setState(() {
           showSettings = true;
         });
+        _swipeRightController.repeat();
       });
     }
     super.initState();
@@ -37,20 +55,25 @@ class _TutorialScreenState extends State<TutorialScreen> {
 
   void handleClick(TargetFocus target) {
     if (target.identify == 'settings') {
+      _swipeRightController.stop();
       setState(() {
         showSettings = false;
         showHistory = true;
       });
+      _swipeLeftController.repeat();
     }
     if (target.identify == 'history') {
+      _swipeLeftController.stop();
       setState(() {
         showHistory = false;
         showSwipeUp = true;
       });
+      _swipeUpController.repeat();
     } else if (target.identify == 'swipeup') {
       setState(() {
         showSwipeUp = false;
       });
+      _swipeUpController.stop();
     }
   }
 
@@ -58,6 +81,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
     tutorialCoachMark = TutorialCoachMark(
       onClickTarget: handleClick,
       onClickOverlay: handleClick,
+      hideSkip: true,
       onSkip: () {
         setState(() {
           showHistory = false;
@@ -65,12 +89,18 @@ class _TutorialScreenState extends State<TutorialScreen> {
           showHistory = false;
           ignorePointer = false;
         });
+        _swipeRightController.stop();
+        _swipeLeftController.stop();
+        _swipeUpController.stop();
         return true;
       },
       onFinish: () {
         setState(() {
           ignorePointer = false;
         });
+        _swipeRightController.stop();
+        _swipeLeftController.stop();
+        _swipeUpController.stop();
       },
       paddingFocus: 0.0,
       targets: [
@@ -164,13 +194,14 @@ class _TutorialScreenState extends State<TutorialScreen> {
             ),
           ],
         ),
-      ], // List<TargetFocus>
-      colorShadow: Colors.blue, // DEFAULT Colors.black
+      ],
+      colorShadow: Colors.blue,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     if (!PreferencesService.isFirstRun) {
       return widget.child;
     }
@@ -183,20 +214,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
           child: AnimatedOpacity(
               opacity: showSettings ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 300),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
+              child: Material(
+                color:
+                    isDark ? Colors.transparent : Colors.grey.withOpacity(0.5),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Material(
-                    key: settingsKey,
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(50),
-                    child: IconButton(
-                      padding: const EdgeInsets.all(16),
-                      onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward),
-                    ),
-                  ),
+                  child: Lottie.asset(AppConst.swipeRightGesture,
+                      key: settingsKey,
+                      height: 150,
+                      width: 150,
+                      controller: _swipeRightController),
                 ),
               )),
         ),
@@ -205,20 +232,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
           child: AnimatedOpacity(
               opacity: showHistory ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 300),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 20.0),
+              child: Material(
+                color:
+                    isDark ? Colors.transparent : Colors.grey.withOpacity(0.5),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Material(
-                    key: historyKey,
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(50),
-                    child: IconButton(
-                      padding: const EdgeInsets.all(16),
-                      onPressed: () {},
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                  ),
+                  child: Lottie.asset(AppConst.swipeLeftGesture,
+                      key: historyKey,
+                      height: 150,
+                      width: 150,
+                      controller: _swipeLeftController),
                 ),
               )),
         ),
@@ -227,20 +250,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
           child: AnimatedOpacity(
               opacity: showSwipeUp ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 300),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
+              child: Material(
+                color:
+                    isDark ? Colors.transparent : Colors.grey.withOpacity(0.5),
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Material(
-                    key: swipeUpKey,
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(50),
-                    child: IconButton(
-                      padding: const EdgeInsets.all(16),
-                      onPressed: () {},
-                      icon: const Icon(Icons.arrow_upward),
-                    ),
-                  ),
+                  child: Lottie.asset(AppConst.swipeUpGesture,
+                      key: swipeUpKey,
+                      height: 150,
+                      width: 150,
+                      controller: _swipeUpController),
                 ),
               )),
         ),
