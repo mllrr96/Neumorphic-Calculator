@@ -105,4 +105,4 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Contact
 
-For any inquiries or suggestions, please feel free to email me at [mrmoragdr@gmail.com](mailto:mrmoragdr@gmail.com).
+For any inquiries or suggestions, please feel free to email me at [ragheb.github@gmail.com](mailto:ragheb.github@gmail.com).
