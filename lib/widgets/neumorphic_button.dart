@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
 
 class NeumorphicButton extends StatefulWidget {
   const NeumorphicButton({
@@ -20,7 +19,7 @@ class NeumorphicButton extends StatefulWidget {
   final double? width, height;
   final Duration? duration;
   final Widget child;
-  final BorderRadiusGeometry? borderRadius;
+  final double? borderRadius;
   final List<BoxShadow>? boxShadow;
   final BoxConstraints? constraints;
   final BoxBorder? border;
@@ -35,8 +34,6 @@ class NeumorphicButtonState extends State<NeumorphicButton> {
 
   @override
   Widget build(BuildContext context) {
-    double borderRadius =
-        PreferencesService.instance.settingsModel.buttonRadius;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTapDown: (_) => setElevated(false),
@@ -64,8 +61,7 @@ class NeumorphicButtonState extends State<NeumorphicButton> {
         decoration: BoxDecoration(
           border: widget.border,
           color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius:
-              widget.borderRadius ?? BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(widget.borderRadius ?? 18.0),
           boxShadow: _isElevated
               ? widget.boxShadow ??
                   [

@@ -2,6 +2,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:day_night_themed_switch/day_night_themed_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/service/theme_service.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/widgets/info_dialog.dart';
 
@@ -16,7 +17,7 @@ class CalculatorAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CalculatorAppBarState extends State<CalculatorAppBar> {
-  PreferencesService get referencesService => PreferencesService.instance;
+  ThemeService get themeService => ThemeService.instance;
   bool darkMode = false;
   @override
   Widget build(BuildContext context) {
@@ -28,17 +29,17 @@ class _CalculatorAppBarState extends State<CalculatorAppBar> {
         children: [
           ThemeSwitcher(
             builder: (context) {
-              darkMode = referencesService.themeMode == ThemeMode.system &&
+              darkMode = themeService.themeMode == ThemeMode.system &&
                       Theme.of(context).brightness == Brightness.dark
                   ? true
-                  : PreferencesService.instance.themeMode == ThemeMode.dark;
+                  : themeService.themeMode == ThemeMode.dark;
               return SizedBox(
                 width: 80,
                 child: DayNightSwitch(
                   value: darkMode,
                   onChanged: (val) {
                     darkMode = val;
-                    PreferencesService.instance.saveThemeMode(
+                    themeService.saveThemeMode(
                         darkMode ? ThemeMode.dark : ThemeMode.light);
                     context.toggleThemeMode(
                       isReversed: darkMode,

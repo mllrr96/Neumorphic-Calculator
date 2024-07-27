@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/widgets/neumorphic_button.dart';
 import 'package:neumorphic_calculator/widgets/scientific_buttons.dart';
 import 'package:neumorphic_calculator/widgets/stacked_button.dart';
@@ -11,11 +10,14 @@ class NumberPad extends StatelessWidget {
       {super.key,
       this.onNumberPressed,
       this.onOperationPressed,
-      this.onScientificButtonsPressed});
+      this.onScientificButtonsPressed,
+      required this.isScientific,
+      required this.borderRadius});
   final void Function(String number)? onNumberPressed;
   final void Function(CalculatorButton button)? onOperationPressed;
   final void Function(ScientificButton value)? onScientificButtonsPressed;
-  PreferencesService get preferencesService => PreferencesService.instance;
+  final bool isScientific;
+  final double borderRadius;
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
@@ -29,13 +31,16 @@ class NumberPad extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        if (preferencesService.settingsModel.scientific)
+        if (isScientific)
           ScientificButtons(
-              onScientificButtonsPressed: onScientificButtonsPressed),
+            borderRadius: borderRadius,
+            onScientificButtonsPressed: onScientificButtonsPressed,
+          ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             NeumorphicButton(
+              borderRadius: borderRadius,
               child:
                   Text(CalculatorButton.allClear.value, style: operationStyle),
               onPressed: () {
@@ -53,12 +58,14 @@ class NumberPad extends StatelessWidget {
                       ?.call(CalculatorButton.closeParenthesis),
                 )),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Icon(CalculatorIcons.percentage,
                   color: primaryColor, size: 24),
               onPressed: () =>
                   onOperationPressed?.call(CalculatorButton.percent),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child:
                   Icon(CalculatorIcons.divide, color: primaryColor, size: 24),
               onPressed: () =>
@@ -70,21 +77,25 @@ class NumberPad extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.seven.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.seven.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.eight.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.eight.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.nine.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.nine.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child:
                   Icon(CalculatorIcons.cancel, color: primaryColor, size: 24),
               onPressed: () =>
@@ -96,21 +107,25 @@ class NumberPad extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.four.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.four.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.five.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.five.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.six.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.six.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Icon(CalculatorIcons.minus, color: primaryColor, size: 24),
               onPressed: () =>
                   onOperationPressed?.call(CalculatorButton.subtract),
@@ -121,21 +136,25 @@ class NumberPad extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.one.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.one.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.two.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.two.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.three.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.three.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Icon(CalculatorIcons.plus, color: primaryColor, size: 24),
               onPressed: () => onOperationPressed?.call(CalculatorButton.add),
             ),
@@ -145,21 +164,25 @@ class NumberPad extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Text(CalculatorButton.zero.value, style: numberStyle),
               onPressed: () =>
                   onNumberPressed?.call(CalculatorButton.zero.value),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child:
                   Text(CalculatorButton.decimal.value, style: operationStyle),
               onPressed: () =>
                   onOperationPressed?.call(CalculatorButton.decimal),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Icon(Icons.backspace, size: 24, color: primaryColor),
               onPressed: () => onOperationPressed?.call(CalculatorButton.clear),
             ),
             NeumorphicButton(
+              borderRadius: borderRadius,
               child: Icon(CalculatorIcons.calc, color: primaryColor, size: 24),
               onPressed: () => onOperationPressed?.call(CalculatorButton.equal),
             ),

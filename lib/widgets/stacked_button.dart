@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
 
 class StackedButton extends StatefulWidget {
   const StackedButton({
@@ -14,6 +13,7 @@ class StackedButton extends StatefulWidget {
     required this.secondChild,
     this.onFirstChildPressed,
     this.onSecondChildPressed,
+    this.borderRadius = 12.0,
   }) : _isVertical = false;
 
   const StackedButton.vertical({
@@ -28,11 +28,13 @@ class StackedButton extends StatefulWidget {
     required this.secondChild,
     this.onFirstChildPressed,
     this.onSecondChildPressed,
+    this.borderRadius = 12.0,
   }) : _isVertical = true;
 
   final bool _isVertical;
   final void Function()? onLongPress;
   final double? width, height;
+  final double borderRadius;
   final Duration? duration;
   final List<BoxShadow>? boxShadow;
   final BoxConstraints? constraints;
@@ -68,24 +70,23 @@ class StackedButtonState extends State<StackedButton> {
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final radius = PreferencesService.instance.settingsModel.buttonRadius;
     final borderRadius1 = widget._isVertical
         ? BorderRadius.only(
-            topRight: Radius.circular(radius),
-            topLeft: Radius.circular(radius),
+            topRight: Radius.circular(widget.borderRadius),
+            topLeft: Radius.circular(widget.borderRadius),
           )
         : BorderRadius.only(
-            bottomLeft: Radius.circular(radius),
-            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(widget.borderRadius),
+            topLeft: Radius.circular(widget.borderRadius),
           );
     final borderRadius2 = widget._isVertical
         ? BorderRadius.only(
-            bottomRight: Radius.circular(radius),
-            bottomLeft: Radius.circular(radius),
+            bottomRight: Radius.circular(widget.borderRadius),
+            bottomLeft: Radius.circular(widget.borderRadius),
           )
         : BorderRadius.only(
-            bottomRight: Radius.circular(radius),
-            topRight: Radius.circular(radius),
+            bottomRight: Radius.circular(widget.borderRadius),
+            topRight: Radius.circular(widget.borderRadius),
           );
     final margin1 = widget._isVertical
         ? const EdgeInsets.only(bottom: 3)

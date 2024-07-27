@@ -6,11 +6,12 @@ import 'package:neumorphic_calculator/bloc/calculator_bloc/calculator_bloc.dart'
 import 'package:neumorphic_calculator/bloc/history_bloc/history_bloc.dart';
 import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/history_screen.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/service/theme_service.dart';
 import 'package:neumorphic_calculator/settings_screen.dart';
 import 'package:neumorphic_calculator/tutorial_screen.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'bloc/page_cubit/page_cubit.dart';
+import 'bloc/preference_cubit/preference_cubit.dart';
 import 'calculator_screen.dart';
 import 'widgets/keep_alive_wrapper.dart';
 
@@ -21,6 +22,9 @@ Future<void> main() async {
 
   runApp(MultiBlocProvider(
     providers: [
+      BlocProvider(
+        create: (context) => PreferenceCubit.instance..loadSettings(),
+      ),
       BlocProvider(
         create: (context) => CalculatorBloc.instance,
       ),
@@ -48,9 +52,9 @@ class _NeumorphicCalculatorAppState extends State<NeumorphicCalculatorApp> {
   int _index = 0;
   @override
   Widget build(BuildContext context) {
-    final themeMode = PreferencesService.instance.themeMode;
-    final lightTheme = PreferencesService.instance.lightTheme;
-    final darkTheme = PreferencesService.instance.darkTheme;
+    final themeMode = ThemeService.instance.themeMode;
+    final lightTheme = ThemeService.instance.lightTheme;
+    final darkTheme = ThemeService.instance.darkTheme;
     return BlocListener<PageCubit, PageState>(
       listenWhen: (_, __) => true,
       listener: (context, state) {
