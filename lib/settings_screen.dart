@@ -21,7 +21,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     settings = preferencesService.settingsModel;
-
     super.initState();
   }
 
@@ -31,8 +30,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.dispose();
   }
 
+  // TODO: fix button radius not changing in calculator screen
   void updateSettings() {
-    if (settings != preferencesService.settingsModel) {
+    if (settings.buttonRadius !=
+        preferencesService.settingsModel.buttonRadius) {
       preferencesService.updateSettings(settings);
     }
   }
@@ -51,7 +52,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return ThemeSwitchingArea(
       child: Scaffold(
           appBar: AppBar(title: const Text('Settings')),
-          bottomNavigationBar: const BottomAppBar(child: MadeBy()),
+          bottomNavigationBar: const BottomAppBar(
+            padding: EdgeInsets.zero,
+            child: MadeBy(),
+          ),
           body: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
             children: [

@@ -16,14 +16,14 @@ extension CalculatorExtension on String {
 
   ResultModel calculate({bool skipErrorChecking = false, Parser? parser}) {
     Parser p = parser ?? Parser();
-    // TODO: check for mismatch parenthesis and fix it, use mapslitjoin to check every open parenthesis
-    String finalInput =
-        _replaceOperationSymbols.removeCommas.replaceAll('√', 'sqrt');
+    String finalInput = _fixE._fixParenthesis._replaceOperationSymbols
+        ._replaceTrigonometry.removeCommas;
     bool hasDouble = finalInput.contains('.');
     try {
       Expression exp = p.parse(finalInput);
       ContextModel ctxModel = ContextModel();
       ctxModel.bindVariableName('π', Number(math.pi));
+      // ctxModel.bindVariableName('p', Number(math.e));
       double eval = exp.evaluate(EvaluationType.REAL, ctxModel);
       if (eval % 1 == 0 && !hasDouble) {
         return ResultModel(
@@ -146,12 +146,35 @@ extension CalculatorExtension on String {
   }
 
   String get _replaceOperationSymbols {
-    String finalInput = input;
-    finalInput = finalInput
-        .replaceAll('x', '*')
-        .replaceAll('÷', '/')
-        .replaceAll('%', '/100');
-    return finalInput;
+    return replaceAll('x', '*').replaceAll('÷', '/').replaceAll('%', '/100');
+  }
+
+  String get _fixParenthesis {
+    int openParenthesis = count('(');
+    int closeParenthesis = count(')');
+    if (openParenthesis > closeParenthesis) {
+      return input + ')' * (openParenthesis - closeParenthesis);
+    } else if (closeParenthesis > openParenthesis) {
+      return '(' * (closeParenthesis - openParenthesis) + input;
+    }
+    return input;
+  }
+
+  String get _replaceTrigonometry {
+    return replaceAll('acos', 'arccos')
+        .replaceAll('asin', 'arcsin')
+        .replaceAll('atan', 'arctan')
+        .replaceAll('√', 'sqrt');
+  }
+
+  String get _fixE {
+    // Replace e with math.e then replace exp with e
+    // because in math_expression exp() is not supported
+    // this is a workaround
+    return replaceAllMapped(
+      RegExp(r'e(?!xp\()'),
+      (Match m) => math.e.toString(),
+    ).replaceAll('exp(', 'e');
   }
 
   (String, int) insertScienticButton(ScientificButton value, int offset) {
@@ -268,5 +291,5 @@ extension StringExtension on String {
   }
 
   String get removeCommas => input.replaceAll(',', '');
-  int get commaCount => input.characters.where((val) => val == ',').length;
+  // int get commaCount => input.count(',');
 }

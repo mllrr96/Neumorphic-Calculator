@@ -7,7 +7,8 @@ class ConfirmDialog extends StatelessWidget {
       required this.title,
       required this.content,
       required this.confirmText});
-  final String title, content, confirmText;
+  final String content, confirmText;
+  final Widget title;
 
   final void Function() onConfirm;
 
@@ -23,7 +24,7 @@ class ConfirmDialog extends StatelessWidget {
           color: isDark ? Colors.white : Colors.black,
         );
     return AlertDialog(
-      title: Text(title),
+      title: title,
       titleTextStyle: titleTextStyle,
       contentTextStyle: contentTextStyle,
       content: Text(content),

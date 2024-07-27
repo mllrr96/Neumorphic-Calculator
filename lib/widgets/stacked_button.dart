@@ -69,9 +69,6 @@ class StackedButtonState extends State<StackedButton> {
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     final radius = PreferencesService.instance.settingsModel.buttonRadius;
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    TextStyle operationStyle = TextStyle(
-        color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900);
     final borderRadius1 = widget._isVertical
         ? BorderRadius.only(
             topRight: Radius.circular(radius),
@@ -150,8 +147,7 @@ class StackedButtonState extends State<StackedButton> {
                           ]
                       : null,
                 ),
-                child: DefaultTextStyle(
-                    style: operationStyle, child: widget.firstChild),
+                child: widget.firstChild,
               ),
             ),
           ),
@@ -198,10 +194,7 @@ class StackedButtonState extends State<StackedButton> {
                           ]
                       : null,
                 ),
-                child: DefaultTextStyle(
-                  style: operationStyle,
-                  child: widget.secondChild,
-                ),
+                child: widget.secondChild,
               ),
             ),
           ),

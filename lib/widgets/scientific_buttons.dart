@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/widgets/stacked_button.dart';
 
@@ -7,38 +7,49 @@ class ScientificButtons extends StatelessWidget {
   final void Function(ScientificButton value)? onScientificButtonsPressed;
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    TextStyle operationStyle = TextStyle(
+        color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900);
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             StackedButton(
-              firstChild: Text(ScientificButton.pow.value),
-              secondChild: Text(ScientificButton.fact.value),
+              firstChild:
+                  Text(ScientificButton.pow.value, style: operationStyle),
+              secondChild:
+                  Text(ScientificButton.fact.value, style: operationStyle),
               onFirstChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.pow),
               onSecondChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.fact),
             ),
             StackedButton.vertical(
-              firstChild: Text(ScientificButton.sin.name),
-              secondChild: Text(ScientificButton.cos.name),
+              firstChild:
+                  Text(ScientificButton.sin.name, style: operationStyle),
+              secondChild:
+                  Text(ScientificButton.cos.name, style: operationStyle),
               onFirstChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.sin),
               onSecondChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.cos),
             ),
             StackedButton.vertical(
-              firstChild: Text(ScientificButton.tan.name),
-              secondChild: Text(ScientificButton.log.name),
+              firstChild:
+                  Text(ScientificButton.tan.name, style: operationStyle),
+              secondChild:
+                  Text(ScientificButton.log.name, style: operationStyle),
               onFirstChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.tan),
               onSecondChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.log),
             ),
             StackedButton(
-              firstChild: Text(ScientificButton.sqrt.value.replaceAll('(', '')),
-              secondChild: Text(ScientificButton.pi.value),
+              firstChild: Text(ScientificButton.sqrt.value.replaceAll('(', ''),
+                  style: operationStyle),
+              secondChild:
+                  Text(ScientificButton.pi.value, style: operationStyle),
               onFirstChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.sqrt),
               onSecondChildPressed: () =>
@@ -51,28 +62,32 @@ class ScientificButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             StackedButton.vertical(
-              firstChild: const Text(''),
-              secondChild: const Text('INV'),
+              firstChild: Text('', style: operationStyle),
+              secondChild: Text('INV', style: operationStyle),
               onFirstChildPressed: () {},
               onSecondChildPressed: () {},
             ),
             StackedButton.vertical(
-              firstChild: Text(ScientificButton.asin.name),
-              secondChild: Text(ScientificButton.acos.name),
+              firstChild:
+                  Text(ScientificButton.asin.name, style: operationStyle),
+              secondChild:
+                  Text(ScientificButton.acos.name, style: operationStyle),
               onFirstChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.asin),
               onSecondChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.acos),
             ),
             StackedButton.vertical(
-              firstChild: const Text('10\u02e3'),
-              secondChild: const Text('e\u02e3'),
+              firstChild: Text('10\u02e3', style: operationStyle),
+              secondChild: Text('e\u02e3', style: operationStyle),
               onFirstChildPressed: () {},
-              onSecondChildPressed: () {},
+              onSecondChildPressed: () =>
+                  onScientificButtonsPressed?.call(ScientificButton.exp),
             ),
             StackedButton(
-              firstChild: Text(ScientificButton.e.value),
-              secondChild: Text(ScientificButton.ln.name),
+              firstChild: Text(ScientificButton.e.value, style: operationStyle),
+              secondChild:
+                  Text(ScientificButton.ln.name, style: operationStyle),
               onFirstChildPressed: () =>
                   onScientificButtonsPressed?.call(ScientificButton.e),
               onSecondChildPressed: () =>

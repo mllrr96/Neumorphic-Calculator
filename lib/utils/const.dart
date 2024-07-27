@@ -9,4 +9,7 @@ class AppConst {
   static const String heart = 'assets/lottie/heart.json';
   static const String githubDark = 'assets/lottie/github-dark.json';
   static const String githubLight = 'assets/lottie/github-light.json';
+  static const String deleteLight = 'assets/lottie/delete-light.json';
+  static const String deleteDark = 'assets/lottie/delete-dark.json';
+
 }

@@ -45,8 +45,8 @@ class NumberPad extends StatelessWidget {
             SizedBox(
                 width: 75,
                 child: StackedButton(
-                  firstChild: const Text('('),
-                  secondChild: const Text(')'),
+                  firstChild: Text('(', style: operationStyle),
+                  secondChild: Text(')', style: operationStyle),
                   onFirstChildPressed: () => onOperationPressed
                       ?.call(CalculatorButton.openParenthesis),
                   onSecondChildPressed: () => onOperationPressed

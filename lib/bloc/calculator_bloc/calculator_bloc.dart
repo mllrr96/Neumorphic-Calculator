@@ -31,9 +31,24 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     final noSelection = offset == -1 || offset == expression.length;
     switch (noSelection) {
       case true:
-        emit(state.copyWith(
-            expression: (expression + button.value).formatExpression(),
-            offset: -1));
+        if (expression.isEmpty) {
+          emit(state.copyWith(
+              expression: (expression + button.value).formatExpression(),
+              offset: -1));
+        } else {
+          // Check if the last character is a number, pi, e,  or
+          // a close parentheses to add a multiplication sign
+          if (expression.contains(RegExp(r'[0-9)eπ]$'))) {
+            emit(state.copyWith(
+                expression:
+                    ('${expression}x${button.value}').formatExpression(),
+                offset: -1));
+          } else {
+            emit(state.copyWith(
+                expression: (expression + button.value).formatExpression(),
+                offset: -1));
+          }
+        }
         break;
       case false:
         final result = expression.insertScienticButton(button, offset);
@@ -91,11 +106,27 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     bool noSelection =
         event.offset == -1 || event.offset == state.expression.length;
     if (noSelection) {
-      emit(state.copyWith(
-          expression: (state.expression + event.number).formatExpression(),
-          offset: -1));
+      // Check if the last character is pi, e,  or
+      // a close parentheses to add a multiplication sign
+      if (state.expression.contains(RegExp(r'[eπ)]$'))) {
+        emit(state.copyWith(
+            expression:
+                ('${state.expression}x${event.number}').formatExpression(),
+            offset: -1));
+      } else {
+        emit(state.copyWith(
+            expression: (state.expression + event.number).formatExpression(),
+            offset: -1));
+      }
     } else {
-      final result = state.expression.insertText(event.number, event.offset);
+      (String, int) result;
+      // Check if the last character before selection is pi, e,  or
+      // a close parentheses to add a multiplication sign
+      state.expression.substring(0, event.offset).contains(RegExp(r'[eπ)]$'))
+          ? result =
+              state.expression.insertText('x${event.number}', event.offset)
+          : result = state.expression.insertText(event.number, event.offset);
+
       emit(state.copyWith(
           expression: result.$1.formatExpression(), offset: result.$2));
     }

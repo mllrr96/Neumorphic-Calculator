@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:neumorphic_calculator/bloc/calculator_bloc/calculator_bloc.dart';
 import 'package:neumorphic_calculator/bloc/page_cubit/page_cubit.dart';
+import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/widgets/confirm_dialog.dart';
 
@@ -53,6 +55,7 @@ class _HistoryScreenState extends State<HistoryScreen>
           builder: (context, state) {
             final resultNotEmpty =
                 state is HistoryLoaded && state.results.isNotEmpty;
+            final isDark = Theme.of(context).brightness == Brightness.dark;
             return Scaffold(
                 appBar: AppBar(
                   title: const Text('History'),
@@ -95,7 +98,21 @@ class _HistoryScreenState extends State<HistoryScreen>
                           padding: const EdgeInsets.all(16.0),
                           onPressed: () {
                             ConfirmDialog(
-                                title: 'Clear History',
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Clear History'),
+                                    Lottie.asset(
+                                      !isDark
+                                          ? AppConst.deleteDark
+                                          : AppConst.deleteLight,
+                                      height: 50,
+                                      width: 50,
+                                      repeat: false,
+                                    ),
+                                  ],
+                                ),
                                 content:
                                     'Are you sure you want to clear the history?',
                                 confirmText: 'Clear',

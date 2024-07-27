@@ -13,36 +13,45 @@ class MadeBy extends StatelessWidget {
           color: isDark ? Colors.white : Colors.black,
         );
     final githubIconPath = isDark ? AppConst.githubLight : AppConst.githubDark;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '@2024 Neumorphic Calculator',
-              style: contentTextStyle?.copyWith(color: Colors.grey),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  '@2024 Neumorphic Calculator',
+                  style: contentTextStyle?.copyWith(color: Colors.grey),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                Text(
+                  'Made with ❤️ by Mohammed Ragheb',
+                  style: contentTextStyle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ],
             ),
-            Text(
-              'Made with ❤️ by Mohammed Ragheb',
-              style: contentTextStyle,
-            ),
-          ],
-        ),
-        IconButton(
-          onPressed: () async {
-            try {
-              await launchUrl(Uri.parse(AppConst.githubLink));
-            } catch (_) {}
-          },
-          icon: Lottie.asset(
-            githubIconPath,
-            width: 50,
-            height: 50,
           ),
-        )
-      ],
+          IconButton(
+            onPressed: () async {
+              try {
+                await launchUrl(Uri.parse(AppConst.githubLink));
+              } catch (_) {}
+            },
+            icon: Lottie.asset(
+              githubIconPath,
+              width: 50,
+              height: 50,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

@@ -50,6 +50,7 @@ enum ScientificButton {
   fact('!'),
   pi('π'),
   e('e'),
+  exp('exp('),
   rad('rad'),
   deg('deg');
 

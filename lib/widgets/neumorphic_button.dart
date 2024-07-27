@@ -35,8 +35,9 @@ class NeumorphicButtonState extends State<NeumorphicButton> {
 
   @override
   Widget build(BuildContext context) {
+    double borderRadius =
+        PreferencesService.instance.settingsModel.buttonRadius;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final borderRadius = PreferencesService.instance.settingsModel.buttonRadius;
     return GestureDetector(
       onTapDown: (_) => setElevated(false),
       onTapUp: (_) => setElevated(true),
