@@ -41,11 +41,6 @@ class QuickSettings extends StatelessWidget {
                           .copyWith(hapticEnabled: !hapticEnabled));
                     },
                   ),
-                  SwitchListTile(
-                    title: const Text('Other settings'),
-                    value: false,
-                    onChanged: (_) {},
-                  ),
                 ],
               ),
             ),

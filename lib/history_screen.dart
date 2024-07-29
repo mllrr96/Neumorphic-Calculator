@@ -58,6 +58,13 @@ class _HistoryScreenState extends State<HistoryScreen>
             final isDark = Theme.of(context).brightness == Brightness.dark;
             return Scaffold(
                 appBar: AppBar(
+                  systemOverlayStyle: Theme.of(context)
+                      .appBarTheme
+                      .systemOverlayStyle
+                      ?.copyWith(
+                        systemNavigationBarColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                      ),
                   title: const Text('History'),
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   bottom: showTip && resultNotEmpty

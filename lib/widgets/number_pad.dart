@@ -50,6 +50,7 @@ class NumberPad extends StatelessWidget {
             SizedBox(
                 width: 75,
                 child: StackedButton(
+                  borderRadius: borderRadius,
                   firstChild: Text('(', style: operationStyle),
                   secondChild: Text(')', style: operationStyle),
                   onFirstChildPressed: () => onOperationPressed

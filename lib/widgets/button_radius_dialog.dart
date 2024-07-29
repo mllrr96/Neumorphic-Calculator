@@ -20,18 +20,28 @@ class _ButtonRadiusDialogState extends State<ButtonRadiusDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // When showing dialog in dark mode the text remians black, this is a workaround
+    final titleTextStyle = Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: isDark ? Colors.white : Colors.black,
+        );
+    final contentTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: isDark ? Colors.white : Colors.black,
+        );
     return AlertDialog(
-      title: const Text('Button radius'),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      title: Text('Button radius', style: titleTextStyle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Change the radius of the buttons'),
-          // demo button
+          Text('Change the radius of the buttons', style: contentTextStyle),
+          const SizedBox(height: 16),
           NeumorphicButton(
             border:
                 Border.all(color: Theme.of(context).splashColor, width: 0.5),
             borderRadius: buttonRadius,
-            child: const Text('Demo'),
+            child: Text('Demo', style: contentTextStyle),
           ),
           const SizedBox(height: 16),
           Slider(
@@ -43,7 +53,7 @@ class _ButtonRadiusDialogState extends State<ButtonRadiusDialog> {
                 buttonRadius = val;
               });
             },
-            max: 25,
+            max: 45,
             min: 5,
           ),
         ],

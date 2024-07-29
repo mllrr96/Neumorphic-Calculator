@@ -79,24 +79,18 @@ class CalculatorScreenState extends State<CalculatorScreen> {
     }
   }
 
-  // bool get splashEnabled => settingsModel.splashEnabled;
-
   @override
   Widget build(BuildContext context) {
     return Slidable(
       direction: Axis.vertical,
       key: const ValueKey(0),
       endActionPane: const ActionPane(
-        extentRatio: 0.2,
+        extentRatio: 0.15,
         motion: BehindMotion(),
         children: [Expanded(child: QuickSettings())],
       ),
       child: BlocListener<CalculatorBloc, CalculatorState>(
         listener: (context, state) {
-          // if (state.splash) {
-          //   setState(() => splash = !splash);
-          // }
-
           controller.value = TextEditingValue(
             text: state.expression,
             selection: TextSelection.collapsed(offset: state.offset ?? -1),
@@ -110,7 +104,10 @@ class CalculatorScreenState extends State<CalculatorScreen> {
         child: ThemeSwitchingArea(
           child: Builder(builder: (context) {
             return AnnotatedRegion<SystemUiOverlayStyle>(
-              value: Theme.of(context).appBarTheme.systemOverlayStyle ??
+              value: Theme.of(context).appBarTheme.systemOverlayStyle?.copyWith(
+                        systemNavigationBarColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                      ) ??
                   SystemUiOverlayStyle.light,
               child: Scaffold(
                 appBar: const CalculatorAppBar(),

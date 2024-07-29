@@ -40,6 +40,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return ThemeSwitchingArea(
           child: Scaffold(
               appBar: AppBar(
+                systemOverlayStyle:
+                    Theme.of(context).appBarTheme.systemOverlayStyle?.copyWith(
+                          systemNavigationBarColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                        ),
                 title: const Text('Settings'),
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               ),
@@ -253,6 +258,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   return Theme(
                                     data: theme,
                                     child: ListTile(
+                                      trailing: settings.font == font
+                                          ? const Icon(Icons.check)
+                                          : null,
                                       onTap: () {
                                         if (font == settings.font) {
                                           return Navigator.pop(context);
