@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 
 enum CalculatorButton {
   allClear('AC'),
@@ -93,6 +95,26 @@ enum Fonts {
         return GoogleFonts.cabinTextTheme();
       case Fonts.pacifico:
         return GoogleFonts.pacificoTextTheme();
+    }
+  }
+
+  Future<String> license() async {
+    switch (this) {
+      case Fonts.rubik:
+      case Fonts.arsenal:
+      case Fonts.montserrat:
+      case Fonts.merriweather:
+      case Fonts.ptSans:
+      case Fonts.margarine:
+      case Fonts.dancingScript:
+      case Fonts.kodeMono:
+      case Fonts.cabin:
+      case Fonts.pacifico:
+        return await rootBundle.loadString(
+            'assets/google_fonts/OFL-${name.toLowerCase().removeSpaces}.txt');
+
+      case Fonts.roboto:
+        return await rootBundle.loadString('assets/google_fonts/LICENSE.txt');
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:system_theme/system_theme.dart';
 import 'bloc/page_cubit/page_cubit.dart';
 import 'bloc/preference_cubit/preference_cubit.dart';
 import 'calculator_screen.dart';
+import 'utils/enum.dart';
 import 'widgets/keep_alive_wrapper.dart';
 
 Future<void> main() async {
@@ -21,6 +23,14 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await SystemTheme.accentColor.load();
   await configureDependencies();
+
+  // Load all the licenses for the fonts
+  LicenseRegistry.addLicense(() async* {
+    for (final font in Fonts.values) {
+      final license = await font.license();
+      yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    }
+  });
 
   runApp(MultiBlocProvider(
     providers: [

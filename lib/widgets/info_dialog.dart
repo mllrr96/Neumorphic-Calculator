@@ -175,6 +175,12 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
       actions: [
         TextButton(
           onPressed: () {
+            showLicensePage(context: context);
+          },
+          child: const Text('Licenses'),
+        ),
+        TextButton(
+          onPressed: () {
             Navigator.of(context).pop();
           },
           child: const Text('Close'),
