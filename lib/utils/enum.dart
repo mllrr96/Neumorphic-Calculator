@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'theme.dart';
-
 enum CalculatorButton {
   allClear('AC'),
   openParenthesis('('),
@@ -58,20 +56,6 @@ enum ScientificButton {
   const ScientificButton(this.value);
 }
 
-enum ThemeType {
-  blue,
-  pink;
-
-  (ThemeData, ThemeData) get themeData {
-    switch (this) {
-      case ThemeType.blue:
-        return (BlueTheme.light, BlueTheme.dark);
-      case ThemeType.pink:
-        return (PinkTheme.light, PinkTheme.dark);
-    }
-  }
-}
-
 enum Fonts {
   rubik,
   roboto,
@@ -84,6 +68,33 @@ enum Fonts {
   kodeMono,
   cabin,
   pacifico;
+
+  TextTheme get textTheme {
+    switch (this) {
+      case Fonts.rubik:
+        return GoogleFonts.rubikTextTheme();
+      case Fonts.roboto:
+        return GoogleFonts.robotoTextTheme();
+      case Fonts.montserrat:
+        return GoogleFonts.montserratTextTheme();
+      case Fonts.arsenal:
+        return GoogleFonts.arsenalTextTheme();
+      case Fonts.merriweather:
+        return GoogleFonts.merriweatherTextTheme();
+      case Fonts.ptSans:
+        return GoogleFonts.ptSansTextTheme();
+      case Fonts.margarine:
+        return GoogleFonts.margarineTextTheme();
+      case Fonts.dancingScript:
+        return GoogleFonts.dancingScriptTextTheme();
+      case Fonts.kodeMono:
+        return GoogleFonts.kodeMonoTextTheme();
+      case Fonts.cabin:
+        return GoogleFonts.cabinTextTheme();
+      case Fonts.pacifico:
+        return GoogleFonts.pacificoTextTheme();
+    }
+  }
 
   ThemeData setToTheme(ThemeData theme) {
     switch (this) {
@@ -136,4 +147,25 @@ enum Fonts {
         );
     }
   }
+}
+
+enum ThemeColor {
+  sunsetOrange(Color(0xFFFF5E5B)),
+  oceanBlue(Color(0xFF0077B6)),
+  forestGreen(Color(0xFF2A9D8F)),
+  lavenderPurple(Color(0xFF9D4EDD)),
+  sunshineYellow(Color(0xFFFFD166)),
+  coralPink(Color(0xFFFF6F61)),
+  skyBlue(Color(0xFF00B4D8)),
+  mintGreen(Color(0xFF3DDC97)),
+  royalPurple(Color(0xFF7209B7)),
+  goldenYellow(Color(0xFFFFC300)),
+  blushRed(Color(0xFFE63946)),
+  tealBlue(Color(0xFF008080)),
+  peachOrange(Color(0xFFFFA07A)),
+  emeraldGreen(Color(0xFF50C878)),
+  midnightBlue(Color(0xFF191970));
+
+  final Color color;
+  const ThemeColor(this.color);
 }

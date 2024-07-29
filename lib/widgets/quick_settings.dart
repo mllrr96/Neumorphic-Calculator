@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neumorphic_calculator/bloc/preference_cubit/preference_cubit.dart';
 import 'package:neumorphic_calculator/bloc/preference_cubit/preference_state.dart';
@@ -32,6 +33,9 @@ class QuickSettings extends StatelessWidget {
                     title: const Text('Haptic feedback'),
                     value: hapticEnabled,
                     onChanged: (val) {
+                      if (val) {
+                        HapticFeedback.heavyImpact();
+                      }
                       context.read<PreferenceCubit>().updateSettings(state
                           .settings
                           .copyWith(hapticEnabled: !hapticEnabled));

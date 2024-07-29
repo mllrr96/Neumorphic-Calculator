@@ -10,6 +10,7 @@ import 'package:neumorphic_calculator/service/theme_service.dart';
 import 'package:neumorphic_calculator/settings_screen.dart';
 import 'package:neumorphic_calculator/tutorial_screen.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
+import 'package:system_theme/system_theme.dart';
 import 'bloc/page_cubit/page_cubit.dart';
 import 'bloc/preference_cubit/preference_cubit.dart';
 import 'calculator_screen.dart';
@@ -18,6 +19,7 @@ import 'widgets/keep_alive_wrapper.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await SystemTheme.accentColor.load();
   await configureDependencies();
 
   runApp(MultiBlocProvider(

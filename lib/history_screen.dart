@@ -59,6 +59,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             return Scaffold(
                 appBar: AppBar(
                   title: const Text('History'),
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   bottom: showTip && resultNotEmpty
                       ? PreferredSize(
                           preferredSize: Size.fromHeight(_animation.value),

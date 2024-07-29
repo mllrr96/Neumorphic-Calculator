@@ -3,7 +3,10 @@ import 'package:injectable/injectable.dart';
 import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
+import 'package:neumorphic_calculator/utils/extensions/color_extension.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:system_theme/system_theme.dart';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
 @singleton
 class ThemeService {
@@ -16,7 +19,6 @@ class ThemeService {
   final PreferencesService preferencesService;
 
   static const String _themeModeKey = 'theme_mode';
-  static const String _themeKey = 'theme';
 
   static late ThemeMode _themeMode;
   ThemeMode get themeMode => _themeMode;
@@ -27,17 +29,28 @@ class ThemeService {
   static late ThemeData _darkTheme;
   ThemeData get darkTheme => _darkTheme;
 
-  static late ThemeType _themeType;
-  ThemeType get themeType => _themeType;
-
   @PostConstruct()
   void init() {
     _themeMode = _loadThemeMode();
-    _themeType = _loadTheme();
-    _lightTheme = preferencesService.settingsModel.font
-        .setToTheme(_themeType.themeData.$1);
-    _darkTheme = preferencesService.settingsModel.font
-        .setToTheme(_themeType.themeData.$2);
+    _loadTheme();
+  }
+
+  void _loadTheme() {
+    final accentColor = SystemTheme.accentColor.accent;
+    final themeColor = preferencesService.settingsModel.themeColor.color;
+    if (preferencesService.settingsModel.dynamicColor &&
+        accentColor != SystemTheme.fallbackColor &&
+        defaultTargetPlatform.supportsAccentColor) {
+      loadTheme(accentColor);
+    } else {
+      loadTheme(themeColor);
+    }
+  }
+
+  void loadTheme(Color color) {
+    final textTheme = PreferencesService.instance.settingsModel.font.textTheme;
+    _lightTheme = color.getTheme(textTheme);
+    _darkTheme = color.getTheme(textTheme, brightness: Brightness.dark);
   }
 
   static ThemeMode _loadThemeMode() {
@@ -52,25 +65,6 @@ class ThemeService {
     }
   }
 
-  static ThemeType _loadTheme() {
-    try {
-      final int? themeIndex = _sharedPreferences.getInt(_themeKey);
-      if (themeIndex != null) {
-        return ThemeType.values[themeIndex];
-      }
-      return ThemeType.blue;
-    } catch (_) {
-      return ThemeType.blue;
-    }
-  }
-
-  void saveTheme(ThemeType type) {
-    try {
-      _sharedPreferences.setInt(_themeKey, type.index);
-      _themeType = type;
-    } catch (_) {}
-  }
-
   void saveThemeMode(ThemeMode themeMode) {
     try {
       _sharedPreferences.setInt(_themeModeKey, themeMode.index);
@@ -79,7 +73,7 @@ class ThemeService {
   }
 
   void updateFont(Fonts font) {
-    _lightTheme = font.setToTheme(_themeType.themeData.$1);
-    _darkTheme = font.setToTheme(_themeType.themeData.$2);
+    _lightTheme = font.setToTheme(_lightTheme);
+    _darkTheme = font.setToTheme(_darkTheme);
   }
 }

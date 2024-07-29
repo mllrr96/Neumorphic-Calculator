@@ -29,6 +29,7 @@ dependencies:
   flutter_slidable: ^3.1.1
   tutorial_coach_mark: ^1.2.11
   lottie: ^3.1.2
+  system_theme: ^3.0.0
 
 dev_dependencies:
   flutter_test:

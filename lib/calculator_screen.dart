@@ -28,7 +28,7 @@ class CalculatorScreen extends StatefulWidget {
 class CalculatorScreenState extends State<CalculatorScreen> {
   final TextEditingController controller = TextEditingController();
   String get input => controller.text;
-  // bool splash = false;
+  bool splash = false;
   SettingsModel get settingsModel =>
       context.read<PreferenceCubit>().state.settings;
 
@@ -120,7 +120,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                     children: [
                       BlocBuilder<CalculatorBloc, CalculatorState>(
                         builder: (context, state) {
-                          bool splash = false;
                           if (state.splash) {
                             splash = !splash;
                           }

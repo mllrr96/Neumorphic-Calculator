@@ -175,7 +175,7 @@ class _TutorialScreenState extends State<TutorialScreen>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'Swipe up to view more settings',
+                      'Swipe up to view quick settings',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,

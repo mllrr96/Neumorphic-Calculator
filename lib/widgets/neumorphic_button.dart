@@ -30,7 +30,11 @@ class NeumorphicButton extends StatefulWidget {
 class NeumorphicButtonState extends State<NeumorphicButton> {
   bool _isElevated = true;
 
-  void setElevated(bool value) => setState(() => _isElevated = value);
+  void setElevated(bool value) {
+    if (mounted) {
+      setState(() => _isElevated = value);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
