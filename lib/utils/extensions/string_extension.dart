@@ -223,6 +223,62 @@ extension CalculatorExtension on String {
   }
 
   String get removeLastChar => input.substring(0, input.length - 1);
+  (String, int) removeLastFunction(int offset) {
+    if (isLastCharFunction && lastFunction != null) {
+      return (
+        input.substring(0, offset - lastFunction!.length),
+        offset - lastFunction!.length
+      );
+    }
+    return (input, offset);
+  }
+
+  String? get lastFunction {
+    // returns the last function in the input
+    const functions = [
+      'asin(',
+      'acos(',
+      'sin(',
+      'cos(',
+      'tan(',
+      'log(',
+      'ln(',
+      '√(',
+      'asin',
+      'acos',
+      'sin',
+      'cos',
+      'tan',
+      'log',
+      'ln',
+      '√',
+    ];
+    for (final function in functions) {
+      if (endsWith(function)) {
+        return function;
+      }
+    }
+    return null;
+  }
+
+  bool get isLastCharFunction => input.endsWithAny([
+        'asin',
+        'acos',
+        'sin',
+        'cos',
+        'tan',
+        'log',
+        'ln',
+        '√',
+        'sin(',
+        'asin(',
+        'cos(',
+        'acos(',
+        'tan(',
+        'log(',
+        'ln(',
+        '√('
+      ]);
 
   (String, int) removeCharAt(int offset) {
     try {

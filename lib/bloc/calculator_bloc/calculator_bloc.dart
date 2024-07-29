@@ -231,15 +231,35 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     if (expression.isEmpty) {
       emit(state.copyWith(expression: expression.formatExpression()));
     }
-    if (noOffset) {
-      if (expression.isNotEmpty) {
-        final result = expression.removeLastChar;
-        emit(state.copyWith(expression: result.formatExpression()));
-      }
-    } else {
-      final result = expression.removeCharAt(event.offset);
-      emit(state.copyWith(
-          expression: result.$1.formatExpression(), offset: result.$2));
+
+    switch (noOffset) {
+      case true:
+        if (expression.isNotEmpty) {
+          // Check if the last character is cos, acos, sin, asin, tan, log, ln, or sqrt
+          // to remove the whole function
+          if (expression.isLastCharFunction) {
+            final result = expression.removeLastFunction(event.offset);
+            emit(state.copyWith(expression: result.$1.formatExpression()));
+          } else {
+            final result = expression.removeLastChar;
+            emit(state.copyWith(expression: result.formatExpression()));
+          }
+        }
+        break;
+      case false:
+        if (expression.substring(0, event.offset).isLastCharFunction) {
+          final firstPart = expression
+              .substring(0, event.offset)
+              .removeLastFunction(event.offset);
+          final result = firstPart.$1 + expression.substring(event.offset);
+          emit(state.copyWith(
+              expression: result.formatExpression(), offset: firstPart.$2));
+        } else {
+          final result = expression.removeCharAt(event.offset);
+          emit(state.copyWith(
+              expression: result.$1.formatExpression(), offset: result.$2));
+        }
+        break;
     }
   }
 
