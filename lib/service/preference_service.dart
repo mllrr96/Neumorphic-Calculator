@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:neumorphic_calculator/di/di.dart';
+import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/settings_model.dart';
@@ -12,10 +13,11 @@ class PreferencesService {
   }
   static PreferencesService get instance => getIt<PreferencesService>();
   static late SharedPreferences _sharedPreferences;
-  static const String _settingsKey = 'settings';
-  static const String _resultsKey = 'results';
-  static const String _firstRunKey = 'firstRun';
-  static const String _firstCallKey = 'firstKey';
+  static const String _firstRunKey = AppConst.firstRunKey;
+  static const String _firstCallKey = AppConst.firstCallKey;
+  static const String _settingsKey = AppConst.settingsKey;
+  static const String _resultsKey = AppConst.resultsKey;
+
 
   static late SettingsModel _settingsModel;
   SettingsModel get settingsModel => _settingsModel;

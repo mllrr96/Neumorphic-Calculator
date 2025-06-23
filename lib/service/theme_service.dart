@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/extensions/color_extension.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,7 @@ class ThemeService {
   static late SharedPreferences _sharedPreferences;
   final PreferencesService preferencesService;
 
-  static const String _themeModeKey = 'theme_mode';
+  static const String _themeModeKey = AppConst.themeModeKey;
 
   static late ThemeMode _themeMode;
   ThemeMode get themeMode => _themeMode;

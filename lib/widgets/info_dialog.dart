@@ -112,7 +112,7 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
             leading: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.35)),
+                  color: Colors.grey.withValues(alpha:0.35)),
               child: Lottie.asset(
                 AppConst.swipeLeftGesture,
                 controller: _swipeLeftController,
@@ -128,7 +128,7 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
             leading: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.35)),
+                  color: Colors.grey.withValues(alpha:0.35)),
               child: Lottie.asset(
                 AppConst.swipeRightGesture,
                 controller: _swipeRightController,
@@ -144,7 +144,7 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
             leading: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.35)),
+                  color: Colors.grey.withValues(alpha:0.35)),
               child: Lottie.asset(
                 AppConst.swipeUpGesture,
                 controller: _swipeUpController,
@@ -160,7 +160,7 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
             leading: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.35)),
+                  color: Colors.grey.withValues(alpha:0.35)),
               child: Lottie.asset(
                 AppConst.heart,
                 controller: _heartController,

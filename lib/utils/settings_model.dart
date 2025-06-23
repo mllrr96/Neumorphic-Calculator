@@ -3,7 +3,6 @@ import 'enum.dart';
 
 class SettingsModel extends Equatable {
   final bool hapticEnabled;
-  final bool splashEnabled;
   final double buttonRadius;
   final Fonts font;
   final bool showHistoryTip;
@@ -13,7 +12,6 @@ class SettingsModel extends Equatable {
   const SettingsModel({
     required this.hapticEnabled,
     required this.dynamicColor,
-    required this.splashEnabled,
     required this.buttonRadius,
     required this.font,
     required this.showHistoryTip,
@@ -24,7 +22,6 @@ class SettingsModel extends Equatable {
   factory SettingsModel.normal() {
     return const SettingsModel(
       hapticEnabled: true,
-      splashEnabled: true,
       dynamicColor: false,
       buttonRadius: 12.0,
       showHistoryTip: true,
@@ -36,7 +33,6 @@ class SettingsModel extends Equatable {
 
   SettingsModel copyWith(
       {bool? hapticEnabled,
-      bool? splashEnabled,
       double? buttonRadius,
       bool? showHistoryTip,
       bool? scientific,
@@ -45,7 +41,6 @@ class SettingsModel extends Equatable {
       Fonts? font}) {
     return SettingsModel(
         hapticEnabled: hapticEnabled ?? this.hapticEnabled,
-        splashEnabled: splashEnabled ?? this.splashEnabled,
         buttonRadius: buttonRadius ?? this.buttonRadius,
         scientific: scientific ?? this.scientific,
         themeColor: themeColor ?? this.themeColor,
@@ -57,7 +52,6 @@ class SettingsModel extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'hapticEnabled': hapticEnabled,
-      'splashEnabled': splashEnabled,
       'dynamicColor': dynamicColor,
       'buttonRadius': buttonRadius,
       'scientific': scientific,
@@ -70,7 +64,6 @@ class SettingsModel extends Equatable {
   factory SettingsModel.fromMap(Map<String, dynamic> map) {
     return SettingsModel(
       hapticEnabled: map['hapticEnabled'] ?? true,
-      splashEnabled: map['splashEnabled'] ?? true,
       scientific: map['scientific'] ?? false,
       dynamicColor: map['dynamicColor'] ?? false,
       buttonRadius: map['buttonRadius'] ?? 12.0,
@@ -83,7 +76,6 @@ class SettingsModel extends Equatable {
   @override
   List<Object?> get props => [
         hapticEnabled,
-        splashEnabled,
         buttonRadius,
         scientific,
         themeColor,

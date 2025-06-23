@@ -3,7 +3,6 @@ import 'package:fraction/fraction.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:math_expressions/math_expressions.dart';
-import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
 import 'dart:math' as math;
 
@@ -14,8 +13,17 @@ var logger = Logger(
 extension CalculatorExtension on String {
   String get input => this;
 
-  ResultModel calculate({bool skipErrorChecking = false, Parser? parser}) {
-    Parser p = parser ?? Parser();
+  bool isNoSelection(int? offset) =>
+      offset == null || offset == -1 || offset == length;
+
+  bool get needsMultiply => contains(RegExp(r'[eπ)]$'));
+
+  bool get endsWithOperator => endsWithAny(['x', '÷', '+', '-']);
+
+  bool get isValidForCalculation => isNotEmpty && !endsWithOperator;
+
+  ResultModel calculate({bool skipErrorChecking = false, GrammarParser? parser}) {
+    GrammarParser p = parser ?? GrammarParser();
     String finalInput = _fixE._fixParenthesis._replaceOperationSymbols
         ._replaceTrigonometry.removeCommas;
     bool hasDouble = finalInput.contains('.');
@@ -24,7 +32,9 @@ extension CalculatorExtension on String {
       ContextModel ctxModel = ContextModel();
       ctxModel.bindVariableName('π', Number(math.pi));
       // ctxModel.bindVariableName('p', Number(math.e));
-      double eval = exp.evaluate(EvaluationType.REAL, ctxModel);
+      RealEvaluator expEvaluator = RealEvaluator(ctxModel);
+
+      num eval = expEvaluator.evaluate(exp);
       if (eval % 1 == 0 && !hasDouble) {
         return ResultModel(
             output: eval.toInt().toString(),
@@ -48,7 +58,9 @@ extension CalculatorExtension on String {
 
   bool get isNumber =>
       double.tryParse(input) != null || int.tryParse(input) != null;
+
   bool get isDouble => double.tryParse(input) != null;
+
   bool get isInt => int.tryParse(input) != null;
 
   String get toFraction {
@@ -64,9 +76,7 @@ extension CalculatorExtension on String {
           'x',
           '÷',
           '+',
-          '-',
-          ...ScientificButton.values
-              .map((e) => e.value.replaceAll('(', '').replaceAll(')', ''))
+          '-'
         ])) {
       return false;
     }
@@ -177,18 +187,6 @@ extension CalculatorExtension on String {
     ).replaceAll('exp(', 'e');
   }
 
-  (String, int) insertScienticButton(ScientificButton value, int offset) {
-    try {
-      final firstPart = input.substring(0, offset);
-      final lastPart = input.substring(offset);
-
-      return (firstPart + value.value + lastPart, offset + value.value.length);
-    } catch (e, stack) {
-      logger.f(e.toString(), stackTrace: stack, error: e);
-      return (input, offset);
-    }
-  }
-
   (String, int) insertText(String value, int offset,
       {bool skipFormatting = false}) {
     try {
@@ -223,6 +221,7 @@ extension CalculatorExtension on String {
   }
 
   String get removeLastChar => input.substring(0, input.length - 1);
+
   (String, int) removeLastFunction(int offset) {
     if (isLastCharFunction && lastFunction != null) {
       return (
@@ -315,7 +314,6 @@ extension CalculatorExtension on String {
 }
 
 extension StringExtension on String {
-  String get capitilize => this[0].toUpperCase() + substring(1);
 
   String get removeSpaces => replaceAll(' ', '');
 
@@ -347,5 +345,5 @@ extension StringExtension on String {
   }
 
   String get removeCommas => input.replaceAll(',', '');
-  // int get commaCount => input.count(',');
+// int get commaCount => input.count(',');
 }

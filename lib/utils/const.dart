@@ -1,4 +1,6 @@
 class AppConst {
+  AppConst._();
+
   static const String appName = 'Neumorphic Calculator';
   static const String githubLink =
       'https://github.com/mllrr96/Neumorphic-Calculator.git';
@@ -12,4 +14,10 @@ class AppConst {
   static const String deleteLight = 'assets/lottie/delete-light.json';
   static const String deleteDark = 'assets/lottie/delete-dark.json';
 
+  static const String historyKey = 'history';
+  static const String settingsKey = 'settings';
+  static const String resultsKey = 'results';
+  static const String firstRunKey = 'firstRun';
+  static const String firstCallKey = 'firstKey';
+  static const String themeModeKey = 'theme_mode';
 }

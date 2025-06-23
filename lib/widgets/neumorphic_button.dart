@@ -4,16 +4,18 @@ class NeumorphicButton extends StatefulWidget {
   const NeumorphicButton({
     super.key,
     this.onPressed,
+    this.onLongPress,
+    required this.child,
     this.width,
     this.height,
-    this.duration,
-    required this.child,
     this.borderRadius,
-    this.onLongPress,
+    this.duration,
     this.boxShadow,
     this.constraints,
     this.border,
+    this.semanticLabel,
   });
+
   final void Function()? onPressed;
   final void Function()? onLongPress;
   final double? width, height;
@@ -23,33 +25,50 @@ class NeumorphicButton extends StatefulWidget {
   final List<BoxShadow>? boxShadow;
   final BoxConstraints? constraints;
   final BoxBorder? border;
+  final String? semanticLabel;
+
   @override
-  State<NeumorphicButton> createState() => NeumorphicButtonState();
+  State<NeumorphicButton> createState() => _NeumorphicButtonState();
 }
 
-class NeumorphicButtonState extends State<NeumorphicButton> {
+class _NeumorphicButtonState extends State<NeumorphicButton> {
   bool _isElevated = true;
 
   void setElevated(bool value) {
-    if (mounted) {
-      setState(() => _isElevated = value);
-    }
+    if (mounted) setState(() => _isElevated = value);
+  }
+
+  void _handleTap() {
+    widget.onPressed?.call();
+    Future.delayed(const Duration(milliseconds: 200), () => setElevated(true));
+  }
+
+  List<BoxShadow>? _buildShadows(bool isDark) {
+    if (!_isElevated) return null;
+    return widget.boxShadow ??
+        [
+          BoxShadow(
+            color: isDark ? const Color(0xff313D4E) : const Color(0xffEBEFFF),
+            offset: const Offset(5, 5),
+            blurRadius: 10,
+          ),
+          BoxShadow(
+            color: isDark ? const Color(0xff394656) : const Color(0xffFFFFFF),
+            offset: const Offset(-5, -5),
+            blurRadius: 10,
+          ),
+        ];
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTapDown: (_) => setElevated(false),
-      onTapUp: (_) => setElevated(true),
+      onTapUp: (_) => _handleTap(),
       onTapCancel: () => setElevated(true),
       onLongPress: widget.onLongPress,
-      onTap: () {
-        setElevated(!_isElevated);
-        Future.delayed(
-            const Duration(milliseconds: 200), () => setElevated(true));
-        widget.onPressed?.call();
-      },
       child: AnimatedContainer(
         alignment: Alignment.center,
         duration: widget.duration ?? const Duration(milliseconds: 200),
@@ -57,36 +76,13 @@ class NeumorphicButtonState extends State<NeumorphicButton> {
         width: widget.width,
         constraints: widget.constraints ??
             const BoxConstraints(
-              minHeight: 55,
-              maxHeight: 75,
-              minWidth: 55,
-              maxWidth: 75,
-            ),
+                minHeight: 55, maxHeight: 75, minWidth: 55, maxWidth: 75),
+        transform: Matrix4.identity()..scale(_isElevated ? 1.0 : 0.96),
         decoration: BoxDecoration(
           border: widget.border,
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(widget.borderRadius ?? 18.0),
-          boxShadow: _isElevated
-              ? widget.boxShadow ??
-                  [
-                    BoxShadow(
-                      color: isDark
-                          ? const Color(0xff313D4E)
-                          : const Color(0xffEBEFFF),
-                      offset: const Offset(5, 5),
-                      blurRadius: 10,
-                      spreadRadius: 0,
-                    ),
-                    BoxShadow(
-                      color: isDark
-                          ? const Color(0xff394656)
-                          : const Color(0xffFFFFFF),
-                      offset: const Offset(-5, -5),
-                      blurRadius: 10,
-                      spreadRadius: 0,
-                    ),
-                  ]
-              : null,
+          boxShadow: _buildShadows(isDark),
         ),
         child: widget.child,
       ),

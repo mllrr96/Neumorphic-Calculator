@@ -36,28 +36,6 @@ enum CalculatorButton {
   bool get isNumber => int.tryParse(value) != null;
 }
 
-enum ScientificButton {
-  sin('sin('),
-  asin('asin('),
-  cos('cos('),
-  acos('acos('),
-  tan('tan('),
-  atan('atan('),
-  log('log('),
-  ln('ln('),
-  sqrt('√('),
-  pow('^'),
-  fact('!'),
-  pi('π'),
-  e('e'),
-  exp('exp('),
-  rad('rad'),
-  deg('deg');
-
-  final String value;
-  const ScientificButton(this.value);
-}
-
 enum Fonts {
   rubik,
   roboto,

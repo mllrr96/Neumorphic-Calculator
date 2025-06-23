@@ -1,195 +1,113 @@
 import 'package:flutter/material.dart';
+import 'package:neumorphic_calculator/calculator_icons.dart';
+import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/widgets/neumorphic_button.dart';
-import 'package:neumorphic_calculator/widgets/scientific_buttons.dart';
 import 'package:neumorphic_calculator/widgets/stacked_button.dart';
-import '../calculator_icons.dart';
-import '../utils/enum.dart';
 
 class NumberPad extends StatelessWidget {
-  const NumberPad(
-      {super.key,
-      this.onNumberPressed,
-      this.onOperationPressed,
-      this.onScientificButtonsPressed,
-      required this.isScientific,
-      required this.borderRadius});
+  const NumberPad({
+    super.key,
+    this.onNumberPressed,
+    this.onOperationPressed,
+    required this.borderRadius,
+  });
+
   final void Function(String number)? onNumberPressed;
   final void Function(CalculatorButton button)? onOperationPressed;
-  final void Function(ScientificButton value)? onScientificButtonsPressed;
-  final bool isScientific;
   final double borderRadius;
+
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    TextStyle numberStyle = TextStyle(
-        color: Theme.of(context).iconTheme.color,
-        fontSize: 24,
-        fontWeight: FontWeight.bold);
-    TextStyle operationStyle = TextStyle(
-        color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900);
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        if (isScientific)
-          ScientificButtons(
-            borderRadius: borderRadius,
-            onScientificButtonsPressed: onScientificButtonsPressed,
-          ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child:
-                  Text(CalculatorButton.allClear.value, style: operationStyle),
-              onPressed: () {
-                onOperationPressed?.call(CalculatorButton.allClear);
-              },
-            ),
-            SizedBox(
+    final numberStyle = TextStyle(
+      color: Theme.of(context).iconTheme.color,
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+    );
+    final operationStyle = TextStyle(
+      color: primaryColor,
+      fontSize: 24,
+      fontWeight: FontWeight.w900,
+    );
+
+    Widget buildTextBtn(String label, VoidCallback onPressed, TextStyle style) {
+      return NeumorphicButton(
+        borderRadius: borderRadius,
+        onPressed: onPressed,
+        child: Text(label, style: style),
+      );
+    }
+
+    Widget buildIconBtn(IconData icon, VoidCallback onPressed) {
+      return NeumorphicButton(
+        borderRadius: borderRadius,
+        onPressed: onPressed,
+        child: Icon(icon, color: primaryColor, size: 24),
+      );
+    }
+
+    return RepaintBoundary(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildTextBtn(CalculatorButton.allClear.value,
+                      () => onOperationPressed?.call(CalculatorButton.allClear), operationStyle),
+              SizedBox(
                 width: 75,
                 child: StackedButton(
                   borderRadius: borderRadius,
                   firstChild: Text('(', style: operationStyle),
                   secondChild: Text(')', style: operationStyle),
-                  onFirstChildPressed: () => onOperationPressed
-                      ?.call(CalculatorButton.openParenthesis),
-                  onSecondChildPressed: () => onOperationPressed
-                      ?.call(CalculatorButton.closeParenthesis),
-                )),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Icon(CalculatorIcons.percentage,
-                  color: primaryColor, size: 24),
-              onPressed: () =>
-                  onOperationPressed?.call(CalculatorButton.percent),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child:
-                  Icon(CalculatorIcons.divide, color: primaryColor, size: 24),
-              onPressed: () =>
-                  onOperationPressed?.call(CalculatorButton.divide),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.seven.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.seven.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.eight.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.eight.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.nine.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.nine.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child:
-                  Icon(CalculatorIcons.cancel, color: primaryColor, size: 24),
-              onPressed: () =>
-                  onOperationPressed?.call(CalculatorButton.multiply),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.four.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.four.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.five.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.five.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.six.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.six.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Icon(CalculatorIcons.minus, color: primaryColor, size: 24),
-              onPressed: () =>
-                  onOperationPressed?.call(CalculatorButton.subtract),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.one.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.one.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.two.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.two.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.three.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.three.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Icon(CalculatorIcons.plus, color: primaryColor, size: 24),
-              onPressed: () => onOperationPressed?.call(CalculatorButton.add),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Text(CalculatorButton.zero.value, style: numberStyle),
-              onPressed: () =>
-                  onNumberPressed?.call(CalculatorButton.zero.value),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child:
-                  Text(CalculatorButton.decimal.value, style: operationStyle),
-              onPressed: () =>
-                  onOperationPressed?.call(CalculatorButton.decimal),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Icon(Icons.backspace, size: 24, color: primaryColor),
-              onPressed: () => onOperationPressed?.call(CalculatorButton.clear),
-            ),
-            NeumorphicButton(
-              borderRadius: borderRadius,
-              child: Icon(CalculatorIcons.calc, color: primaryColor, size: 24),
-              onPressed: () => onOperationPressed?.call(CalculatorButton.equal),
-            ),
-          ],
-        ),
-      ],
+                  onFirstChildPressed: () => onOperationPressed?.call(CalculatorButton.openParenthesis),
+                  onSecondChildPressed: () => onOperationPressed?.call(CalculatorButton.closeParenthesis),
+                ),
+              ),
+              buildIconBtn(CalculatorIcons.percentage, () => onOperationPressed?.call(CalculatorButton.percent)),
+              buildIconBtn(CalculatorIcons.divide, () => onOperationPressed?.call(CalculatorButton.divide)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildTextBtn('7', () => onNumberPressed?.call('7'), numberStyle),
+              buildTextBtn('8', () => onNumberPressed?.call('8'), numberStyle),
+              buildTextBtn('9', () => onNumberPressed?.call('9'), numberStyle),
+              buildIconBtn(CalculatorIcons.cancel, () => onOperationPressed?.call(CalculatorButton.multiply)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildTextBtn('4', () => onNumberPressed?.call('4'), numberStyle),
+              buildTextBtn('5', () => onNumberPressed?.call('5'), numberStyle),
+              buildTextBtn('6', () => onNumberPressed?.call('6'), numberStyle),
+              buildIconBtn(CalculatorIcons.minus, () => onOperationPressed?.call(CalculatorButton.subtract)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildTextBtn('1', () => onNumberPressed?.call('1'), numberStyle),
+              buildTextBtn('2', () => onNumberPressed?.call('2'), numberStyle),
+              buildTextBtn('3', () => onNumberPressed?.call('3'), numberStyle),
+              buildIconBtn(CalculatorIcons.plus, () => onOperationPressed?.call(CalculatorButton.add)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildTextBtn('0', () => onNumberPressed?.call('0'), numberStyle),
+              buildTextBtn('.', () => onOperationPressed?.call(CalculatorButton.decimal), operationStyle),
+              buildIconBtn(Icons.backspace, () => onOperationPressed?.call(CalculatorButton.clear)),
+              buildIconBtn(CalculatorIcons.calc, () => onOperationPressed?.call(CalculatorButton.equal)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
