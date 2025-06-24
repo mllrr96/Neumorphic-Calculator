@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:neumorphic_calculator/calculator_icons.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/widgets/neumorphic_button.dart';
@@ -103,7 +104,7 @@ class NumberPad extends StatelessWidget {
               buildTextBtn('0', () => onNumberPressed?.call('0'), numberStyle),
               buildTextBtn('.', () => onOperationPressed?.call(CalculatorButton.decimal), operationStyle),
               buildIconBtn(Icons.backspace, () => onOperationPressed?.call(CalculatorButton.clear)),
-              buildIconBtn(CalculatorIcons.calc, () => onOperationPressed?.call(CalculatorButton.equal)),
+              buildIconBtn(LucideIcons.calculator, () => onOperationPressed?.call(CalculatorButton.equal)),
             ],
           ),
         ],

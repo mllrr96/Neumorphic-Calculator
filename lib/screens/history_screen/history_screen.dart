@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:neumorphic_calculator/dashboard_controller.dart';
+import 'package:neumorphic_calculator/screens/dashboard_screen/dashboard_controller.dart';
 import 'package:neumorphic_calculator/screens/calculator_screen/calculator_controller.dart';
 import 'package:neumorphic_calculator/screens/history_screen/history_controller.dart';
 import 'package:neumorphic_calculator/screens/settings_screen/settings_controller.dart';
@@ -55,16 +55,42 @@ class _HistoryScreenState extends State<HistoryScreen>
             final resultNotEmpty = ctrl.state?.isNotEmpty ?? false;
             final isDark = Get.isDarkMode;
             return Scaffold(
-              appBar: AppBar(
-                systemOverlayStyle:
-                    Theme.of(context).appBarTheme.systemOverlayStyle?.copyWith(
-                          systemNavigationBarColor:
-                              Theme.of(context).scaffoldBackgroundColor,
-                        ),
-                title: const Text('History'),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                bottom: showTip && resultNotEmpty
-                    ? PreferredSize(
+              floatingActionButton: resultNotEmpty
+                  ? FloatingActionButton.large(
+                      child: const Icon(
+                        Icons.delete_forever,
+                      ),
+                      onPressed: () {
+                        ConfirmDialog(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Clear History'),
+                                Lottie.asset(
+                                  !isDark
+                                      ? AppConst.deleteDark
+                                      : AppConst.deleteLight,
+                                  height: 50,
+                                  width: 50,
+                                  repeat: false,
+                                ),
+                              ],
+                            ),
+                            content:
+                                'Are you sure you want to clear the history?',
+                            confirmText: 'Clear',
+                            onConfirm: () {
+                              ctrl.clearData();
+                              // context
+                              //     .read<HistoryBloc>()
+                              //     .add(const ClearHistory());
+                            }).show(context);
+                      })
+                  : null,
+              body: Column(
+                children: [
+                  if (showTip && resultNotEmpty)
+                    PreferredSize(
                         preferredSize: Size.fromHeight(_animation.value),
                         child: SizedBox(
                           height: _animation.value,
@@ -79,7 +105,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 tileColor: Theme.of(context)
                                     .colorScheme
                                     .secondary
-                                    .withValues(alpha:0.1),
+                                    .withValues(alpha: 0.1),
                                 trailing: IconButton(
                                   padding: const EdgeInsets.all(16.0),
                                   icon: const Icon(Icons.close),
@@ -92,80 +118,45 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   },
                                 )),
                           ),
-                        ))
-                    : null,
-                actions: [
-                  if (resultNotEmpty)
-                    IconButton(
-                        icon: const Icon(
-                          Icons.delete_forever,
-                          color: Colors.red,
-                        ),
-                        padding: const EdgeInsets.all(16.0),
-                        onPressed: () {
-                          ConfirmDialog(
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text('Clear History'),
-                                      Lottie.asset(
-                                        !isDark
-                                            ? AppConst.deleteDark
-                                            : AppConst.deleteLight,
-                                        height: 50,
-                                        width: 50,
-                                        repeat: false,
-                                      ),
-                                    ],
-                                  ),
-                                  content:
-                                      'Are you sure you want to clear the history?',
-                                  confirmText: 'Clear',
-                                  onConfirm: () {
-                                    ctrl.clearData();
-                                    // context
-                                    //     .read<HistoryBloc>()
-                                    //     .add(const ClearHistory());
-                                  })
-                              .show(context);
-                        }),
+                        )),
+                  Expanded(
+                    child: ctrl.obx(
+                      (historyList) => ListView.builder(
+                        itemCount: historyList!.length,
+                        itemBuilder: (context, index) {
+                          final history = historyList[index];
+                          return ListTile(
+                            title: Text(history.expression),
+                            subtitle: Text(history.output),
+                            trailing: Text(history.dateTime.timeAgo),
+                            onTap: () {
+                              CalculatorController.instance.updateExpression(
+                                history.expression,
+                                offset: history.expression.length,
+                              );
+                              DashboardController.instance.animateToPage(1);
+                            },
+                            onLongPress: () async {
+                              // copy the result to the clipboard
+                              await Clipboard.setData(
+                                  ClipboardData(text: history.output));
+                              HapticFeedback.heavyImpact();
+                            },
+                          );
+                        },
+                      ),
+                      onEmpty: Center(
+                        child: Text('Expression history = 0', style: textStyle),
+                      ),
+                      onLoading: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      onError: (error) => Center(
+                        child: Text(error ?? ' ', style: textStyle),
+                      ),
+                    ),
+                  ),
                 ],
-              ),
-              body: ctrl.obx(
-                (historyList) => ListView.builder(
-                  itemCount: historyList!.length,
-                  itemBuilder: (context, index) {
-                    final history = historyList[index];
-                    return ListTile(
-                      title: Text(history.expression),
-                      subtitle: Text(history.output),
-                      trailing: Text(history.dateTime.timeAgo),
-                      onTap: () {
-                        CalculatorController.instance.updateExpression(
-                          history.expression,
-                          offset: history.expression.length,
-                        );
-                        DashboardController.instance.animateToPage(1);
-                      },
-                      onLongPress: () async {
-                        // copy the result to the clipboard
-                        await Clipboard.setData(
-                            ClipboardData(text: history.output));
-                        HapticFeedback.heavyImpact();
-                      },
-                    );
-                  },
-                ),
-                onEmpty: Center(
-                  child: Text('Expression history = 0', style: textStyle),
-                ),
-                onLoading: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                onError: (error) => Center(
-                  child: Text(error ?? ' ', style: textStyle),
-                ),
               ),
             );
           },

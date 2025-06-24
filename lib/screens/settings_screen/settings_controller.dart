@@ -1,20 +1,18 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/repo/database.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsController extends GetxController with StateMixin<SettingsModel> {
   static SettingsController get instance => Get.find<SettingsController>();
-  late final Database _dataBase;
+  final DatabaseRepository _dataBase;
+  SettingsController(this._dataBase);
 
   @override
   void onInit() {
     super.onInit();
-    _dataBase = Database(getIt<SharedPreferences>());
     _loadSettings();
   }
 
@@ -40,6 +38,8 @@ class SettingsController extends GetxController with StateMixin<SettingsModel> {
         AppConst.settingsKey,
         jsonEncode(settings.toMap()),
       );
+      update();
+
       change(settings, status: RxStatus.success());
     } catch (e) {
       change(

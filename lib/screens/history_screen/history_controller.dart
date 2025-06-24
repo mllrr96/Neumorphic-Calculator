@@ -1,22 +1,20 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:neumorphic_calculator/di/di.dart';
 import 'package:neumorphic_calculator/repo/database.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryController extends GetxController
     with StateMixin<List<ResultModel>> {
+  HistoryController(this._database);
   static HistoryController get instance => Get.find<HistoryController>();
 
-  late final Database _database;
+  final DatabaseRepository _database;
 
   @override
   void onInit() {
     super.onInit();
-    _database = Database(getIt<SharedPreferences>());
     _loadData();
   }
 

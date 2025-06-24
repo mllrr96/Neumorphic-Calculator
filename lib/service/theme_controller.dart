@@ -1,62 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:injectable/injectable.dart';
-import 'package:neumorphic_calculator/di/di.dart';
+import 'package:get/get.dart';
+import 'package:neumorphic_calculator/repo/database.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/extensions/color_extension.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
-@singleton
-class ThemeService {
-  ThemeService(SharedPreferences sharedPreferences, this.preferencesService) {
-    _sharedPreferences = sharedPreferences;
-  }
-  static ThemeService get instance => getIt<ThemeService>();
+class ThemeController extends GetxController {
+  ThemeController(this._repo, this.preferencesService);
 
-  static late SharedPreferences _sharedPreferences;
-  final PreferencesService preferencesService;
+  static ThemeController get instance => Get.find<ThemeController>();
 
-  static const String _themeModeKey = AppConst.themeModeKey;
+  late final DatabaseRepository _repo;
+  final PreferencesController preferencesService;
 
-  static late ThemeMode _themeMode;
+  final String _themeModeKey = AppConst.themeModeKey;
+
+  late ThemeMode _themeMode;
   ThemeMode get themeMode => _themeMode;
 
-  static late ThemeData _lightTheme;
+  late ThemeData _lightTheme;
   ThemeData get lightTheme => _lightTheme;
 
-  static late ThemeData _darkTheme;
+  late ThemeData _darkTheme;
   ThemeData get darkTheme => _darkTheme;
 
-  @PostConstruct()
-  void init() {
+  @override
+  void onInit() {
     _themeMode = _loadThemeMode();
-    _loadTheme();
+    _loadThemes();
+    super.onInit();
   }
 
-  void _loadTheme() {
+  void _loadThemes() {
     final accentColor = SystemTheme.accentColor.accent;
     final themeColor = preferencesService.settingsModel.themeColor.color;
     if (preferencesService.settingsModel.dynamicColor &&
         accentColor != SystemTheme.fallbackColor &&
         defaultTargetPlatform.supportsAccentColor) {
-      loadTheme(accentColor);
+      _applyColorToTheme(accentColor);
     } else {
-      loadTheme(themeColor);
+      _applyColorToTheme(themeColor);
     }
   }
 
-  void loadTheme(Color color) {
-    final textTheme = PreferencesService.instance.settingsModel.font.textTheme;
+  void _applyColorToTheme(Color color) {
+    final textTheme = PreferencesController.instance.settingsModel.font.textTheme;
     _lightTheme = color.getTheme(textTheme);
     _darkTheme = color.getTheme(textTheme, brightness: Brightness.dark);
+    update();
   }
 
-  static ThemeMode _loadThemeMode() {
+  ThemeMode _loadThemeMode() {
     try {
-      final int? themeModeIndex = _sharedPreferences.getInt(_themeModeKey);
+      final int? themeModeIndex = _repo.get<int>(_themeModeKey);
       if (themeModeIndex != null) {
         return ThemeMode.values[themeModeIndex];
       }
@@ -68,13 +67,21 @@ class ThemeService {
 
   void saveThemeMode(ThemeMode themeMode) {
     try {
-      _sharedPreferences.setInt(_themeModeKey, themeMode.index);
+      _repo.set<int>(_themeModeKey, themeMode.index);
       _themeMode = themeMode;
+      update();
     } catch (_) {}
   }
 
   void updateFont(Fonts font) {
     _lightTheme = font.setToTheme(_lightTheme);
     _darkTheme = font.setToTheme(_darkTheme);
+    update();
+  }
+
+  void updateTheme(ThemeData light, ThemeData dark) {
+    _lightTheme = light;
+    _darkTheme = dark;
+    update();
   }
 }

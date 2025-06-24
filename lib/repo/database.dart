@@ -2,8 +2,8 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @singleton
-class Database {
-  Database(SharedPreferences sharedPreferences)
+class DatabaseRepository {
+  DatabaseRepository(SharedPreferences sharedPreferences)
       : _preferences = sharedPreferences;
   final SharedPreferences _preferences;
 

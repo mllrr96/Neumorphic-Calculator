@@ -1,9 +1,11 @@
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:day_night_themed_switch/day_night_themed_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
-import 'package:neumorphic_calculator/service/theme_service.dart';
+import 'package:get/get.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:neumorphic_calculator/screens/dashboard_screen/dashboard_controller.dart';
+import 'package:neumorphic_calculator/screens/settings_screen/settings_controller.dart';
+import 'package:neumorphic_calculator/service/theme_controller.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
+import 'package:neumorphic_calculator/widgets/icon_page_indicator.dart';
 import 'package:neumorphic_calculator/widgets/info_dialog.dart';
 
 class CalculatorAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -17,8 +19,9 @@ class CalculatorAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CalculatorAppBarState extends State<CalculatorAppBar> {
-  ThemeService get themeService => ThemeService.instance;
+  ThemeController get themeService => ThemeController.instance;
   bool darkMode = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,37 +30,25 @@ class _CalculatorAppBarState extends State<CalculatorAppBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ThemeSwitcher(
-            builder: (context) {
-              darkMode = themeService.themeMode == ThemeMode.system &&
-                      Theme.of(context).brightness == Brightness.dark
-                  ? true
-                  : themeService.themeMode == ThemeMode.dark;
-              return SizedBox(
-                width: 80,
-                child: DayNightSwitch(
-                  value: darkMode,
-                  onChanged: (val) {
-                    darkMode = val;
-                    themeService.saveThemeMode(
-                        darkMode ? ThemeMode.dark : ThemeMode.light);
-                    context.toggleThemeMode(
-                      isReversed: darkMode,
-                    );
-                  },
-                ),
-              );
+          GetBuilder<SettingsController>(builder: (ctrl) {
+            return IconPageIndicator(
+              controller: DashboardController.instance.pageController,
+              icons: [
+                LucideIcons.wrench,
+                LucideIcons.calculator,
+                LucideIcons.history,
+              ],
+              buttonRadius: ctrl.state?.buttonRadius,
+            );
+          }),
+          IconButton(
+            padding: const EdgeInsets.all(16.0),
+            icon: const Icon(LucideIcons.info),
+            onPressed: () {
+              // showInfoDialog(context);
+              const InfoDialog().show(context);
             },
           ),
-          if (!PreferencesService.isFirstRun)
-            IconButton(
-              padding: const EdgeInsets.all(16.0),
-              icon: const Icon(Icons.info_outline),
-              onPressed: () {
-                // showInfoDialog(context);
-                const InfoDialog().show(context);
-              },
-            ),
         ],
       ),
     );

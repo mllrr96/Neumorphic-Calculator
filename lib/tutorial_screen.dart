@@ -33,7 +33,7 @@ class _TutorialScreenState extends State<TutorialScreen>
 
   @override
   void initState() {
-    if (PreferencesService.isFirstRun) {
+    if (PreferencesController.instance.isFirstRun) {
       ignorePointer = true;
       initTutorial();
       _initAnimations();
@@ -153,7 +153,7 @@ class _TutorialScreenState extends State<TutorialScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    if (!PreferencesService.isFirstRun) {
+    if (!PreferencesController.instance.isFirstRun) {
       return widget.child;
     }
 

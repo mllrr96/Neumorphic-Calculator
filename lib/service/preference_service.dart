@@ -1,39 +1,39 @@
 import 'dart:convert';
-import 'package:injectable/injectable.dart';
-import 'package:neumorphic_calculator/di/di.dart';
+import 'package:get/get.dart';
+import 'package:neumorphic_calculator/repo/database.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/settings_model.dart';
+import 'package:neumorphic_calculator/utils/settings_model.dart';
 
-@singleton
-class PreferencesService {
-  PreferencesService(SharedPreferences sharedPreferences) {
-    _sharedPreferences = sharedPreferences;
-  }
-  static PreferencesService get instance => getIt<PreferencesService>();
-  static late SharedPreferences _sharedPreferences;
+class PreferencesController extends GetxService {
+  PreferencesController(this._repo);
+
+  static PreferencesController get instance => Get.find<PreferencesController>();
+
+  final DatabaseRepository _repo;
+
   static const String _firstRunKey = AppConst.firstRunKey;
   static const String _firstCallKey = AppConst.firstCallKey;
   static const String _settingsKey = AppConst.settingsKey;
   static const String _resultsKey = AppConst.resultsKey;
 
-
   static late SettingsModel _settingsModel;
+
   SettingsModel get settingsModel => _settingsModel;
 
   static late List<ResultModel> _results;
+
   List<ResultModel> get results => _results;
 
-  static bool get isFirstRun {
+  bool get isFirstRun {
     if (_firstRun == null) {
       try {
-        final bool firstRun = _sharedPreferences.getBool(_firstRunKey) ?? true;
-        _sharedPreferences.setBool(_firstRunKey, false);
+        final bool firstRun = _repo.get<bool>(_firstRunKey) ?? true;
+        _repo.set<bool>(_firstRunKey, false);
         _firstRun = firstRun;
         return firstRun;
       } catch (_) {
-        _sharedPreferences.setBool(_firstRunKey, false);
+        _repo.set<bool>(_firstRunKey, false);
         _firstRun = true;
         return true;
       }
@@ -44,31 +44,32 @@ class PreferencesService {
 
   static bool? _firstRun;
 
-  static bool get isFirstCall {
+  bool get isFirstCall {
     try {
-      final bool firstCall = _sharedPreferences.getBool(_firstCallKey) ?? true;
-      _sharedPreferences.setBool(_firstCallKey, false);
+      final bool firstCall = _repo.get<bool>(_firstCallKey) ?? true;
+      _repo.set<bool>(_firstCallKey, false);
       return firstCall;
     } catch (_) {
-      _sharedPreferences.setBool(_firstCallKey, false);
+      _repo.set<bool>(_firstCallKey, false);
       return true;
     }
   }
 
-  static void reset() {
-    _sharedPreferences.setBool(_firstRunKey, true);
-    _sharedPreferences.setBool(_firstCallKey, true);
+  void reset() {
+    _repo.set<bool>(_firstRunKey, true);
+    _repo.set<bool>(_firstCallKey, true);
   }
 
-  @PostConstruct()
-  void init() {
+  @override
+  void onInit() {
     _settingsModel = _loadSettingsModel();
     _results = _loadResults();
+    super.onInit();
   }
 
-  static SettingsModel _loadSettingsModel() {
+  SettingsModel _loadSettingsModel() {
     try {
-      final settings = _sharedPreferences.getString(_settingsKey);
+      final settings = _repo.get<String>(_settingsKey);
       Map<String, dynamic> settingsMap = jsonDecode(settings!);
       return SettingsModel.fromMap(settingsMap);
     } catch (_) {
@@ -84,23 +85,18 @@ class PreferencesService {
       //   _darkTheme = settingsModel.font.setToTheme(_themeType.themeData.$2);
       // }
       _settingsModel = settingsModel;
-      _sharedPreferences.setString(
-          _settingsKey, jsonEncode(settingsModel.toMap()));
+      _repo.set<String>(_settingsKey, jsonEncode(settingsModel.toMap()));
     } catch (_) {
       _settingsModel = settingsModel;
     }
   }
 
-  static List<ResultModel> _loadResults() {
+  List<ResultModel> _loadResults() {
     try {
-      final results = _sharedPreferences.getStringList('results');
-      if (results != null) {
-        return results
-            .map((result) => ResultModel.fromJson(jsonDecode(result)))
-            .toList();
-      } else {
-        return [];
-      }
+      final results = _repo.get<List<String>>(_resultsKey);
+      return results!
+          .map((result) => ResultModel.fromJson(jsonDecode(result)))
+          .toList();
     } catch (_) {
       return [];
     }
@@ -111,7 +107,7 @@ class PreferencesService {
       // Save only 40 results
       if (_results.length >= 40) _results.removeLast();
       _results.insert(0, result);
-      _sharedPreferences.setStringList(_resultsKey,
+      _repo.set<List<String>>(_resultsKey,
           _results.map((result) => jsonEncode(result.toJson())).toList());
     } catch (_) {}
   }
@@ -119,7 +115,7 @@ class PreferencesService {
   void clearResults() {
     try {
       _results.clear();
-      _sharedPreferences.remove(_resultsKey);
+      _repo.remove(_resultsKey);
     } catch (_) {}
   }
 }
