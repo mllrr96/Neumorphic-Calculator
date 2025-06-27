@@ -10,6 +10,7 @@ import 'package:neumorphic_calculator/utils/settings_model.dart';
 import 'package:neumorphic_calculator/widgets/input_widget.dart';
 import 'package:neumorphic_calculator/widgets/number_pad.dart';
 import 'package:neumorphic_calculator/widgets/result_widget.dart';
+import 'package:neumorphic_calculator/widgets/circular_wipe_overlay_widget.dart';
 
 import 'calculator_controller.dart';
 
@@ -64,31 +65,35 @@ class CalculatorScreenState extends State<CalculatorScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Obx(() {
-                        textCtrl.value = TextEditingValue(
-                          text: calcController.expression.value,
-                          selection: TextSelection.collapsed(
-                            offset: calcController.offset.value,
-                          ),
-                        );
-                        return InputWidget(textCtrl);
-                      }),
-                    ),
-                    Expanded(
-                      child: Obx(() => ResultWidget(
+              child: Obx(() {
+                textCtrl.value = TextEditingValue(
+                  text: calcController.expression.value,
+                  selection: TextSelection.collapsed(
+                    offset: calcController.offset.value,
+                  ),
+                );
+                return CircularWipeOverlayWidget(
+                  triggerWipe: calcController.isClearing.value,
+                  onWipeComplete: () {
+                    calcController.isClearing.value = false;
+                    calcController.clear();
+                  },
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(flex: 2, child: InputWidget(textCtrl)),
+                        Expanded(
+                          child: ResultWidget(
                             calcController.output.value.formatThousands(),
-                          )),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }),
             ),
             Flexible(
               flex: 2,
@@ -115,7 +120,12 @@ class CalculatorScreenState extends State<CalculatorScreen> {
                           mediumHaptic();
                           break;
                         case CalculatorButton.allClear:
-                          calcController.clear();
+                          if (calcController.exp.isNotEmpty &&
+                              calcController.output.value.isNotEmpty) {
+                            calcController.isClearing.value = true;
+                          } else {
+                            calcController.clear();
+                          }
                           heavyHaptic();
                           break;
                         case CalculatorButton.equal:
