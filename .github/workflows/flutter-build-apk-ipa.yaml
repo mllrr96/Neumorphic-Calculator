@@ -15,7 +15,6 @@ jobs:
         with:
           channel: "stable"
           architecture: x64
-          cache: true
 
       - uses: actions/setup-java@v2
         with:
