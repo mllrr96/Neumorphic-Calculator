@@ -17,7 +17,7 @@ class CalculatorController extends GetxController {
       if (expression.value.canCalculate) {
         calculate(skipError: true);
       }
-    }, time: const Duration(milliseconds: 100));
+    }, time: const Duration(milliseconds: 50));
     super.onInit();
   }
 
@@ -25,10 +25,6 @@ class CalculatorController extends GetxController {
     expression.value = newExp.formatExpression();
     offset.value = newOffset;
   }
-
-  // ─────────────────────────────────────────────────────
-  // Number / Operator / Decimal
-  // ─────────────────────────────────────────────────────
 
   void addNumber(String number, [int? position]) {
     final offsetVal = offset.value;
@@ -94,10 +90,6 @@ class CalculatorController extends GetxController {
     }
   }
 
-  // ─────────────────────────────────────────────────────
-  // Calculation / Equals
-  // ─────────────────────────────────────────────────────
-
   void calculate({bool skipError = false}) {
     if (!exp.isValidForCalculation) {
       output.value = '';
@@ -125,10 +117,6 @@ class CalculatorController extends GetxController {
       output.value = ' ';
     }
   }
-
-  // ─────────────────────────────────────────────────────
-  // Clear / Delete / Load
-  // ─────────────────────────────────────────────────────
 
   void clear() {
     final shouldSplash = expression.isNotEmpty && output.isNotEmpty;
@@ -167,10 +155,6 @@ class CalculatorController extends GetxController {
     expression.value = result.expression;
     output.value = result.output;
   }
-
-  // ─────────────────────────────────────────────────────
-  // Parentheses
-  // ─────────────────────────────────────────────────────
 
   void addParentheses(String p, [int? position]) {
     final isClose = p == ')';

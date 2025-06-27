@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:neumorphic_calculator/screens/dashboard_screen/dashboard_controller.dart';
 import 'package:neumorphic_calculator/screens/calculator_screen/calculator_controller.dart';
 import 'package:neumorphic_calculator/screens/history_screen/history_controller.dart';
 import 'package:neumorphic_calculator/screens/settings_screen/settings_controller.dart';
-import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
-import 'package:neumorphic_calculator/widgets/confirm_dialog.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -53,40 +50,7 @@ class _HistoryScreenState extends State<HistoryScreen>
           animation: _controller,
           builder: (context, _) {
             final resultNotEmpty = ctrl.state?.isNotEmpty ?? false;
-            final isDark = Get.isDarkMode;
             return Scaffold(
-              floatingActionButton: resultNotEmpty
-                  ? FloatingActionButton.large(
-                      child: const Icon(
-                        Icons.delete_forever,
-                      ),
-                      onPressed: () {
-                        ConfirmDialog(
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Clear History'),
-                                Lottie.asset(
-                                  !isDark
-                                      ? AppConst.deleteDark
-                                      : AppConst.deleteLight,
-                                  height: 50,
-                                  width: 50,
-                                  repeat: false,
-                                ),
-                              ],
-                            ),
-                            content:
-                                'Are you sure you want to clear the history?',
-                            confirmText: 'Clear',
-                            onConfirm: () {
-                              ctrl.clearData();
-                              // context
-                              //     .read<HistoryBloc>()
-                              //     .add(const ClearHistory());
-                            }).show(context);
-                      })
-                  : null,
               body: Column(
                 children: [
                   if (showTip && resultNotEmpty)

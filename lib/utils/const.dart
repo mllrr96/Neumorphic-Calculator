@@ -17,7 +17,7 @@ class AppConst {
   static const String historyKey = 'history';
   static const String settingsKey = 'settings';
   static const String resultsKey = 'results';
-  static const String firstRunKey = 'firstRun';
-  static const String firstCallKey = 'firstKey';
+  static const String firstRunKey = 'first_run';
+  static const String firstCallKey = 'first_key';
   static const String themeModeKey = 'theme_mode';
 }

@@ -16,6 +16,8 @@ class DatabaseRepository {
           return await _preferences.setStringList(key, value as List<String>);
         case const (bool):
           return await _preferences.setBool(key, value as bool);
+        case const (int):
+          return await _preferences.setInt(key, value as int);
         default:
           throw UnsupportedError('Type $T is not supported');
       }
@@ -33,6 +35,8 @@ class DatabaseRepository {
           return _preferences.getStringList(key) as T?;
         case const (bool):
           return _preferences.getBool(key) as T?;
+        case const (int):
+          return _preferences.getInt(key) as T?;
         default:
           throw UnsupportedError('Type $T is not supported');
       }

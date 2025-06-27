@@ -118,6 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         SettingsController.instance
                             .updateSettings(settings.copyWith(
                           themeColor: themeColor,
+                          dynamicColor: false,
                         ));
                       },
                       child: Container(
@@ -259,21 +260,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: ListTile(
                 title: const Text('Button Radius'),
                 trailing: Text(settings.buttonRadius.toString()),
-                onTap: () async {
-                  await ButtonRadiusDialog(buttonRadius: settings.buttonRadius)
-                      .show(context)
-                      .then(
-                    (result) {
-                      if (result is double) {
-                        settingsCtrl.updateSettings(
-                            settings.copyWith(buttonRadius: result));
-                        // ThemeController.instance.update();
-                      }
-                    },
-                  );
-                },
               ),
-              onPressed: () {},
+              onPressed: () async {
+                await ButtonRadiusDialog(buttonRadius: settings.buttonRadius)
+                    .show(context)
+                    .then(
+                  (result) {
+                    if (result is double) {
+                      settingsCtrl.updateSettings(
+                          settings.copyWith(buttonRadius: result));
+                      // ThemeController.instance.update();
+                    }
+                  },
+                );
+              },
+            ),
+            const SizedBox(height: 18.0),
+            NeumorphicButton(
+              borderRadius: settings.buttonRadius,
+              child: ListTile(
+                title: const Text('Haptic Feedback'),
+                trailing: Switch(
+                  value: settings.hapticEnabled,
+                  onChanged: (value) {
+                    settingsCtrl.updateSettings(
+                        settings.copyWith(hapticEnabled: value));
+                  },
+                ),
+              ),
+              onPressed: () {
+                settingsCtrl.updateSettings(
+                    settings.copyWith(hapticEnabled: !settings.hapticEnabled));
+              },
             )
           ],
         ),
