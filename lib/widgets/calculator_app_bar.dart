@@ -1,9 +1,15 @@
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:day_night_themed_switch/day_night_themed_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
-import 'package:neumorphic_calculator/service/theme_service.dart';
+import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:neumorphic_calculator/screens/dashboard_screen/dashboard_controller.dart';
+import 'package:neumorphic_calculator/screens/history_screen/history_controller.dart';
+import 'package:neumorphic_calculator/screens/settings_screen/settings_controller.dart';
+import 'package:neumorphic_calculator/service/theme_controller.dart';
+import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
+import 'package:neumorphic_calculator/widgets/confirm_dialog.dart';
+import 'package:neumorphic_calculator/widgets/icon_page_indicator.dart';
 import 'package:neumorphic_calculator/widgets/info_dialog.dart';
 
 class CalculatorAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -17,47 +23,79 @@ class CalculatorAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CalculatorAppBarState extends State<CalculatorAppBar> {
-  ThemeService get themeService => ThemeService.instance;
+  ThemeController get themeCtrl => ThemeController.instance;
+  DashboardController get dashboardCtrl => DashboardController.instance;
+  HistoryController get historyCtrl => HistoryController.instance;
   bool darkMode = false;
+
   @override
   Widget build(BuildContext context) {
+    final bool historyAvailable = historyCtrl.state?.isNotEmpty ?? false;
+    final isDark = Get.isDarkMode;
+    final onHistoryPage = dashboardCtrl.index == 2;
     return Container(
       alignment: Alignment.bottomLeft,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ThemeSwitcher(
-            builder: (context) {
-              darkMode = themeService.themeMode == ThemeMode.system &&
-                      Theme.of(context).brightness == Brightness.dark
-                  ? true
-                  : themeService.themeMode == ThemeMode.dark;
-              return SizedBox(
-                width: 80,
-                child: DayNightSwitch(
-                  value: darkMode,
-                  onChanged: (val) {
-                    darkMode = val;
-                    themeService.saveThemeMode(
-                        darkMode ? ThemeMode.dark : ThemeMode.light);
-                    context.toggleThemeMode(
-                      isReversed: darkMode,
-                    );
-                  },
+          GetBuilder<SettingsController>(builder: (ctrl) {
+            return IconPageIndicator(
+              controller: dashboardCtrl.pageController,
+              icons: [
+                LucideIcons.wrench,
+                LucideIcons.calculator,
+                LucideIcons.history,
+              ],
+              buttonRadius: ctrl.state?.buttonRadius,
+            );
+          }),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) {
+              return ScaleTransition(
+                scale: animation,
+                child: FadeTransition(
+                  opacity: animation,
+                  child: child,
                 ),
               );
             },
-          ),
-          if (!PreferencesService.isFirstRun)
-            IconButton(
+            child: IconButton(
+              key: ValueKey<bool>(onHistoryPage),
               padding: const EdgeInsets.all(16.0),
-              icon: const Icon(Icons.info_outline),
-              onPressed: () {
-                // showInfoDialog(context);
+              icon: onHistoryPage
+                  ? const Icon(LucideIcons.trash2, color: Colors.red,)
+                  : const Icon(LucideIcons.info),
+              onPressed:onHistoryPage ? (){
+                if(!historyAvailable) return;
+                ConfirmDialog(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Clear History'),
+                        Lottie.asset(
+                          !isDark
+                              ? AppConst.deleteDark
+                              : AppConst.deleteLight,
+                          height: 50,
+                          width: 50,
+                          repeat: false,
+                        ),
+                      ],
+                    ),
+                    content:
+                    'Are you sure you want to clear the history?',
+                    confirmText: 'Clear',
+                    onConfirm: () {
+                      historyCtrl.clearData();
+                    }).show(context);
+
+              } : () {
                 const InfoDialog().show(context);
               },
             ),
+          )
         ],
       ),
     );

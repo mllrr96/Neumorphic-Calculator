@@ -13,14 +13,11 @@ class InfoDialog extends StatefulWidget {
 class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
   late AnimationController _swipeRightController;
   late AnimationController _swipeLeftController;
-  late AnimationController _swipeUpController;
   late AnimationController _heartController;
   void _initAnimations() {
     _swipeRightController =
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
     _swipeLeftController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    _swipeUpController =
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
     _heartController =
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
@@ -43,20 +40,12 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
     _swipeRightController.addListener(
       () {
         if (_swipeRightController.isCompleted) {
-          _swipeUpController.reset();
-          _swipeUpController.forward();
-        }
-      },
-    );
-
-    _swipeUpController.addListener(
-      () {
-        if (_swipeUpController.isCompleted) {
           _heartController.reset();
           _heartController.forward();
         }
       },
     );
+
 
     _heartController.addListener(
       () {
@@ -72,7 +61,6 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
   void dispose() {
     _swipeRightController.dispose();
     _swipeLeftController.dispose();
-    _swipeUpController.dispose();
     _heartController.dispose();
     super.dispose();
   }
@@ -112,7 +100,7 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
             leading: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.35)),
+                  color: Colors.grey.withValues(alpha:0.35)),
               child: Lottie.asset(
                 AppConst.swipeLeftGesture,
                 controller: _swipeLeftController,
@@ -128,7 +116,7 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
             leading: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.35)),
+                  color: Colors.grey.withValues(alpha:0.35)),
               child: Lottie.asset(
                 AppConst.swipeRightGesture,
                 controller: _swipeRightController,
@@ -144,23 +132,7 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
             leading: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.35)),
-              child: Lottie.asset(
-                AppConst.swipeUpGesture,
-                controller: _swipeUpController,
-                width: 50,
-                height: 50,
-              ),
-            ),
-            title: const Text('Swipe up to access quick settings.'),
-          ),
-          const Divider(),
-          ListTile(
-            contentPadding: const EdgeInsets.all(0),
-            leading: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.35)),
+                  color: Colors.grey.withValues(alpha:0.35)),
               child: Lottie.asset(
                 AppConst.heart,
                 controller: _heartController,

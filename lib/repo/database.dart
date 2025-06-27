@@ -2,54 +2,44 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @singleton
-class Database {
-  Database(SharedPreferences sharedPreferences)
+class DatabaseRepository {
+  DatabaseRepository(SharedPreferences sharedPreferences)
       : _preferences = sharedPreferences;
   final SharedPreferences _preferences;
 
-  Future<bool> setString(String key, String value) async {
+  Future<bool> set<T>(String key, T value) async {
     try {
-      return await _preferences.setString(key, value);
+      switch (T) {
+        case const (String):
+          return await _preferences.setString(key, value as String);
+        case const (List<String>):
+          return await _preferences.setStringList(key, value as List<String>);
+        case const (bool):
+          return await _preferences.setBool(key, value as bool);
+        case const (int):
+          return await _preferences.setInt(key, value as int);
+        default:
+          throw UnsupportedError('Type $T is not supported');
+      }
     } catch (_) {
       return false;
     }
   }
 
-  Future<bool> setStringList(String key, List<String> value) async {
+  T? get<T>(String key) {
     try {
-      return await _preferences.setStringList(key, value);
-    } catch (_) {
-      return false;
-    }
-  }
-
-  Future<bool> setBool(String key, bool value) async {
-    try {
-      return await _preferences.setBool(key, value);
-    } catch (_) {
-      return false;
-    }
-  }
-
-  bool? getBool(String key) {
-    try {
-      return _preferences.getBool(key);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  String? getString(String key) {
-    try {
-      return _preferences.getString(key);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  List<String>? getStringList(String key) {
-    try {
-      return _preferences.getStringList(key);
+      switch (T) {
+        case const (String):
+          return _preferences.getString(key) as T?;
+        case const (List<String>):
+          return _preferences.getStringList(key) as T?;
+        case const (bool):
+          return _preferences.getBool(key) as T?;
+        case const (int):
+          return _preferences.getInt(key) as T?;
+        default:
+          throw UnsupportedError('Type $T is not supported');
+      }
     } catch (_) {
       return null;
     }

@@ -9,32 +9,31 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  math_expressions: ^2.5.0
+  math_expressions: ^3.0.0
   auto_size_text: ^3.0.0
   google_fonts: ^6.2.1
   day_night_themed_switch: ^1.0.0
   auto_size_text_field: ^2.2.3
-  animated_theme_switcher:
-    git: https://github.com/mllrr96/animated_theme_switcher.git
   equatable: ^2.0.5
-  get_it: ^7.7.0
   shared_preferences: ^2.2.3
-  intl: ^0.19.0
+  intl: ^0.20.2
   url_launcher: ^6.3.0
   fraction: ^5.0.2
   timeago: ^3.7.0
-  flutter_bloc: ^8.1.6
   injectable: ^2.4.2
   logger: ^2.4.0
-  flutter_slidable: ^3.1.1
+  flutter_slidable: ^4.0.0
   tutorial_coach_mark: ^1.2.11
   lottie: ^3.1.2
   system_theme: ^3.0.0
+  get: ^4.7.2
+  smooth_page_indicator: ^1.2.1
+  lucide_icons: ^0.257.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   build_runner: 
   injectable_generator:  
 flutter:
