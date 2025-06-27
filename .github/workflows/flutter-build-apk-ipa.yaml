@@ -21,7 +21,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-          cache: 'gradle'
 
       - name: Run flutter doctor
         run: flutter doctor -v
