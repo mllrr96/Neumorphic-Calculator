@@ -3,6 +3,7 @@ import 'package:neumorphic_calculator/widgets/neumorphic_button.dart';
 
 class ButtonRadiusDialog extends StatefulWidget {
   const ButtonRadiusDialog({super.key, required this.buttonRadius});
+
   final double buttonRadius;
 
   @override
@@ -20,17 +21,18 @@ class _ButtonRadiusDialogState extends State<ButtonRadiusDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     // When showing dialog in dark mode the text remians black, this is a workaround
-    final titleTextStyle = Theme.of(context).textTheme.headlineSmall?.copyWith(
-          color: isDark ? Colors.white : Colors.black,
-        );
-    final contentTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: isDark ? Colors.white : Colors.black,
-        );
+    final titleTextStyle = theme.textTheme.headlineSmall?.copyWith(
+      color: isDark ? Colors.white : Colors.black,
+    );
+    final contentTextStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: isDark ? Colors.white : Colors.black,
+    );
     return AlertDialog(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       title: Text('Button radius', style: titleTextStyle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -38,8 +40,7 @@ class _ButtonRadiusDialogState extends State<ButtonRadiusDialog> {
           Text('Change the radius of the buttons', style: contentTextStyle),
           const SizedBox(height: 16),
           NeumorphicButton(
-            border:
-                Border.all(color: Theme.of(context).splashColor, width: 0.5),
+            border: Border.all(color: theme.splashColor, width: 0.5),
             borderRadius: buttonRadius,
             child: Text('Demo', style: contentTextStyle),
           ),

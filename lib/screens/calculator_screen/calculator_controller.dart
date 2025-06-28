@@ -10,6 +10,7 @@ class CalculatorController extends GetxController {
   String get exp => expression.value;
   RxString output = ''.obs;
   RxInt offset = (-1).obs;
+  RxBool isClearing = false.obs;
 
   @override
   void onInit() {
@@ -29,17 +30,24 @@ class CalculatorController extends GetxController {
   void addNumber(String number, [int? position]) {
     final offsetVal = offset.value;
 
-    if (exp.isNoSelection(offsetVal)) {
+    try{
+      if (exp.isNoSelection(offsetVal)) {
+        expression.value = exp.needsMultiply
+            ? ('${exp}x$number').formatExpression()
+            : (exp + number).formatExpression();
+        offset.value = -1;
+      } else {
+        final needsMultiply =
+        exp.substring(0, position!).contains(RegExp(r'[eπ)]$'));
+        final insertText = needsMultiply ? 'x$number' : number;
+        final result = exp.insertText(insertText, position);
+        _applyInsertion(result.$1, result.$2);
+      }
+    }catch(_){
       expression.value = exp.needsMultiply
           ? ('${exp}x$number').formatExpression()
           : (exp + number).formatExpression();
       offset.value = -1;
-    } else {
-      final needsMultiply =
-          exp.substring(0, position!).contains(RegExp(r'[eπ)]$'));
-      final insertText = needsMultiply ? 'x$number' : number;
-      final result = exp.insertText(insertText, position);
-      _applyInsertion(result.$1, result.$2);
     }
   }
 
@@ -110,18 +118,17 @@ class CalculatorController extends GetxController {
     if (out.isEmpty || out.contains('/') || out.endsWithOperator) return;
 
     if (!out.isInt && out.isDouble) {
-      expression.value = out;
+      expression.value = out.formatThousands();
       output.value = out.toFraction;
     } else {
-      expression.value = out;
+      expression.value = out.formatThousands();
       output.value = ' ';
     }
   }
 
-  void clear() {
-    final shouldSplash = expression.isNotEmpty && output.isNotEmpty;
+  Future<void> clear() async {
     expression.value = '';
-    output.value = shouldSplash ? ' ' : '';
+    output.value = '';
   }
 
   void delete([int? position]) {

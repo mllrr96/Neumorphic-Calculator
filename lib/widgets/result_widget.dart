@@ -7,8 +7,9 @@ class ResultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = theme.colorScheme.primary;
     final formatError = result == 'Format Error';
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18.0),
@@ -20,7 +21,7 @@ class ResultWidget extends StatelessWidget {
             color: formatError
                 ? Colors.red
                 : isDark
-                    ? Theme.of(context).iconTheme.color
+                    ? theme.iconTheme.color
                     : primaryColor),
         minFontSize: 20,
         maxFontSize: 80,

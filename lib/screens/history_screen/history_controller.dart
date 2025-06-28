@@ -11,6 +11,7 @@ class HistoryController extends GetxController
   static HistoryController get instance => Get.find<HistoryController>();
 
   final DatabaseRepository _database;
+  RxBool isClearing = false.obs;
 
   @override
   void onInit() {

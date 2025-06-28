@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
+import 'package:neumorphic_calculator/utils/extensions/theme_extension.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class TutorialScreen extends StatefulWidget {
   const TutorialScreen({super.key, required this.child});
+
   final Widget child;
 
   @override
@@ -38,7 +40,9 @@ class _TutorialScreenState extends State<TutorialScreen>
       initTutorial();
       _initAnimations();
       Future.delayed(const Duration(seconds: 2), () {
-        tutorialCoachMark.show(context: context);
+        if (mounted) {
+          tutorialCoachMark.show(context: context);
+        }
         setState(() {
           showSettings = true;
         });
@@ -152,7 +156,7 @@ class _TutorialScreenState extends State<TutorialScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).isDarkMode;
     if (!PreferencesController.instance.isFirstRun) {
       return widget.child;
     }

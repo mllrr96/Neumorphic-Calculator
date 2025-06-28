@@ -4,12 +4,9 @@ import 'package:get/get.dart';
 import 'package:neumorphic_calculator/screens/history_screen/history_controller.dart';
 import 'package:neumorphic_calculator/screens/settings_screen/settings_controller.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
-import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
-import 'package:neumorphic_calculator/widgets/input_widget.dart';
 import 'package:neumorphic_calculator/widgets/number_pad.dart';
-import 'package:neumorphic_calculator/widgets/result_widget.dart';
 
 import 'calculator_controller.dart';
 
@@ -60,88 +57,56 @@ class CalculatorScreenState extends State<CalculatorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Obx(() {
-                        textCtrl.value = TextEditingValue(
-                          text: calcController.expression.value,
-                          selection: TextSelection.collapsed(
-                            offset: calcController.offset.value,
-                          ),
-                        );
-                        return InputWidget(textCtrl);
-                      }),
-                    ),
-                    Expanded(
-                      child: Obx(() => ResultWidget(
-                            calcController.output.value.formatThousands(),
-                          )),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Flexible(
-              flex: 2,
-              child: Material(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: GetBuilder<SettingsController>(builder: (_) {
-                  return NumberPad(
-                    borderRadius: settingsModel.buttonRadius,
-                    onNumberPressed: (number) {
-                      calcController.addNumber(
-                          number, textCtrl.selection.baseOffset);
-                      mediumHaptic();
-                    },
-                    onOperationPressed: (button) {
-                      switch (button) {
-                        case CalculatorButton.openParenthesis ||
-                              CalculatorButton.closeParenthesis:
-                          calcController.addParentheses(
-                              button.value, textCtrl.selection.baseOffset);
-                          mediumHaptic();
-                          break;
-                        case CalculatorButton.clear:
-                          calcController.delete(textCtrl.selection.baseOffset);
-                          mediumHaptic();
-                          break;
-                        case CalculatorButton.allClear:
-                          calcController.clear();
-                          heavyHaptic();
-                          break;
-                        case CalculatorButton.equal:
-                          final exp = calcController.expression.value;
-                          final output = calcController.output.value;
-                          calcController.calculate();
-                          calcController.equals();
-                          _addToResult(exp, output);
-                          heavyHaptic();
-                          break;
-                        case CalculatorButton.decimal:
-                          calcController
-                              .addDecimal(textCtrl.selection.baseOffset);
-                          mediumHaptic();
-                          break;
-                        default:
-                          calcController.addOperator(
-                              button.value, textCtrl.selection.baseOffset);
-                          mediumHaptic();
-                      }
-                    },
-                  );
-                }),
-              ),
-            ),
-          ],
+        child: Material(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: GetBuilder<SettingsController>(builder: (_) {
+            return NumberPad(
+              borderRadius: settingsModel.buttonRadius,
+              onNumberPressed: (number) {
+                calcController.addNumber(number, textCtrl.selection.baseOffset);
+                mediumHaptic();
+              },
+              onOperationPressed: (button) {
+                switch (button) {
+                  case CalculatorButton.openParenthesis ||
+                        CalculatorButton.closeParenthesis:
+                    calcController.addParentheses(
+                        button.value, textCtrl.selection.baseOffset);
+                    mediumHaptic();
+                    break;
+                  case CalculatorButton.clear:
+                    calcController.delete(textCtrl.selection.baseOffset);
+                    mediumHaptic();
+                    break;
+                  case CalculatorButton.allClear:
+                    if (calcController.exp.isNotEmpty &&
+                        calcController.output.value.isNotEmpty) {
+                      calcController.isClearing.value = true;
+                    } else {
+                      calcController.clear();
+                    }
+                    heavyHaptic();
+                    break;
+                  case CalculatorButton.equal:
+                    final exp = calcController.expression.value;
+                    final output = calcController.output.value;
+                    calcController.calculate();
+                    calcController.equals();
+                    _addToResult(exp, output);
+                    heavyHaptic();
+                    break;
+                  case CalculatorButton.decimal:
+                    calcController.addDecimal(textCtrl.selection.baseOffset);
+                    mediumHaptic();
+                    break;
+                  default:
+                    calcController.addOperator(
+                        button.value, textCtrl.selection.baseOffset);
+                    mediumHaptic();
+                }
+              },
+            );
+          }),
         ),
       ),
     );

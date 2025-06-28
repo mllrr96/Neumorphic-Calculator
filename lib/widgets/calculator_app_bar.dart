@@ -30,7 +30,6 @@ class _CalculatorAppBarState extends State<CalculatorAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    final bool historyAvailable = historyCtrl.state?.isNotEmpty ?? false;
     final isDark = Get.isDarkMode;
     final onHistoryPage = dashboardCtrl.index == 2;
     return Container(
@@ -68,7 +67,7 @@ class _CalculatorAppBarState extends State<CalculatorAppBar> {
                   ? const Icon(LucideIcons.trash2, color: Colors.red,)
                   : const Icon(LucideIcons.info),
               onPressed:onHistoryPage ? (){
-                if(!historyAvailable) return;
+                if(historyCtrl.status.isEmpty) return;
                 ConfirmDialog(
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,7 +87,8 @@ class _CalculatorAppBarState extends State<CalculatorAppBar> {
                     'Are you sure you want to clear the history?',
                     confirmText: 'Clear',
                     onConfirm: () {
-                      historyCtrl.clearData();
+                      historyCtrl.isClearing.value = true;
+                      historyCtrl.update();
                     }).show(context);
 
               } : () {
