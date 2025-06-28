@@ -16,18 +16,17 @@ jobs:
           channel: "stable"
           architecture: x64
 
-      - uses: actions/setup-java@v2
+      - name: Setup Java
+        continue-on-error: true
+        uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
           java-version: '17'
-#       This is workaround until cache action is fixed
-#       see https://github.com/actions/setup-java/issues/343
-        continue-on-error: true
 
       - name: Run flutter doctor
         run: flutter doctor -v
 
-      - name: Run pub get and build runner
+      - name: Install Dependencies
         run: |
           flutter pub get
 
@@ -40,19 +39,19 @@ jobs:
         run: |
           flutter build ios --release --no-codesign
           cd build/ios/iphoneos
-          mkdir Payload
-          cd Payload
-          ln -s ../Runner.app
+          mkdir -p Payload
+          cp -R Runner.app Payload/
           cd ..
-          zip -r Neumorphic-Calculator-${GITHUB_REF#refs/*/}.ipa Payload
+          zip -r Neumorphic-Calculator-${GITHUB_REF_NAME}.ipa Payload
 
-      - name: Rename Files
+
+      - name: Rename APK Files
         run: |
           cd build/app/outputs/apk/release
-          mv app-armeabi-v7a-release.apk Neumorphic-Calculator-${GITHUB_REF#refs/*/}-armeabi-v7a.apk
-          mv app-arm64-v8a-release.apk Neumorphic-Calculator-${GITHUB_REF#refs/*/}-arm64-v8a.apk
-          mv app-x86_64-release.apk Neumorphic-Calculator-${GITHUB_REF#refs/*/}-x86_64.apk
-          mv app-release.apk  Neumorphic-Calculator-${GITHUB_REF#refs/*/}-universal.apk
+          mv app-armeabi-v7a-release.apk Neumorphic-Calculator-${GITHUB_REF_NAME}-armeabi-v7a.apk
+          mv app-arm64-v8a-release.apk Neumorphic-Calculator-${GITHUB_REF_NAME}-arm64-v8a.apk
+          mv app-x86_64-release.apk Neumorphic-Calculator-${GITHUB_REF_NAME}-x86_64.apk
+          mv app-release.apk  Neumorphic-Calculator-${GITHUB_REF_NAME}-universal.apk
 
       - name: Create Release
         uses: ncipollo/release-action@v1.13.0
