@@ -1,13 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fraction/fraction.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:neumorphic_calculator/utils/result_model.dart';
-import 'dart:math' as math;
 
 var logger = Logger(
   printer: PrettyPrinter(),
+  level: kReleaseMode ? Level.off : Level.debug,
 );
 
 extension CalculatorExtension on String {
@@ -16,26 +17,21 @@ extension CalculatorExtension on String {
   bool isNoSelection(int? offset) =>
       offset == null || offset == -1 || offset == length;
 
-  bool get needsMultiply => contains(RegExp(r'[eπ)]$'));
-
   bool get endsWithOperator => endsWithAny(['x', '÷', '+', '-']);
 
   bool get isValidForCalculation => isNotEmpty && !endsWithOperator;
 
-  ResultModel calculate({bool skipErrorChecking = false, GrammarParser? parser}) {
+  ResultModel calculate(
+      {bool skipErrorChecking = false, GrammarParser? parser}) {
     GrammarParser p = parser ?? GrammarParser();
-    String finalInput = _fixE._fixParenthesis._replaceOperationSymbols
-        ._replaceTrigonometry.removeCommas;
-    bool hasDouble = finalInput.contains('.');
+    String finalInput = _fixParenthesis._replaceOperationSymbols.removeCommas;
+    bool hasFraction = finalInput.contains('.');
     try {
       Expression exp = p.parse(finalInput);
-      ContextModel ctxModel = ContextModel();
-      ctxModel.bindVariableName('π', Number(math.pi));
-      // ctxModel.bindVariableName('p', Number(math.e));
-      RealEvaluator expEvaluator = RealEvaluator(ctxModel);
+      RealEvaluator expEvaluator = RealEvaluator();
 
       num eval = expEvaluator.evaluate(exp);
-      if (eval % 1 == 0 && !hasDouble) {
+      if (eval % 1 == 0 && !hasFraction) {
         return ResultModel(
             output: eval.toInt().toString(),
             expression: this,
@@ -47,7 +43,7 @@ extension CalculatorExtension on String {
             dateTime: DateTime.now());
       }
     } catch (e, stack) {
-      logger.f(e.toString(), stackTrace: stack, error: e);
+      logger.e('Error calculating', stackTrace: stack, error: e);
       if (skipErrorChecking) {
         return ResultModel.empty();
       } else {
@@ -71,13 +67,7 @@ extension CalculatorExtension on String {
   }
 
   bool get canCalculate {
-    if (input.isEmpty ||
-        !input.containsAny([
-          'x',
-          '÷',
-          '+',
-          '-'
-        ])) {
+    if (input.isEmpty || !input.containsAny(['x', '÷', '+', '-'])) {
       return false;
     }
     if (input.endsWithAny(['x', '÷', '+', '-'])) {
@@ -118,16 +108,9 @@ extension CalculatorExtension on String {
 
       String number = input.removeCommas;
       if (number.removeSpaces.isEmpty) return number;
-      String? trigonometry;
-      // Remove sin, cos, tan, log and add them later
-      if (number.containsAny(['sin', 'cos', 'tan', 'log', 'e', 'π'])) {
-        // Remove all numbers and () from the string
-        trigonometry = number.replaceAll(RegExp(r'[0-9()]'), '');
-        number = number.replaceAll(RegExp(r'[a-zA-Zπ]'), '');
-      }
 
       if (number.isEmpty) {
-        return trigonometry ?? number;
+        return number;
       }
 
       if (!number.isNumber) {
@@ -143,14 +126,9 @@ extension CalculatorExtension on String {
         formattedString = number._formatDouble;
       }
 
-      if (trigonometry == null) return formattedString;
-      if (trigonometry.length > 1) {
-        return '$trigonometry($formattedString)';
-      } else {
-        return '$trigonometry$formattedString';
-      }
+      return formattedString;
     } catch (e, stack) {
-      logger.f(e.toString(), stackTrace: stack, error: e);
+      logger.e('Error formatting to thousands', stackTrace: stack, error: e);
       return this;
     }
   }
@@ -168,23 +146,6 @@ extension CalculatorExtension on String {
       return '(' * (closeParenthesis - openParenthesis) + input;
     }
     return input;
-  }
-
-  String get _replaceTrigonometry {
-    return replaceAll('acos', 'arccos')
-        .replaceAll('asin', 'arcsin')
-        .replaceAll('atan', 'arctan')
-        .replaceAll('√', 'sqrt');
-  }
-
-  String get _fixE {
-    // Replace e with math.e then replace exp with e
-    // because in math_expression exp() is not supported
-    // this is a workaround
-    return replaceAllMapped(
-      RegExp(r'e(?!xp\()'),
-      (Match m) => math.e.toString(),
-    ).replaceAll('exp(', 'e');
   }
 
   (String, int) insertText(String value, int offset,
@@ -206,7 +167,7 @@ extension CalculatorExtension on String {
           result = (firstPart + value + lastPart);
           difference = 0;
         } else {
-          result = (firstPart + value + lastPart).formatExpression();
+          result = (firstPart + value + lastPart);
           // Calculate the difference because formatExpression can add ','
           // which will mess up the original offset
           difference = (result.length - input.length).abs();
@@ -215,82 +176,30 @@ extension CalculatorExtension on String {
         return (result, offset + difference);
       }
     } catch (e, stack) {
-      logger.f(e.toString(), stackTrace: stack, error: e);
+      logger.e('Error inserting text', stackTrace: stack, error: e);
       return (input, offset);
     }
   }
 
   String get removeLastChar => input.substring(0, input.length - 1);
 
-  (String, int) removeLastFunction(int offset) {
-    if (isLastCharFunction && lastFunction != null) {
-      return (
-        input.substring(0, offset - lastFunction!.length),
-        offset - lastFunction!.length
-      );
-    }
-    return (input, offset);
-  }
-
-  String? get lastFunction {
-    // returns the last function in the input
-    const functions = [
-      'asin(',
-      'acos(',
-      'sin(',
-      'cos(',
-      'tan(',
-      'log(',
-      'ln(',
-      '√(',
-      'asin',
-      'acos',
-      'sin',
-      'cos',
-      'tan',
-      'log',
-      'ln',
-      '√',
-    ];
-    for (final function in functions) {
-      if (endsWith(function)) {
-        return function;
-      }
-    }
-    return null;
-  }
-
-  bool get isLastCharFunction => input.endsWithAny([
-        'asin',
-        'acos',
-        'sin',
-        'cos',
-        'tan',
-        'log',
-        'ln',
-        '√',
-        'sin(',
-        'asin(',
-        'cos(',
-        'acos(',
-        'tan(',
-        'log(',
-        'ln(',
-        '√('
-      ]);
-
   (String, int) removeCharAt(int offset) {
     try {
+      // If offset is greater than the input length, then treat it as if the user
+      // pressed backspace at the end of the input
+      if (offset > input.length) {
+        return (input.removeLastChar, -1);
+      }
       final firstPartWithoutLastCharacter = input.substring(0, offset - 1);
       final lastPart = input.substring(offset);
       final oldOffset = offset;
       final updatedText = firstPartWithoutLastCharacter + lastPart;
-      final formattedText = updatedText.formatExpression();
-      final difference = (formattedText.length - input.length).abs();
+      final difference = (updatedText.length - input.length).abs();
       return (updatedText, oldOffset - difference);
     } catch (e, stack) {
-      logger.f(e.toString(), stackTrace: stack);
-      return (input, offset);
+      logger.e('Error removing char at offset $offset',
+          stackTrace: stack, error: e);
+      return (input, -1);
     }
   }
 
@@ -314,7 +223,6 @@ extension CalculatorExtension on String {
 }
 
 extension StringExtension on String {
-
   String get removeSpaces => replaceAll(' ', '');
 
   bool endsWithAny(List<String> suffixes) {
@@ -345,5 +253,4 @@ extension StringExtension on String {
   }
 
   String get removeCommas => input.replaceAll(',', '');
-// int get commaCount => input.count(',');
 }

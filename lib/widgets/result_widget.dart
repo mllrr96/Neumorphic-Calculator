@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class ResultWidget extends StatelessWidget {
   final String result;
+
   const ResultWidget(this.result, {super.key});
 
   @override
@@ -10,9 +11,9 @@ class ResultWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final primaryColor = theme.colorScheme.primary;
-    final formatError = result == 'Format Error';
+    final formatError = result.toLowerCase().contains('error');
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+      padding: const EdgeInsets.symmetric(horizontal: 22.0),
       alignment: Alignment.centerRight,
       child: AutoSizeText(
         result,

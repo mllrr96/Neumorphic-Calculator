@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neumorphic_calculator/controllers/preference_controller.dart';
 import 'package:neumorphic_calculator/repo/database.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/extensions/color_extension.dart';

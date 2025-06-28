@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
+import 'package:neumorphic_calculator/utils/extensions/theme_extension.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MadeByWidget extends StatelessWidget {
@@ -9,8 +9,9 @@ class MadeByWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Get.isDarkMode;
-    final contentTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+    final theme = Theme.of(context);
+    final isDark = theme.isDarkMode;
+    final contentTextStyle = theme.textTheme.bodyMedium?.copyWith(
           color: isDark ? Colors.white : Colors.black,
         );
     final githubIconPath = isDark ? AppConst.githubLight : AppConst.githubDark;

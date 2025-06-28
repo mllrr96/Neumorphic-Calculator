@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:neumorphic_calculator/controllers/theme_controller.dart';
 import 'package:neumorphic_calculator/screens/settings_screen/settings_controller.dart';
-import 'package:neumorphic_calculator/service/theme_controller.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/extensions/color_extension.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
@@ -202,7 +202,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               borderRadius: settings.buttonRadius,
               child: ListTile(
                 title: const Text('Font'),
-                trailing: Text(theme.textTheme.bodyLarge?.fontFamily ?? ''),
+                trailing: Text(theme.textTheme.bodyLarge?.fontFamily
+                        ?.replaceAll('_regular', '') ??
+                    ''),
               ),
               onPressed: () {
                 showAdaptiveDialog<Fonts>(

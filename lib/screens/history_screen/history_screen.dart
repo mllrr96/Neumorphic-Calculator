@@ -67,14 +67,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                             child: ClipRect(
                               child: ListTile(
                                   leading: Icon(Icons.info_outline,
-                                      color: theme
-                                          .colorScheme
-                                          .secondary),
+                                      color: theme.colorScheme.secondary),
                                   title: const Text(
                                       'Press and hold to copy result'),
-                                  tileColor: theme
-                                      .colorScheme
-                                      .secondary
+                                  tileColor: theme.colorScheme.secondary
                                       .withValues(alpha: 0.1),
                                   trailing: IconButton(
                                     padding: const EdgeInsets.all(16.0),
@@ -100,10 +96,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                               subtitle: Text(history.output.formatThousands()),
                               trailing: Text(history.dateTime.timeAgo),
                               onTap: () {
-                                CalculatorController.instance.updateExpression(
-                                  history.expression,
-                                  offset: history.expression.length,
-                                );
+                                CalculatorController.instance
+                                    .updateExpression(history.expression, -1);
                                 DashboardController.instance.animateToPage(1);
                               },
                               onLongPress: () async {
@@ -114,19 +108,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                             );
                           },
                         ),
-                        onEmpty: Column(
-                          children: [
-                            Divider(
-                              thickness: 5,
-                              color: theme.dividerColor.withValues(alpha: 0.2),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text('Expression history = 0',
-                                    style: textStyle),
-                              ),
-                            ),
-                          ],
+                        onEmpty: Center(
+                          child:
+                              Text('Expression history = 0', style: textStyle),
                         ),
                         onLoading: const Center(
                           child: CircularProgressIndicator(),

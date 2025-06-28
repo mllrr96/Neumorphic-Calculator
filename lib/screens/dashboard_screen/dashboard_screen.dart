@@ -14,26 +14,18 @@ import 'package:neumorphic_calculator/widgets/input_widget.dart';
 import 'package:neumorphic_calculator/widgets/keep_alive_wrapper.dart';
 import 'package:neumorphic_calculator/widgets/result_widget.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
-
-  @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> {
-  final textCtrl = TextEditingController();
-  final calcController = Get.find<CalculatorController>();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return GetBuilder<DashboardController>(builder: (controller) {
+    return GetBuilder<DashboardController>(builder: (dashCtrl) {
       return PopScope(
-        canPop: controller.index == 1,
+        canPop: dashCtrl.index == 1,
         onPopInvokedWithResult: (val, _) {
           if (val) return;
-          controller.animateToPage(1);
+          dashCtrl.animateToPage(1);
         },
         child: TutorialScreen(
           child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -46,46 +38,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   children: [
                     Flexible(
-                      child: Obx(() {
-                        textCtrl.value = TextEditingValue(
-                          text: calcController.expression.value,
-                          selection: TextSelection.collapsed(
-                            offset: calcController.offset.value,
-                          ),
-                        );
-                        return CircularWipeOverlayWidget(
-                          triggerWipe: calcController.isClearing.value,
-                          onWipeComplete: () {
-                            calcController.isClearing.value = false;
-                            calcController.clear();
-                          },
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CalculatorAppBar(),
-                                Expanded(flex: 2, child: InputWidget(textCtrl)),
-                                Expanded(
-                                  child: ResultWidget(
-                                    calcController.output.value
-                                        .formatThousands(),
+                      child: GetBuilder<CalculatorController>(
+                        builder: (controller) {
+                          return CircularWipeOverlayWidget(
+                            triggerWipe: controller.isClearing,
+                            onWipeComplete: () {
+                              controller.isClearing = false;
+                              controller.output = '';
+                              controller.textCtrl.clear();
+                              controller.update();
+                            },
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CalculatorAppBar(),
+                                  Expanded(
+                                      flex: 2,
+                                      child: InputWidget(controller.textCtrl)),
+                                  Expanded(
+                                    child: ResultWidget(
+                                      controller.output.formatExpression(),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }),
+                          );
+                        },
+                      ),
                     ),
                     Expanded(
                       flex: 2,
                       child: PageView(
                         onPageChanged: (index) {
-                          controller.index = index;
-                          controller.update();
+                          dashCtrl.index = index;
+                          dashCtrl.update();
                         },
-                        controller: controller.pageController,
+                        controller: dashCtrl.pageController,
                         children: const [
                           KeepAliveWrapper(child: SettingsScreen()),
                           KeepAliveWrapper(child: CalculatorScreen()),

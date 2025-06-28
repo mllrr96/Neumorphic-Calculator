@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:neumorphic_calculator/service/preference_service.dart';
+import 'package:neumorphic_calculator/controllers/preference_controller.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/theme_extension.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
