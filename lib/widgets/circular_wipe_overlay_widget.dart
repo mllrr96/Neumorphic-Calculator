@@ -5,7 +5,6 @@ class CircularWipeOverlayWidget extends StatefulWidget {
   final Widget child;
   final bool triggerWipe;
   final VoidCallback? onWipeComplete;
-  final Color? overlayColor;
   final Duration duration;
 
   const CircularWipeOverlayWidget({
@@ -13,12 +12,12 @@ class CircularWipeOverlayWidget extends StatefulWidget {
     required this.child,
     required this.triggerWipe,
     required this.onWipeComplete,
-    this.overlayColor,
     this.duration = const Duration(milliseconds: 300),
   });
 
   @override
-  State<CircularWipeOverlayWidget> createState() => _CircularWipeOverlayWidgetState();
+  State<CircularWipeOverlayWidget> createState() =>
+      _CircularWipeOverlayWidgetState();
 }
 
 class _CircularWipeOverlayWidgetState extends State<CircularWipeOverlayWidget>
@@ -66,8 +65,7 @@ class _CircularWipeOverlayWidgetState extends State<CircularWipeOverlayWidget>
 
   @override
   Widget build(BuildContext context) {
-    final overlayColor =
-        widget.overlayColor ?? Theme.of(context).colorScheme.primary;
+    final overlayColor = Theme.of(context).colorScheme.primary;
 
     return LayoutBuilder(
       builder: (context, constraints) {

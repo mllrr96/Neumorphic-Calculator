@@ -68,11 +68,10 @@ class _WipeOverlayListState extends State<WipeOverlayList>
 
   @override
   Widget build(BuildContext context) {
-    final overlayColor =
-        Theme.of(context).scaffoldBackgroundColor;
+    final theme = Theme.of(context);
+    final overlayColor = theme.scaffoldBackgroundColor;
 
-    final lineColor =
-        Theme.of(context).colorScheme.primary.withValues(alpha: 0.5);
+    final lineColor = theme.colorScheme.primary.withValues(alpha: 0.5);
 
     return LayoutBuilder(
       builder: (context, constraints) {

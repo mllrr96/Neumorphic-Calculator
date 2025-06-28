@@ -42,10 +42,9 @@ class _HistoryScreenState extends State<HistoryScreen>
     return GetBuilder<SettingsController>(builder: (settingsCtrl) {
       final settings = settingsCtrl.state ?? SettingsModel.normal();
       final showTip = settings.showHistoryTip;
-      final textStyle = Theme.of(context)
-          .textTheme
-          .bodyLarge
-          ?.copyWith(color: Theme.of(context).colorScheme.onSurface);
+      final theme = Theme.of(context);
+      final textStyle = theme.textTheme.bodyLarge
+          ?.copyWith(color: theme.colorScheme.onSurface);
       return GetBuilder<HistoryController>(builder: (ctrl) {
         return AnimatedBuilder(
           animation: _controller,
@@ -54,7 +53,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             return Scaffold(
               body: WipeOverlayList(
                 triggerWipe: ctrl.isClearing.value,
-                onWipeComplete: (){
+                onWipeComplete: () {
                   ctrl.clearData();
                   ctrl.isClearing.value = false;
                 },
@@ -68,12 +67,12 @@ class _HistoryScreenState extends State<HistoryScreen>
                             child: ClipRect(
                               child: ListTile(
                                   leading: Icon(Icons.info_outline,
-                                      color: Theme.of(context)
+                                      color: theme
                                           .colorScheme
                                           .secondary),
-                                  title:
-                                      const Text('Press and hold to copy result'),
-                                  tileColor: Theme.of(context)
+                                  title: const Text(
+                                      'Press and hold to copy result'),
+                                  tileColor: theme
                                       .colorScheme
                                       .secondary
                                       .withValues(alpha: 0.1),
@@ -82,10 +81,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                                     icon: const Icon(Icons.close),
                                     onPressed: () {
                                       _controller.forward();
-                                      settingsCtrl.updateSettings(settingsCtrl
-                                              .state
-                                              ?.copyWith(showHistoryTip: false) ??
-                                          SettingsModel.normal());
+                                      settingsCtrl.updateSettings(
+                                          settingsCtrl.state?.copyWith(
+                                                  showHistoryTip: false) ??
+                                              SettingsModel.normal());
                                     },
                                   )),
                             ),
@@ -108,16 +107,26 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 DashboardController.instance.animateToPage(1);
                               },
                               onLongPress: () async {
-                                // copy the result to the clipboard
-                                await Clipboard.setData(
-                                    ClipboardData(text: history.output.formatThousands()));
+                                await Clipboard.setData(ClipboardData(
+                                    text: history.output.formatThousands()));
                                 HapticFeedback.heavyImpact();
                               },
                             );
                           },
                         ),
-                        onEmpty: Center(
-                          child: Text('Expression history = 0', style: textStyle),
+                        onEmpty: Column(
+                          children: [
+                            Divider(
+                              thickness: 5,
+                              color: theme.dividerColor.withValues(alpha: 0.2),
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Text('Expression history = 0',
+                                    style: textStyle),
+                              ),
+                            ),
+                          ],
                         ),
                         onLoading: const Center(
                           child: CircularProgressIndicator(),

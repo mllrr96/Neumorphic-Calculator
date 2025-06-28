@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:neumorphic_calculator/screens/settings_screen/settings_controller.dart';
 import 'package:neumorphic_calculator/service/theme_controller.dart';
 import 'package:neumorphic_calculator/utils/enum.dart';
 import 'package:neumorphic_calculator/utils/extensions/color_extension.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
+import 'package:neumorphic_calculator/utils/extensions/theme_extension.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
 import 'package:neumorphic_calculator/widgets/button_radius_dialog.dart';
 import 'package:neumorphic_calculator/widgets/made_by.dart';
@@ -26,10 +28,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Get.isDarkMode;
-    final titleTextStyle = Theme.of(context).textTheme.headlineSmall?.copyWith(
-          color: isDark ? Colors.white : Colors.black,
-        );
+    final theme = Theme.of(context);
+    final isDark = theme.isDarkMode;
+    final titleTextStyle = theme.textTheme.headlineSmall?.copyWith(
+      color: isDark ? Colors.white : Colors.black,
+    );
 
     final isDynamicColorAvailable =
         SystemTheme.accentColor.accent != SystemTheme.fallbackColor &&
@@ -144,27 +147,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   NeumorphicButton(
                     borderRadius: settings.buttonRadius,
                     onPressed: () async {
-                      // final avoidTransition =
-                      //     MediaQuery.of(context).platformBrightness !=
-                      //         Theme.of(context).brightness;
                       themeCtrl.saveThemeMode(ThemeMode.system);
-                      // context.updateThemeMode(
-                      //     animateTransition: avoidTransition,
-                      //     themeMode: ThemeMode.system,
-                      //     isReversed:
-                      //     MediaQuery.of(context).platformBrightness ==
-                      //         Brightness.dark);
-                      // // Calling setState to update the UI,
-                      // // as the theme is not changing but theme mode is
-                      // if (!avoidTransition) {
-                      //   setState(() {});
-                      // }
                     },
                     child: Icon(
                       Icons.brightness_auto,
                       size: 28,
                       color: themeCtrl.themeMode == ThemeMode.system
-                          ? Theme.of(context).colorScheme.primary
+                          ? theme.colorScheme.primary
                           : isDark
                               ? Colors.white
                               : Colors.black54,
@@ -179,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Icons.light_mode,
                       size: 28,
                       color: themeCtrl.themeMode == ThemeMode.light
-                          ? Theme.of(context).colorScheme.primary
+                          ? theme.colorScheme.primary
                           : isDark
                               ? Colors.white
                               : Colors.black54,
@@ -199,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Icons.dark_mode,
                       size: 28,
                       color: themeCtrl.themeMode == ThemeMode.dark
-                          ? Theme.of(context).colorScheme.primary
+                          ? theme.colorScheme.primary
                           : isDark
                               ? Colors.white
                               : Colors.black54,
@@ -213,8 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               borderRadius: settings.buttonRadius,
               child: ListTile(
                 title: const Text('Font'),
-                trailing: Text(
-                    Theme.of(context).textTheme.bodyLarge?.fontFamily ?? ''),
+                trailing: Text(theme.textTheme.bodyLarge?.fontFamily ?? ''),
               ),
               onPressed: () {
                 showAdaptiveDialog<Fonts>(
@@ -283,12 +271,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 trailing: Switch(
                   value: settings.hapticEnabled,
                   onChanged: (value) {
+                    if (value) {
+                      HapticFeedback.mediumImpact();
+                    }
                     settingsCtrl.updateSettings(
                         settings.copyWith(hapticEnabled: value));
                   },
                 ),
               ),
               onPressed: () {
+                if (!settings.hapticEnabled) {
+                  HapticFeedback.mediumImpact();
+                }
                 settingsCtrl.updateSettings(
                     settings.copyWith(hapticEnabled: !settings.hapticEnabled));
               },

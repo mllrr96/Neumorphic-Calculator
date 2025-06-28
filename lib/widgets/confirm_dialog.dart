@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neumorphic_calculator/utils/extensions/theme_extension.dart';
 
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog(
@@ -7,6 +8,7 @@ class ConfirmDialog extends StatelessWidget {
       required this.title,
       required this.content,
       required this.confirmText});
+
   final String content, confirmText;
   final Widget title;
 
@@ -14,15 +16,16 @@ class ConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.isDarkMode;
 
     // When showing dialog in dark mode the text remians black, this is a workaround
-    final titleTextStyle = Theme.of(context).textTheme.headlineSmall?.copyWith(
-          color: isDark ? Colors.white : Colors.black,
-        );
-    final contentTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: isDark ? Colors.white : Colors.black,
-        );
+    final titleTextStyle = theme.textTheme.headlineSmall?.copyWith(
+      color: isDark ? Colors.white : Colors.black,
+    );
+    final contentTextStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: isDark ? Colors.white : Colors.black,
+    );
     return AlertDialog(
       title: title,
       titleTextStyle: titleTextStyle,

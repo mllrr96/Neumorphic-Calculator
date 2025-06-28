@@ -19,9 +19,10 @@ class NumberPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
     final numberStyle = TextStyle(
-      color: Theme.of(context).iconTheme.color,
+      color: theme.iconTheme.color,
       fontSize: 24,
       fontWeight: FontWeight.bold,
     );

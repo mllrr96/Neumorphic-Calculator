@@ -69,7 +69,8 @@ class StackedButtonState extends State<StackedButton> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    bool isDark = theme.brightness == Brightness.dark;
     final borderRadius1 = widget._isVertical
         ? BorderRadius.only(
             topRight: Radius.circular(widget.borderRadius),
@@ -124,7 +125,7 @@ class StackedButtonState extends State<StackedButton> {
                 width: widget.width,
                 margin: margin1,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+                  color: theme.scaffoldBackgroundColor,
                   borderRadius: borderRadius1,
                   boxShadow: _isElevated
                       ? widget.boxShadow ??
@@ -171,7 +172,7 @@ class StackedButtonState extends State<StackedButton> {
                 width: widget.width,
                 margin: margin2,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+                  color: theme.scaffoldBackgroundColor,
                   borderRadius: borderRadius2,
                   boxShadow: _isElevated2
                       ? widget.boxShadow ??
