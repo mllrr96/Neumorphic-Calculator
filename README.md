@@ -1,6 +1,6 @@
 # Neumorphic Calculator
 
-An elegant and highly customizable calculator app with a beautiful neumorphic design, built using Flutter.
+A beautifully designed, customizable calculator app with a soft, modern neumorphic style. Built in Flutter for Android and iOS.
 
 ![Calculator Screenshot](https://cdn.dribbble.com/users/2986824/screenshots/14757121/media/7754c4eac87d79773937886400d0d95d.png)
 
@@ -35,11 +35,11 @@ An elegant and highly customizable calculator app with a beautiful neumorphic de
 
 ## Features
 
-* **Supports Dark Mode:** Seamlessly switch between light and dark themes for optimal viewing comfort.
-* **Multiple Themes:** Choose from a variety of themes to personalize your calculator and match your style.
-* **Customizable Buttons:** Tailor individual calculator buttons to your preference for a truly unique experience.
-* **Font Customization:** Don't like the default font? Change it easily in the settings to match your taste.
-* **Enhanced Calculation History:**  **Recall your Calculations with Ease:** Keep track of your calculations with a comprehensive and easily accessible history.
+- **Dark Mode:** Easy on the eyes with automatic light and dark themes.
+- **Custom Themes:** Choose the look that suits your style best.
+- **Personalized Buttons:** Adjust button shapes and styles the way you like.
+- **Font Options:** Pick a font you love for the perfect look.
+- **Calculation History:** Quickly review and recall your past calculations.
 
 ## Get the App!
 
@@ -71,14 +71,8 @@ Head to [Releases](https://github.com/mllrr96/Neumorphic-Calculator/releases) pa
 
    ```bash
    flutter pub get
-  
-4. Generate necessary files:
 
-   ```bash
-   dart run build_runner build
-   ```
-
-5. Run the app:
+4. Run the app:
 
    ```bash
    flutter run
