@@ -43,12 +43,7 @@ class DashboardScreen extends StatelessWidget {
                         builder: (controller) {
                           return CircularWipeOverlayWidget(
                             triggerWipe: controller.isClearing,
-                            onWipeComplete: () {
-                              controller.isClearing = false;
-                              controller.output = '';
-                              controller.textCtrl.clear();
-                              controller.update();
-                            },
+                            onWipeComplete: controller.onWipeComplete,
                             child: SizedBox(
                               width: double.infinity,
                               child: Column(

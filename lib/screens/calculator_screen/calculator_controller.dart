@@ -279,4 +279,11 @@ class CalculatorController extends GetxController {
     _addNumber(number, baseOffset);
     _mediumHaptic();
   }
+
+  void onWipeComplete() {
+    isClearing = false;
+    output = '';
+    textCtrl.clear();
+    update();
+  }
 }

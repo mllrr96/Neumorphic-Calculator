@@ -13,7 +13,7 @@ class InputWidget extends StatelessWidget {
     final primaryColor = theme.colorScheme.primary;
     final isDark = theme.isDarkMode;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: AutoSizeTextField(
         controller: controller,
         autofocus: true,
