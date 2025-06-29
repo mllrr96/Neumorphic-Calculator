@@ -10,6 +10,7 @@ import 'package:neumorphic_calculator/tutorial_screen.dart';
 import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/widgets/calculator_app_bar.dart';
 import 'package:neumorphic_calculator/widgets/circular_wipe_overlay_widget.dart';
+import 'package:neumorphic_calculator/widgets/custom_scroll_physics.dart';
 import 'package:neumorphic_calculator/widgets/input_widget.dart';
 import 'package:neumorphic_calculator/widgets/keep_alive_wrapper.dart';
 import 'package:neumorphic_calculator/widgets/result_widget.dart';
@@ -72,6 +73,7 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: PageView(
+                        physics: CustomScrollPhysics(),
                         onPageChanged: (index) {
                           dashCtrl.index = index;
                           dashCtrl.update();
