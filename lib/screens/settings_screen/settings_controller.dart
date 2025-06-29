@@ -4,16 +4,19 @@ import 'package:get/get.dart';
 import 'package:neumorphic_calculator/repo/database.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsController extends GetxController with StateMixin<SettingsModel> {
+  late final PackageInfo packageInfo;
   static SettingsController get instance => Get.find<SettingsController>();
   final DatabaseRepository _dataBase;
   SettingsController(this._dataBase);
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
     _loadSettings();
+     packageInfo = await PackageInfo.fromPlatform();
   }
 
   void _loadSettings() {

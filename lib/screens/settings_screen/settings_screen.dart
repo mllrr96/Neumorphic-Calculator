@@ -10,7 +10,6 @@ import 'package:neumorphic_calculator/utils/extensions/extensions.dart';
 import 'package:neumorphic_calculator/utils/extensions/theme_extension.dart';
 import 'package:neumorphic_calculator/utils/settings_model.dart';
 import 'package:neumorphic_calculator/widgets/button_radius_dialog.dart';
-import 'package:neumorphic_calculator/widgets/made_by.dart';
 import 'package:neumorphic_calculator/widgets/neumorphic_button.dart';
 import 'package:system_theme/system_theme.dart';
 
@@ -40,10 +39,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return GetBuilder<SettingsController>(builder: (settingsCtrl) {
       final settings = settingsCtrl.state ?? SettingsModel.normal();
       return Scaffold(
-        bottomNavigationBar: const BottomAppBar(
-          padding: EdgeInsets.zero,
-          child: MadeByWidget(),
-        ),
         body: ListView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),

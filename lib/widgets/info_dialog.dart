@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:neumorphic_calculator/screens/settings_screen/settings_controller.dart';
 import 'package:neumorphic_calculator/utils/const.dart';
 import 'package:neumorphic_calculator/utils/extensions/theme_extension.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -73,11 +74,16 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
     final titleTextStyle = theme.textTheme.headlineSmall
         ?.copyWith(color: isDark ? Colors.white : Colors.black);
     final githubIconPath = isDark ? AppConst.githubLight : AppConst.githubDark;
-    return AlertDialog.adaptive(
+    return AlertDialog(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(child: Text('Neumorphic Calculator', style: titleTextStyle)),
+          Flexible(
+            child: Text(
+              '${AppConst.appName} ${SettingsController.instance.packageInfo.version}',
+              style: titleTextStyle,
+            ),
+          ),
           IconButton(
             onPressed: () async {
               try {
@@ -128,6 +134,11 @@ class _InfoDialogState extends State<InfoDialog> with TickerProviderStateMixin {
           ),
           const Divider(),
           ListTile(
+            onTap: () async {
+              try {
+                await launchUrl(Uri.parse(AppConst.githubLink));
+              } catch (_) {}
+            },
             contentPadding: const EdgeInsets.all(0),
             leading: Container(
               decoration: BoxDecoration(
