@@ -21,14 +21,16 @@ class NumberPad extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
+    const numbersSize = 32.0;
+    const operationSize = 28.0;
     final numberStyle = TextStyle(
       color: theme.iconTheme.color,
-      fontSize: 24,
+      fontSize: numbersSize,
       fontWeight: FontWeight.bold,
     );
     final operationStyle = TextStyle(
       color: primaryColor,
-      fontSize: 24,
+      fontSize: operationSize,
       fontWeight: FontWeight.w900,
     );
 
@@ -44,7 +46,7 @@ class NumberPad extends StatelessWidget {
       return NeumorphicButton(
         borderRadius: borderRadius,
         onPressed: onPressed,
-        child: Icon(icon, color: primaryColor, size: 24),
+        child: Icon(icon, color: primaryColor, size: operationSize),
       );
     }
 
