@@ -29,14 +29,16 @@ android {
     ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     defaultConfig {
         applicationId = "com.ragheb.neumorphic_calculator"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = 21
         targetSdk = 34
         versionCode = flutterVersionCode.toInteger()
@@ -45,7 +47,6 @@ android {
 
     buildTypes {
         release {
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
         }
     }
