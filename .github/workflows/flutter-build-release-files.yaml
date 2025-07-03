@@ -15,6 +15,7 @@ jobs:
         with:
           channel: "stable"
           architecture: x64
+          flutter-version-file: pubspec.yaml
 
       - name: Setup Java
         continue-on-error: true
