@@ -45,7 +45,6 @@ app.*.map.json
 /android/app/release
 
 # Project-specific files
-/pubspec.lock
 /devtools_options.yaml
 
 # Generated files
