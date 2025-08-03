@@ -1,1 +1,1 @@
-A simple, modern calculator with a neumorphic design.
+A minimal, beautifully designed, customizable calculator with a soft, modern neumorphic style.

@@ -1,1 +1,9 @@
-A minimal, beautifully designed, customizable calculator with a soft, modern neumorphic style.
+A beautifully designed, customizable calculator app with a soft, modern neumorphic style. Built in Flutter..
+
+Features:
+
+- Dark Mode: Easy on the eyes with automatic light and dark themes.
+- Custom Themes: Choose the look that suits your style best.
+- Personalized Buttons: Adjust button shapes and styles the way you like.
+- Font Options: Pick a font you love for the perfect look.
+- Calculation History: Quickly review and recall your past calculations.
