@@ -4,6 +4,16 @@ A beautifully designed, customizable calculator app with a soft, modern neumorph
 
 ![Calculator Screenshot](https://cdn.dribbble.com/users/2986824/screenshots/14757121/media/7754c4eac87d79773937886400d0d95d.png)
 
+**Download:**
+
+[<img src="https://github.com/user-attachments/assets/a50513b3-dbf8-48c1-bff8-1f4215fefbb9"
+alt="Get it on GitHub"
+height="80">](https://github.com/mllrr96/Neumorphic-Calculator/releases) [<img src="https://f-droid.org/badge/get-it-on.png"
+alt="Get it on F-Droid"
+height="80">](https://f-droid.org/packages/com.ragheb.neumorphic_calculator)
+
+**iOS:** Due to App Store restrictions, sideloading is required, checkout [Sideloadly](https://sideloadly.io/) or [AltStore](https://altstore.io/) for more info about sideloading.
+
 ## Screenshots
 <div style="text-align: center">
     <table>
@@ -40,17 +50,6 @@ A beautifully designed, customizable calculator app with a soft, modern neumorph
 - **Personalized Buttons:** Adjust button shapes and styles the way you like.
 - **Font Options:** Pick a font you love for the perfect look.
 - **Calculation History:** Quickly review and recall your past calculations.
-
-## Get the App!
-
-**Download:**
-
-Head to [Releases](https://github.com/mllrr96/Neumorphic-Calculator/releases) page and download the app
-
-**iOS:** Due to App Store restrictions, sideloading is required, checkout [Sideloadly](https://sideloadly.io/) or [AltStore](https://altstore.io/) for more info about sideloading.
-
-
-
 
 
 ## Build it yourself
